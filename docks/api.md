@@ -35,14 +35,14 @@
 
 ## Register
 
-https://scheduler.com/register
+https://scheduler.com/authentication/register
 
 ### POST:
 
 #### request
 ```
 {
-    "userName": "alexander",
+    "username": "alexander",
     "email": "alexander@gmail.com",
     "description": "description",
     "password": "password",
@@ -53,7 +53,7 @@ https://scheduler.com/register
 ```
 {
     "userId": "0000-0000-000000",
-    "userName": "alexander",
+    "username": "alexander",
     "email": "alexander@gmail.com"
     "description": "description"
 }
@@ -61,7 +61,7 @@ https://scheduler.com/register
 
 ## Login
 
-https://scheduler.com/login
+https://scheduler.com/authentication/login
 
 ### POST:
 
