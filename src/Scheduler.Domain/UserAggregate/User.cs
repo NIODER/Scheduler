@@ -23,6 +23,7 @@ public class User : Aggregate<UserId>
     public string PasswordHash { get; private set; }
 
     private User(
+        UserId userId,
         string username, 
         string email,
         string description,
@@ -31,7 +32,7 @@ public class User : Aggregate<UserId>
         List<FinancialPlanId> financialPlanIds,
         List<FriendsInviteId> friendsInviteIds,
         List<GroupInviteId> groupInviteIds,
-        List<TaskId> taskIds)
+        List<TaskId> taskIds) : base(userId)
     {
         Username = username;
         Email = email;
@@ -52,7 +53,23 @@ public class User : Aggregate<UserId>
         PasswordHash = null!;
     }
 
-    // TODO write methods for creation
+    public static User Create(
+        string username,
+        string email,
+        string description,
+        string passwordHash
+    ) => new(
+        UserId.CreateUnique(),
+        username,
+        email,
+        description,
+        passwordHash,
+        groups: [],
+        financialPlanIds: [],
+        friendsInviteIds: [],
+        groupInviteIds: [],
+        taskIds: []
+    );
 
     public IReadOnlyCollection<GroupId> GroupIds => _groups
         .Select(g => g.GroupId)
@@ -65,5 +82,5 @@ public class User : Aggregate<UserId>
     public IReadOnlyCollection<GroupInviteId> GroupInviteIds => _groupInviteIds.AsReadOnly();
     public IReadOnlyCollection<TaskId> TaskIds => _taskIds.AsReadOnly();
 
-    // TODO write methods for behavior
+    // TODO Write behavior
 }

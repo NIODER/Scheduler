@@ -257,9 +257,8 @@ http://scheduler.com/invite/user/{inviteId}
 ```
 {
     "inviteId": "0000-0000-000000",
-    "inviteType": "friendship",
     "senderId": "0000-0000-000000",
-    "addressieId": "0000-0000-000000", nullable
+    "addressieId": "0000-0000-000000",
     "message": "message"
 }
 ```
@@ -282,7 +281,6 @@ http://scheduler.com/invite/user/{addressieId}
 ```
 {
     "inviteId": "0000-0000-000000",
-    "inviteType": "friendship",
     "senderId": "0000-0000-000000",
     "addressieId": "0000-0000-000000",
     "message": "message"
@@ -299,7 +297,6 @@ http://scheduler.com/invite/group/{inviteId}
 ```
 {
     "inviteId": "0000-0000-000000",
-    "inviteType": "group",
     "senderId": "0000-0000-000000",
     "permissions": 123,
     "message": "message"
@@ -325,7 +322,6 @@ http://scheduler.com/invite/group/{groupId}
 ```
 {
     "inviteId": "0000-0000-000000",
-    "inviteType": "group",
     "senderId": "0000-0000-000000",
     "permissions": 123,
     "message": "message"
