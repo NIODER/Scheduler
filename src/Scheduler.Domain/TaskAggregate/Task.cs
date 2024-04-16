@@ -8,8 +8,8 @@ namespace Scheduler.Domain.TaskAggregate;
 public class Task : Aggregate<TaskId>
 {
     public UserId CreatorId { get; private set; }
-    public UserId UserId { get; private set; }
-    public GroupId GroupId { get; private set; }
+    public UserId? UserId { get; private set; }
+    public GroupId? GroupId { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }
     public TaskStatus Status { get; private set; }
@@ -18,8 +18,6 @@ public class Task : Aggregate<TaskId>
     private Task()
     {
         CreatorId = default!;
-        UserId = default!;
-        GroupId = default!;
         Title = null!;
         Description = null!;
     }
@@ -27,8 +25,8 @@ public class Task : Aggregate<TaskId>
     private Task(
         TaskId taskId,
         UserId creatorId,
-        UserId userId,
-        GroupId groupId,
+        UserId? userId,
+        GroupId? groupId,
         string title,
         string description,
         TaskStatus status,
@@ -46,14 +44,14 @@ public class Task : Aggregate<TaskId>
 
     public static Task Create(
         UserId creatorId,
-        UserId userId,
-        GroupId groupId,
+        UserId? userId,
+        GroupId? groupId,
         string title,
         string description,
         DateTime deadline,
         TaskStatus status = TaskStatus.New
     ) => new(
-        TaskId.CreateUnique(),
+        new TaskId(Guid.NewGuid()),
         creatorId,
         userId,
         groupId,

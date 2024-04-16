@@ -22,7 +22,7 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
     public static FinancialPlan Create(
         string title,
         List<Charge> charges
-    ) => new(FinancialPlanId.CreateUnique(), title, charges);
+    ) => new(new FinancialPlanId(Guid.NewGuid()), title, charges);
 
     public IReadOnlyCollection<Charge> Charges => _charges.AsReadOnly();
 }

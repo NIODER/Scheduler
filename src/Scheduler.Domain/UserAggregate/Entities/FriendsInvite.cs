@@ -1,10 +1,9 @@
 using Scheduler.Domain.Common;
-using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
-namespace Scheduler.Domain.FriendsInviteAggregate;
+namespace Scheduler.Domain.UserAggregate.Entities;
 
-public class FriendsInvite : Aggregate<FriendsInviteId>
+public class FriendsInvite : Entity<FriendsInviteId>
 {
     public UserId SenderId { get; private set; }
     public UserId AddressieId { get; private set; }
@@ -18,20 +17,19 @@ public class FriendsInvite : Aggregate<FriendsInviteId>
     }
 
     private FriendsInvite(
-        FriendsInviteId friendsInviteId,
+        FriendsInviteId id,
         UserId senderId,
         UserId addressieId,
-        string message
-    ) : base(friendsInviteId)
+        string message) : base(id)
     {
         SenderId = senderId;
         AddressieId = addressieId;
         Message = message;
     }
-
+    
     public static FriendsInvite Create(
         UserId senderId,
         UserId addressieId,
         string message
-    ) => new(FriendsInviteId.CreateUnique(), senderId: senderId, addressieId: addressieId, message);
+    ) => new(new FriendsInviteId(Guid.NewGuid()), senderId, addressieId, message);
 }

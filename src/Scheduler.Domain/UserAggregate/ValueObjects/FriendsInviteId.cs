@@ -1,3 +1,3 @@
 namespace Scheduler.Domain.UserAggregate.ValueObjects;
 
-public record UserId(Guid Value);
+public record FriendsInviteId(Guid Value);
