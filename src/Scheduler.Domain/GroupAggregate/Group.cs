@@ -2,7 +2,7 @@ using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.Entities;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
-using Scheduler.Domain.TaskAggregate.ValueObjects;
+using Scheduler.Domain.ProblemAggregate.ValueObjects;
 
 namespace Scheduler.Domain.GroupAggregate;
 
@@ -10,7 +10,7 @@ public class Group : Aggregate<GroupId>
 {
     private readonly List<GroupUser> _users = [];
     private readonly List<GroupInvite> _invites = [];
-    private readonly List<TaskId> _taskIds = [];
+    private readonly List<ProblemId> _problemIds = [];
     private readonly List<FinancialPlanId> _financialPlanIds = [];
     public string GroupName { get; private set; }
 
@@ -25,14 +25,14 @@ public class Group : Aggregate<GroupId>
         string groupName,
         List<GroupUser> users,
         List<GroupInvite> invites,
-        List<TaskId> taskIds,
+        List<ProblemId> problemIds,
         List<FinancialPlanId> financialPlanIds
     ) : base(groupId)
     {
         GroupName = groupName;
         _users = users;
         _invites = invites;
-        _taskIds = taskIds;
+        _problemIds = problemIds;
         _financialPlanIds = financialPlanIds;
     }
 
@@ -41,11 +41,11 @@ public class Group : Aggregate<GroupId>
         groupName, 
         users: [],
         invites: [],
-        taskIds: [],
+        problemIds: [],
         financialPlanIds: []);
 
     public IReadOnlyCollection<GroupUser> Users => _users.AsReadOnly();
     public IReadOnlyCollection<GroupInvite> Invites => _invites.AsReadOnly();
-    public IReadOnlyCollection<TaskId> TaskIds => _taskIds.AsReadOnly();
+    public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
 }

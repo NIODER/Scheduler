@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
-using Scheduler.Domain.TaskAggregate.ValueObjects;
+using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
@@ -52,7 +52,7 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.OwnsMany(u => u.GroupIds, gidBuilder =>
         {
             gidBuilder.WithOwner().HasForeignKey(nameof(UserId));
-            gidBuilder.HasKey("Id");
+            gidBuilder.HasKey(gid => gid.Value);
             gidBuilder.Property(gid => gid.Value)
                 .HasColumnName(nameof(GroupId))
                 .ValueGeneratedNever();
@@ -67,7 +67,7 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.OwnsMany(u => u.FinancialPlanIds, financialPlanIdsBuilder =>
         {
             financialPlanIdsBuilder.WithOwner().HasForeignKey(nameof(UserId));
-            financialPlanIdsBuilder.HasKey("Id");
+            financialPlanIdsBuilder.HasKey(fpid => fpid.Value);
             financialPlanIdsBuilder.Property(fpid => fpid.Value)
                 .HasColumnName(nameof(FinancialPlanId))
                 .ValueGeneratedNever();
@@ -89,7 +89,6 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
                 )
                 .ValueGeneratedNever();
 
-            friendsInvitesBuilder.WithOwner().HasForeignKey(fi => fi.SenderId);
             friendsInvitesBuilder.Property(fi => fi.SenderId)
                 .HasConversion(
                     id => id.Value,
@@ -97,7 +96,6 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
                 )
                 .ValueGeneratedNever();
             
-            friendsInvitesBuilder.WithOwner().HasForeignKey(fi => fi.AddressieId);
             friendsInvitesBuilder.Property(fi => fi.AddressieId)
                 .HasConversion(
                     id => id.Value,
@@ -105,6 +103,14 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
                 )
                 .ValueGeneratedNever();
             
+            friendsInvitesBuilder.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(fi => fi.SenderId);
+            
+            friendsInvitesBuilder.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(fi => fi.AddressieId);
+
             friendsInvitesBuilder.Property(fi => fi.Message)
                 .HasMaxLength(500);
         });
@@ -115,16 +121,16 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
 
     private static void ConfigureTaskIds(EntityTypeBuilder<User> builder)
     {
-        builder.OwnsMany(u => u.TaskIds, tidBuilder =>
+        builder.OwnsMany(u => u.ProblemIds, tidBuilder =>
         {
             tidBuilder.WithOwner().HasForeignKey(nameof(UserId));
-            tidBuilder.HasKey("Id");
+            tidBuilder.HasKey(tid => tid.Value);
             tidBuilder.Property(tid => tid.Value)
-                .HasColumnName(nameof(TaskId))
+                .HasColumnName(nameof(ProblemId))
                 .ValueGeneratedNever();
         });
 
-        builder.Metadata.FindNavigation(nameof(User.TaskIds))!
+        builder.Metadata.FindNavigation(nameof(User.ProblemIds))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

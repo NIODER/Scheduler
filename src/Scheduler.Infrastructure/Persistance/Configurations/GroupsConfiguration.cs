@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
-using Scheduler.Domain.TaskAggregate.ValueObjects;
+using Scheduler.Domain.ProblemAggregate.ValueObjects;
 
 namespace Scheduler.Infrastructure.Persistance.Configurations;
 
@@ -106,16 +106,16 @@ public sealed class GroupsConfiguration : IEntityTypeConfiguration<Group>
 
     private static void ConfigureTaskIds(EntityTypeBuilder<Group> builder)
     {
-        builder.OwnsMany(g => g.TaskIds, tidBuilder => 
+        builder.OwnsMany(g => g.ProblemIds, tidBuilder => 
         {
             tidBuilder.WithOwner().HasForeignKey(nameof(GroupId));
             tidBuilder.HasKey("Id");
             tidBuilder.Property(tid => tid.Value)
-                .HasColumnName(nameof(TaskId))
+                .HasColumnName(nameof(ProblemId))
                 .ValueGeneratedNever();
         });
 
-        builder.Metadata.FindNavigation(nameof(Group.TaskIds))!
+        builder.Metadata.FindNavigation(nameof(Group.ProblemIds))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 

@@ -1,37 +1,37 @@
 using Scheduler.Domain.Common;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
-using Scheduler.Domain.TaskAggregate.ValueObjects;
+using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
-namespace Scheduler.Domain.TaskAggregate;
+namespace Scheduler.Domain.ProblemAggregate;
 
-public class Task : Aggregate<TaskId>
+public class Problem : Aggregate<ProblemId>
 {
     public UserId CreatorId { get; private set; }
     public UserId? UserId { get; private set; }
     public GroupId? GroupId { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }
-    public TaskStatus Status { get; private set; }
+    public ProblemStatus Status { get; private set; }
     public DateTime Deadline { get; private set; }
 
-    private Task()
+    private Problem()
     {
         CreatorId = default!;
         Title = null!;
         Description = null!;
     }
 
-    private Task(
-        TaskId taskId,
+    private Problem(
+        ProblemId problemId,
         UserId creatorId,
         UserId? userId,
         GroupId? groupId,
         string title,
         string description,
-        TaskStatus status,
+        ProblemStatus status,
         DateTime deadline
-    ) : base(taskId)
+    ) : base(problemId)
     {
         CreatorId = creatorId;
         UserId = userId;
@@ -42,16 +42,16 @@ public class Task : Aggregate<TaskId>
         Deadline = deadline;
     }
 
-    public static Task Create(
+    public static Problem Create(
         UserId creatorId,
         UserId? userId,
         GroupId? groupId,
         string title,
         string description,
         DateTime deadline,
-        TaskStatus status = TaskStatus.New
+        ProblemStatus status = ProblemStatus.New
     ) => new(
-        new TaskId(Guid.NewGuid()),
+        new(Guid.NewGuid()),
         creatorId,
         userId,
         groupId,

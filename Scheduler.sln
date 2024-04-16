@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Contracts", "src\Scheduler.Contracts\Scheduler.Contracts.csproj", "{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.InfrastructureUnitTests", "tests\Scheduler.InfrastructureUnitTests\Scheduler.InfrastructureUnitTests.csproj", "{B23AA471-B76A-48DF-8090-09DC85E761FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,10 @@ Global
 		{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B23AA471-B76A-48DF-8090-09DC85E761FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B23AA471-B76A-48DF-8090-09DC85E761FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B23AA471-B76A-48DF-8090-09DC85E761FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B23AA471-B76A-48DF-8090-09DC85E761FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1A058FA6-06C6-44B1-9FD1-76C0070CECC7} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
@@ -51,5 +59,6 @@ Global
 		{0254BB49-63ED-41BE-BFAF-CD7D52997093} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
 		{2A1739CA-3AF0-4220-B225-B5A3BFFC32A7} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
 		{6FE12165-DCB4-49D6-B08B-6C146F70EDE8} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
+		{B23AA471-B76A-48DF-8090-09DC85E761FA} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
 	EndGlobalSection
 EndGlobal

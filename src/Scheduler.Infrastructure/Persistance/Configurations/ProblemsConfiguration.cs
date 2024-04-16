@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Task = Scheduler.Domain.TaskAggregate.Task;
+using Scheduler.Domain.ProblemAggregate;
 
 namespace Scheduler.Infrastructure.Persistance.Configurations;
 
-public sealed class TasksConfiguration : IEntityTypeConfiguration<Task>
+public sealed class ProblemsConfiguration : IEntityTypeConfiguration<Problem>
 {
-    public void Configure(EntityTypeBuilder<Task> builder)
+    public void Configure(EntityTypeBuilder<Problem> builder)
     {
         ConfigureProperties(builder);
     }
 
-    private static void ConfigureProperties(EntityTypeBuilder<Task> builder)
+    private static void ConfigureProperties(EntityTypeBuilder<Problem> builder)
     {
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Id)

@@ -10,6 +10,7 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
     public void Configure(EntityTypeBuilder<FinancialPlan> builder)
     {
         ConfigureProperties(builder);
+        ConfigureCharges(builder);
     }
 
     private static void ConfigureProperties(EntityTypeBuilder<FinancialPlan> builder)
@@ -31,32 +32,39 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
     {
         builder.OwnsMany(f => f.Charges, cBuilder =>
         {
-            cBuilder.WithOwner().HasForeignKey(nameof(FinancialPlanId));
-            cBuilder.HasKey(f => f.Id);
+            cBuilder.HasKey(c => c.Id);
+            cBuilder.Property(c => c.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new(value)
+                )
+                .ValueGeneratedNever();
 
-            cBuilder.Property(f => f.ChargeName)
+            cBuilder.Property(c => c.ChargeName)
                 .HasMaxLength(120)
                 .IsRequired();
             
-            cBuilder.Property(f => f.Description)
+            cBuilder.Property(c => c.Description)
                 .HasMaxLength(1000);
             
-            cBuilder.Property(f => f.MinimalCost)
+            cBuilder.Property(c => c.MinimalCost)
                 .IsRequired();
             
-            cBuilder.Property(f => f.MaximalCost);
+            cBuilder.Property(c => c.MaximalCost);
 
-            cBuilder.Property(f => f.Priority)
+            cBuilder.Property(c => c.Priority)
                 .IsRequired();
             
-            cBuilder.Property(f => f.Repeat)
+            cBuilder.Property(c => c.Repeat)
                 .IsRequired();
             
-            cBuilder.Property(f => f.ExpireDays)
+            cBuilder.Property(c => c.ExpireDays)
                 .IsRequired();
 
-            cBuilder.Property(f => f.Created)
-                .IsRequired();
+            cBuilder.Property(c => c.Created)
+               .IsRequired();
+
+            cBuilder.WithOwner().HasForeignKey(nameof(FinancialPlanId));
         });
 
         builder.Metadata.FindNavigation(nameof(FinancialPlan.Charges))!

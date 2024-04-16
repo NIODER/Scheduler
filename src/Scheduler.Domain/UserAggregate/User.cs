@@ -1,7 +1,7 @@
 using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
-using Scheduler.Domain.TaskAggregate.ValueObjects;
+using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.Entities;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
@@ -12,7 +12,7 @@ public class User : Aggregate<UserId>
     private readonly List<GroupId> _groupIds = [];
     private readonly List<FinancialPlanId> _financialPlanIds = [];
     private readonly List<FriendsInvite> _friendsInvites = [];
-    private readonly List<TaskId> _taskIds = [];
+    private readonly List<ProblemId> _problemIds = [];
 
     public string Username { get; private set; }
     public string Email { get; private set; }
@@ -28,7 +28,7 @@ public class User : Aggregate<UserId>
         List<GroupId> groupIds,
         List<FinancialPlanId> financialPlanIds,
         List<FriendsInvite> friendsInvites,
-        List<TaskId> taskIds) : base(userId)
+        List<ProblemId> problemIds) : base(userId)
     {
         Username = username;
         Email = email;
@@ -37,7 +37,7 @@ public class User : Aggregate<UserId>
         _groupIds = groupIds;
         _financialPlanIds = financialPlanIds;
         _friendsInvites = friendsInvites;
-        _taskIds = taskIds;
+        _problemIds = problemIds;
     }
         
     private User()
@@ -62,13 +62,13 @@ public class User : Aggregate<UserId>
         groupIds: [],
         financialPlanIds: [],
         friendsInvites: [],
-        taskIds: []
+        problemIds: []
     );
 
     public IReadOnlyCollection<GroupId> GroupIds => _groupIds.AsReadOnly();
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
     public IReadOnlyCollection<FriendsInvite> FriendsInvites => _friendsInvites.AsReadOnly();
-    public IReadOnlyCollection<TaskId> TaskIds => _taskIds.AsReadOnly();
+    public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
 
     // TODO Write behavior
 }
