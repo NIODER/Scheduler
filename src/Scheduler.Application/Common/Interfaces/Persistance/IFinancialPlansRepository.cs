@@ -13,9 +13,9 @@ public interface IFinancialPlansRepository
     Task<FinancialPlan> GetFinancialPlanByIdAsync(FinancialPlanId financialPlanId);
     void DeleteFinancialPlanById(FinancialPlanId financialPlanId);
     IEnumerable<FinancialPlan> GetPrivateFinancialPlansByUserId(UserId userId);
-    Task<IEnumerable<FinancialPlan>> GetPrivateFinancialPlansByUserIdAsync(UserId userId);
+    IAsyncEnumerable<FinancialPlan> GetPrivateFinancialPlansByUserIdAsync(UserId userId);
     IEnumerable<FinancialPlan> GetGroupFinancialPlansByGroupId(GroupId groupId);
-    Task<IEnumerable<FinancialPlan>> GetGroupFinancialPlansByGroupIdAsync(GroupId groupId);
+    IAsyncEnumerable<FinancialPlan> GetGroupFinancialPlansByGroupIdAsync(GroupId groupId);
     int SaveChanges();
     Task<int> SaveChangesAsync();
 }

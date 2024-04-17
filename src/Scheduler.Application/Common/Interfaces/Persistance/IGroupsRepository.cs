@@ -11,7 +11,7 @@ public interface IGroupsRepository
     Group GetGroupById(GroupId groupId);
     Task<Group> GetGroupByIdAsync(GroupId groupId);
     IEnumerable<Group> GetGroupsByUserId(UserId userId);
-    Task<IEnumerable<Group>> GetGroupsByUserIdAsync(UserId userId);
+    IAsyncEnumerable<Group> GetGroupsByUserIdAsync(UserId userId);
     void DeleteGroupById(GroupId groupId);
     int SaveChanges();
     Task<int> SaveChangesAsync();

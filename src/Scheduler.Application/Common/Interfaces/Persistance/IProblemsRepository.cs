@@ -11,12 +11,12 @@ public interface IProblemsRepository
     void Update(Problem problem);
     Problem GetProblemById(ProblemId problemId);
     Task<Problem> GetProblemByIdAsync(ProblemId problemId);
-    IEnumerable<Problem> GetProblemsVisibleToUserByUserId(UserId userId);
-    Task<IEnumerable<Problem>> GetProblemsVisibleToUserByUserIdAsync(UserId userId);
+    IEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserId(UserId userId);
+    IAsyncEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserIdAsync(UserId userId);
     IEnumerable<Problem> GetProblemsAssignedToUserByUserId(UserId userId);
-    Task<IEnumerable<Problem>> GetProblemsAssignedToUserByUserIdAsync(UserId userId);
-    IEnumerable<Problem> GetGroupFinancialPlansByGroupId(GroupId groupId);
-    Task<IEnumerable<Problem>> GetGroupFinancialPlansByGroupIdAsync(GroupId groupId);
+    IAsyncEnumerable<Problem> GetProblemsAssignedToUserByUserIdAsync(UserId userId);
+    IEnumerable<Problem> GetGroupProblemsByGroupId(GroupId groupId);
+    IAsyncEnumerable<Problem> GetGroupProblemsByGroupIdAsync(GroupId groupId);
     void DeleteProblemById(ProblemId problemId);
     int SaveChanges();
     Task<int> SaveChangesAsync();
