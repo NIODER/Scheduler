@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Scheduler.Application.Common.Interfaces.Persistance;
+using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
@@ -7,7 +8,6 @@ namespace Scheduler.Infrastructure.Persistance.Repositories;
 
 public sealed class UsersRepository(SchedulerDbContext context) : IUsersRepository
 {
-    private const string INVALID_USER_ID_EXCEPTION_MESSAGE = "No user found with given id";
     public void Add(User user)
     {
         context.Users.Add(user);
@@ -15,33 +15,47 @@ public sealed class UsersRepository(SchedulerDbContext context) : IUsersReposito
 
     public void DeleteUserById(UserId userId)
     {
-        var user = context.Users.SingleOrDefault(u => u.Id == userId) 
-            ?? throw new NullReferenceException(INVALID_USER_ID_EXCEPTION_MESSAGE);
-        context.Users.Remove(user);
+        var user = context.Users.SingleOrDefault(u => u.Id == userId);
+        if (user is not null)
+        {
+            context.Users.Remove(user);
+        }
     }
 
-    public User GetUserByEmail(string email)
+    public User? GetUserByEmail(string email)
     {
-        return context.Users.SingleOrDefault(u => u.Email == email)
-            ?? throw new NullReferenceException(INVALID_USER_ID_EXCEPTION_MESSAGE);
+        return context.Users.SingleOrDefault(u => u.Email == email);
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public Task<User?> GetUserByEmailAsync(string email)
     {
-        return await context.Users.SingleOrDefaultAsync(u => u.Email == email)
-            ?? throw new NullReferenceException(INVALID_USER_ID_EXCEPTION_MESSAGE);
+        return context.Users.SingleOrDefaultAsync(u => u.Email == email);
     }
 
-    public User GetUserById(UserId userId)
+    public User? GetUserById(UserId userId)
     {
-        return context.Users.SingleOrDefault(u => u.Id == userId)
-            ?? throw new NullReferenceException(INVALID_USER_ID_EXCEPTION_MESSAGE);
+        return context.Users.SingleOrDefault(u => u.Id == userId);
     }
 
-    public async Task<User> GetUserByIdAsync(UserId userId)
+    public Task<User?> GetUserByIdAsync(UserId userId)
     {
-        return await context.Users.SingleOrDefaultAsync(u => u.Id == userId)
-            ?? throw new NullReferenceException(INVALID_USER_ID_EXCEPTION_MESSAGE);
+        return context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+    }
+
+    public List<User> GetUsersByGroupId(GroupId groupId)
+    {
+        return context.Users
+            .Include(u => u.GroupIds)
+            .Where(u => u.GroupIds.Contains(groupId))
+            .ToList();
+    }
+
+    public Task<List<User>> GetUsersByGroupIdAsync(GroupId groupId)
+    {
+        return context.Users
+            .Include(u => u.GroupIds)
+            .Where(u => u.GroupIds.Contains(groupId))
+            .ToListAsync();
     }
 
     public int SaveChanges()

@@ -9,7 +9,6 @@ namespace Scheduler.Infrastructure.Persistance.Repositories;
 
 public sealed class ProblemsRepository(SchedulerDbContext context) : IProblemsRepository
 {
-    private const string INVALID_PROBLEM_ID_EXCEPTION_MESSAGE = "No problem with given id found.";
     public void Add(Problem problem)
     {
         context.Problems.Add(problem);
@@ -17,57 +16,57 @@ public sealed class ProblemsRepository(SchedulerDbContext context) : IProblemsRe
 
     public void DeleteProblemById(ProblemId problemId)
     {
-        var problem = context.Problems.SingleOrDefault(p => p.Id == problemId)
-            ?? throw new NullReferenceException(INVALID_PROBLEM_ID_EXCEPTION_MESSAGE);
-        context.Problems.Remove(problem);
+        var problem = context.Problems.SingleOrDefault(p => p.Id == problemId);
+        if (problem is not null)
+        {
+            context.Problems.Remove(problem);
+        }
     }
 
-    public IEnumerable<Problem> GetGroupProblemsByGroupId(GroupId groupId)
+    public List<Problem> GetGroupProblemsByGroupId(GroupId groupId)
     {
         return context.Problems.Where(p => p.GroupId == groupId)
-            .AsEnumerable();
+            .ToList();
     }
 
-    public IAsyncEnumerable<Problem> GetGroupProblemsByGroupIdAsync(GroupId groupId)
+    public Task<List<Problem>> GetGroupProblemsByGroupIdAsync(GroupId groupId)
     {
         return context.Problems.Where(p => p.GroupId == groupId)
-            .AsAsyncEnumerable();
+            .ToListAsync();
     }
 
-    public Problem GetProblemById(ProblemId problemId)
+    public Problem? GetProblemById(ProblemId problemId)
     {
-        return context.Problems.SingleOrDefault(p => p.Id == problemId)
-            ?? throw new NullReferenceException(INVALID_PROBLEM_ID_EXCEPTION_MESSAGE);
+        return context.Problems.SingleOrDefault(p => p.Id == problemId);
     }
 
-    public async Task<Problem> GetProblemByIdAsync(ProblemId problemId)
+    public Task<Problem?> GetProblemByIdAsync(ProblemId problemId)
     {
-        return await context.Problems.SingleOrDefaultAsync(p => p.Id == problemId)
-            ?? throw new NullReferenceException(INVALID_PROBLEM_ID_EXCEPTION_MESSAGE);
+        return context.Problems.SingleOrDefaultAsync(p => p.Id == problemId);
     }
 
-    public IEnumerable<Problem> GetProblemsAssignedToUserByUserId(UserId userId)
+    public List<Problem> GetProblemsAssignedToUserByUserId(UserId userId)
     {
         return context.Problems.Where(p => p.UserId == userId)
-            .AsEnumerable();
+            .ToList();
     }
 
-    public IAsyncEnumerable<Problem> GetProblemsAssignedToUserByUserIdAsync(UserId userId)
+    public Task<List<Problem>> GetProblemsAssignedToUserByUserIdAsync(UserId userId)
     {
         return context.Problems.Where(p => p.UserId == userId)
-            .AsAsyncEnumerable();
+            .ToListAsync();
     }
 
-    public IEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserId(UserId userId)
+    public List<Problem> GetProblemsCreatedOrAssignedToUserByUserId(UserId userId)
     {
         return context.Problems.Where(p => p.UserId == userId || p.CreatorId == userId)
-            .AsEnumerable();
+            .ToList();
     }
 
-    public IAsyncEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserIdAsync(UserId userId)
+    public Task<List<Problem>> GetProblemsCreatedOrAssignedToUserByUserIdAsync(UserId userId)
     {
         return context.Problems.Where(p => p.UserId == userId || p.CreatorId == userId)
-            .AsAsyncEnumerable();
+            .ToListAsync();
     }
 
     public int SaveChanges()

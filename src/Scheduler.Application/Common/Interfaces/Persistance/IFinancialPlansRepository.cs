@@ -9,13 +9,13 @@ public interface IFinancialPlansRepository
 {
     void Add(FinancialPlan financialPlan);
     void Update(FinancialPlan financialPlan);
-    FinancialPlan GetFinancialPlanById(FinancialPlanId financialPlanId);
-    Task<FinancialPlan> GetFinancialPlanByIdAsync(FinancialPlanId financialPlanId);
+    FinancialPlan? GetFinancialPlanById(FinancialPlanId financialPlanId);
+    Task<FinancialPlan?> GetFinancialPlanByIdAsync(FinancialPlanId financialPlanId);
     void DeleteFinancialPlanById(FinancialPlanId financialPlanId);
-    IEnumerable<FinancialPlan> GetPrivateFinancialPlansByUserId(UserId userId);
-    IAsyncEnumerable<FinancialPlan> GetPrivateFinancialPlansByUserIdAsync(UserId userId);
-    IEnumerable<FinancialPlan> GetGroupFinancialPlansByGroupId(GroupId groupId);
-    IAsyncEnumerable<FinancialPlan> GetGroupFinancialPlansByGroupIdAsync(GroupId groupId);
+    List<FinancialPlan> GetPrivateFinancialPlansByUserId(UserId userId);
+    Task<List<FinancialPlan>> GetPrivateFinancialPlansByUserIdAsync(UserId userId);
+    List<FinancialPlan> GetGroupFinancialPlansByGroupId(GroupId groupId);
+    Task<List<FinancialPlan>> GetGroupFinancialPlansByGroupIdAsync(GroupId groupId);
     int SaveChanges();
     Task<int> SaveChangesAsync();
 }

@@ -9,14 +9,14 @@ public interface IProblemsRepository
 {
     void Add(Problem problem);
     void Update(Problem problem);
-    Problem GetProblemById(ProblemId problemId);
-    Task<Problem> GetProblemByIdAsync(ProblemId problemId);
-    IEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserId(UserId userId);
-    IAsyncEnumerable<Problem> GetProblemsCreatedOrAssignedToUserByUserIdAsync(UserId userId);
-    IEnumerable<Problem> GetProblemsAssignedToUserByUserId(UserId userId);
-    IAsyncEnumerable<Problem> GetProblemsAssignedToUserByUserIdAsync(UserId userId);
-    IEnumerable<Problem> GetGroupProblemsByGroupId(GroupId groupId);
-    IAsyncEnumerable<Problem> GetGroupProblemsByGroupIdAsync(GroupId groupId);
+    Problem? GetProblemById(ProblemId problemId);
+    Task<Problem?> GetProblemByIdAsync(ProblemId problemId);
+    List<Problem> GetProblemsCreatedOrAssignedToUserByUserId(UserId userId);
+    Task<List<Problem>> GetProblemsCreatedOrAssignedToUserByUserIdAsync(UserId userId);
+    List<Problem> GetProblemsAssignedToUserByUserId(UserId userId);
+    Task<List<Problem>> GetProblemsAssignedToUserByUserIdAsync(UserId userId);
+    List<Problem> GetGroupProblemsByGroupId(GroupId groupId);
+    Task<List<Problem>> GetGroupProblemsByGroupIdAsync(GroupId groupId);
     void DeleteProblemById(ProblemId problemId);
     int SaveChanges();
     Task<int> SaveChangesAsync();

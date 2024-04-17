@@ -8,8 +8,6 @@ namespace Scheduler.Infrastructure.Persistance.Repositories;
 
 public sealed class GroupsRepository(SchedulerDbContext context) : IGroupsRepository
 {
-    private const string INVALID_GROUP_ID_EXCEPTION_MESSAGE = "No group with given id found.";
-
     public void Add(Group group)
     {
         context.Groups.Add(group);
@@ -17,33 +15,34 @@ public sealed class GroupsRepository(SchedulerDbContext context) : IGroupsReposi
 
     public void DeleteGroupById(GroupId groupId)
     {
-        var group = context.Groups.SingleOrDefault(g => g.Id == groupId)
-            ?? throw new NullReferenceException(INVALID_GROUP_ID_EXCEPTION_MESSAGE);
-        context.Groups.Remove(group);
+        var group = context.Groups.SingleOrDefault(g => g.Id == groupId);
+        if (group is not null)
+        {
+            context.Groups.Remove(group);
+        }
     }
 
-    public Group GetGroupById(GroupId groupId)
+    public Group? GetGroupById(GroupId groupId)
     {
-        return context.Groups.SingleOrDefault(g => g.Id == groupId)
-            ?? throw new NullReferenceException(INVALID_GROUP_ID_EXCEPTION_MESSAGE);
+        return context.Groups.SingleOrDefault(g => g.Id == groupId);
     }
 
-    public async Task<Group> GetGroupByIdAsync(GroupId groupId)
+    public Task<Group?> GetGroupByIdAsync(GroupId groupId)
     {
-        return await context.Groups.SingleOrDefaultAsync(g => g.Id == groupId)
-            ?? throw new NullReferenceException(INVALID_GROUP_ID_EXCEPTION_MESSAGE);
+        return context.Groups.SingleOrDefaultAsync(g => g.Id == groupId);
     }
 
-    public IEnumerable<Group> GetGroupsByUserId(UserId userId)
+    public List<Group> GetGroupsByUserId(UserId userId)
+    {
+        return context.Groups
+            .Where(g => g.Users.Any(u => u.UserId == userId))
+            .ToList();
+    }
+
+    public Task<List<Group>> GetGroupsByUserIdAsync(UserId userId)
     {
         return context.Groups.Where(g => g.Users.Any(u => u.UserId == userId))
-            .AsEnumerable();
-    }
-
-    public IAsyncEnumerable<Group> GetGroupsByUserIdAsync(UserId userId)
-    {
-        return context.Groups.Where(g => g.Users.Any(u => u.UserId == userId))
-            .AsAsyncEnumerable();
+            .ToListAsync();
     }
 
     public int SaveChanges()

@@ -26,6 +26,22 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
         builder.Property(f => f.Title)
             .HasMaxLength(120)
             .IsRequired();
+        
+        builder.Property(f => f.CreatorId)
+            .HasConversion(
+                id => id.Value,
+                value => new(value)
+            )
+            .ValueGeneratedNever()
+            .IsRequired();
+        
+        builder.Property(f => f.GroupId)
+            .HasConversion(
+                id => id == null ? default : id.Value,
+                value => new(value)
+            )
+            .ValueGeneratedNever()
+            .IsRequired();
     }
 
     private static void ConfigureCharges(EntityTypeBuilder<FinancialPlan> builder)
