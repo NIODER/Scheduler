@@ -4,8 +4,8 @@ public class JwtSettings
 {
     public const string SECTION_NAME = "JwtSettings";
 
-    public string Issuer { get; private set; } = null!;
-    public string Audience { get; private set; } = null!;
-    public int Expire { get; private set; }
-    public string Secret { get; private set; } = null!;
+    public string Issuer { get; init; } = null!;
+    public string Audience { get; init; } = null!;
+    public int Expire { get; init; }
+    public string Secret { get; init; } = null!;
 }

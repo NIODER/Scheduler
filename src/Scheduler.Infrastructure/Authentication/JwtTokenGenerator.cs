@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Scheduler.Application.Common.Interfaces.Authentication;
 using Scheduler.Application.Common.Interfaces.Services;
+using Scheduler.Domain.UserAggregate;
 
 namespace Scheduler.Infrastructure.Authentication;
 
@@ -12,7 +13,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> options, IDateTimeProvider 
 {
     private readonly JwtSettings jwtSettings = options.Value;
 
-    public string GenerateJwtToken()
+    public string GenerateJwtToken(User user)
     {
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(
@@ -23,7 +24,10 @@ public class JwtTokenGenerator(IOptions<JwtSettings> options, IDateTimeProvider 
         
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Name, user.Username),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString())
         };
 
         var securityToken = new JwtSecurityToken(

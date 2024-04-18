@@ -1,7 +1,8 @@
+using Scheduler.Domain.UserAggregate;
+
 namespace Scheduler.Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenGenerator
 {
-    // TODO add user based generation
-    string GenerateJwtToken();
+    string GenerateJwtToken(User user);
 }

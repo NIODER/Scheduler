@@ -14,7 +14,6 @@ public sealed class SchedulerDbContext(DbContextOptions<SchedulerDbContext> opti
     public DbSet<Problem> Problems { get; private set; }
     public DbSet<FinancialPlan> FinancialPlans { get; private set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

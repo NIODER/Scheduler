@@ -1,8 +1,9 @@
 namespace Scheduler.Contracts.Authentication;
 
-public record RegistrateRequest(
+public record AuthenticationResponse(
+    Guid Id,
     string Username,
     string Email,
     string Description,
-    string Password
+    string Token
 );
