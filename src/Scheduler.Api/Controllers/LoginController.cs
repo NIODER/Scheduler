@@ -13,10 +13,10 @@ public class LoginController(ISender sender, IMapper mapper) : ControllerBase
     private readonly IMapper _mapper = mapper;
 
     [HttpPost]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
     {
         var command = _mapper.Map<LoginCommand>(request);
-        var result = _sender.Send(command);
+        var result = await _sender.Send(command);
         return Ok(_mapper.Map<AuthenticationResponse>(result));
     }
 }

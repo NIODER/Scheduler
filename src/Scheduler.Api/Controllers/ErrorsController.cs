@@ -8,7 +8,7 @@ namespace Scheduler.Api.Controllers;
 
 public class ErrorsController : ControllerBase
 {
-    [Route("/error")]
+    [ApiExplorerSettings(IgnoreApi = true), Route("/error")]
     public IActionResult Error()
     {
         Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
@@ -21,6 +21,6 @@ public class ErrorsController : ControllerBase
             }
             return ValidationProblem(modelStateDictionary);
         }
-        return Problem(statusCode: (int)HttpStatusCode.InternalServerError, title: "Something went wrong.");
+        return Problem(statusCode: (int)HttpStatusCode.InternalServerError, title: exception?.Message);
     }
 }
