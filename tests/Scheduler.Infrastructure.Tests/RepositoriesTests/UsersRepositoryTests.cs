@@ -6,7 +6,7 @@ using Scheduler.Domain.UserAggregate;
 using Scheduler.Infrastructure.Persistance;
 using Scheduler.Infrastructure.Persistance.Repositories;
 
-namespace Scheduler.InfrastructureUnitTests.RepositoriesTests;
+namespace Scheduler.Infrastructure.Tests.RepositoriesTests;
 
 public class UsersRepositoryTests
 {

@@ -45,8 +45,7 @@ https://scheduler.com/authentication/register
     "username": "alexander",
     "email": "alexander@gmail.com",
     "description": "description",
-    "password": "password",
-    "passwordConfirm": "password"
+    "password": "password"
 }
 ```
 #### response

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scheduler.Infrastructure.Persistance;
 
-namespace Scheduler.InfrastructureUnitTests.DatabaseTests;
+namespace Scheduler.Infrastructure.Tests.DatabaseTests;
 
 public class DatabaseCreatingTests
 {
