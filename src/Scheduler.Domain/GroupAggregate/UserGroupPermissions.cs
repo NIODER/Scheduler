@@ -11,5 +11,6 @@ public enum UserGroupPermissions
     CreateFinancialPlan = 1 << 5,
     ChangeUnownedFinancialPlan = 1 << 6,
     DeleteUnownedFinancialPlan = 1 << 7,
-    IsGroupOwner = 1 << 8
+    IsGroupOwner = 1 << 8,
+    All = ~(0)
 }

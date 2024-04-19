@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Groups.Commands.CreateGroup;
 using Scheduler.Application.Groups.Commands.DeleteGroup;
 using Scheduler.Application.Groups.Commands.UpdateGroup;
 using Scheduler.Application.Groups.Queries;
@@ -56,6 +57,19 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         return Ok(_mapper.Map<GroupResponse>(result.Result));
+    }
+
+    [Authorize, HttpPost]
+    public async Task<IActionResult> CreateGroup([FromBody]CreateGroupRequest request)
+    {
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null)
+        {
+            return Forbid();
+        }
+        var command = new CreateGroupCommand(userId.Value, request.GroupName);
+        var result = await _sender.Send(command);
+        return Ok(_mapper.Map<GroupResponse>(result));
     }
 }
  
