@@ -14,9 +14,9 @@ public class User : Aggregate<UserId>
     private readonly List<FriendsInvite> _friendsInvites = [];
     private readonly List<ProblemId> _problemIds = [];
 
-    public string Username { get; private set; }
+    public string Name { get; set; }
     public string Email { get; private set; }
-    public string Description { get; private set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public string PasswordHash { get; private set; }
 
     private User(
@@ -30,7 +30,7 @@ public class User : Aggregate<UserId>
         List<FriendsInvite> friendsInvites,
         List<ProblemId> problemIds) : base(userId)
     {
-        Username = username;
+        Name = username;
         Email = email;
         Description = description;
         PasswordHash = passwordHash;
@@ -42,7 +42,7 @@ public class User : Aggregate<UserId>
         
     private User()
     {
-        Username = null!;
+        Name = null!;
         Email = null!;
         Description = null!;
         PasswordHash = null!;
@@ -69,6 +69,4 @@ public class User : Aggregate<UserId>
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
     public IReadOnlyCollection<FriendsInvite> FriendsInvites => _friendsInvites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
-
-    // TODO Write behavior
 }

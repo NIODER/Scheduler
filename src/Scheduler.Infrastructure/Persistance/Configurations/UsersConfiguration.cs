@@ -29,7 +29,7 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
             )
             .ValueGeneratedNever();
         
-        builder.Property(u => u.Username)
+        builder.Property(u => u.Name)
             .HasMaxLength(120)
             .IsRequired();
 

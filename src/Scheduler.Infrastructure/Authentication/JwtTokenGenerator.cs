@@ -25,7 +25,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> options, IDateTimeProvider 
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.Username),
+            new Claim(JwtRegisteredClaimNames.Name, user.Name),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString())
         };

@@ -105,14 +105,7 @@ http://scheduler.com/user/{userId}
     "description": "description"
 }
 ```
-#### response
-```
-{
-    "userId": "0000-0000-000000",
-    "userName": "alexander",
-    "description": "description"
-}
-```
+
 
 ## Group
 

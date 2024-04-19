@@ -1,0 +1,9 @@
+PATCH  http://localhost:5071/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiNTJjZTVhOS03YWEzLTQxNGYtYWYyZi03OTZlYjJlZjQ2NDkiLCJuYW1lIjoiYWxleGFuZGVyIiwiZW1haWwiOiJhbGV4YW5kZXJAZ21haWwuY29tIiwic3ViIjoiODY2YzViNWQtNjJjYi00NWEwLWJjM2EtM2JiMWYwYzUxMjM3IiwiZXhwIjoxNzEzNDYwMzkyLCJpc3MiOiJTY2hlZHVsZXIiLCJhdWQiOiJTY2hlZHVsZXIifQ.Eo-UV-B1Y_4MBcQrHUGsZhB76wk4slMbxMul3j3EqZY
+Content-Type: application/json
+
+{
+    "userId": "866c5b5d-62cb-45a0-bc3a-3bb1f0c51237",
+    "userName": "updated",
+    "description": "updated"
+}
