@@ -6,7 +6,7 @@ using Scheduler.Api.Common.Utils;
 using Scheduler.Application.Groups.Commands.CreateGroup;
 using Scheduler.Application.Groups.Commands.DeleteGroup;
 using Scheduler.Application.Groups.Commands.UpdateGroup;
-using Scheduler.Application.Groups.Queries;
+using Scheduler.Application.Groups.Queries.GetGroup;
 using Scheduler.Contracts.Groups;
 
 namespace Scheduler.Api.Controllers.GroupControllers;

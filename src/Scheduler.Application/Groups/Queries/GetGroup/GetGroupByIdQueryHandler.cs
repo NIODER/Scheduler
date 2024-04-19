@@ -3,7 +3,7 @@ using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Groups.Common;
 using Scheduler.Domain.GroupAggregate;
 
-namespace Scheduler.Application.Groups.Queries;
+namespace Scheduler.Application.Groups.Queries.GetGroup;
 
 public class GetGroupByIdQueryHandler(IGroupsRepository groupsRepository) : IRequestHandler<GetGroupByIdQuery, GroupResult>
 {

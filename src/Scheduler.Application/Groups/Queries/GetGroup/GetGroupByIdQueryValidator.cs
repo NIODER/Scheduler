@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Scheduler.Application.Groups.Queries;
+namespace Scheduler.Application.Groups.Queries.GetGroup;
 
 public class GetGroupByIdQueryValidator : AbstractValidator<GetGroupByIdQuery>
 {

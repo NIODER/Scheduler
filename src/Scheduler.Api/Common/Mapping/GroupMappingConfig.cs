@@ -17,5 +17,10 @@ public class GroupMappingConfig : IRegister
         config.NewConfig<GroupUser, GroupUserResponse>()
             .Map(dest => dest.UserId, src => src.UserId.Value)
             .Map(dest => dest.Permissions, src => (int)src.Permissions);
+        
+        config.NewConfig<GroupUserResult, GroupUserResponse>()
+            .Map(dest => dest.UserId, src => src.UserId.Value)
+            .Map(dest => dest.Permissions, src => (int)src.Permissions)
+            .IgnoreNonMapped(true);
     }
 }
