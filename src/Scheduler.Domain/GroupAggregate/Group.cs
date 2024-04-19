@@ -3,6 +3,8 @@ using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.Entities;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
+using Scheduler.Domain.UserAggregate;
+using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Domain.GroupAggregate;
 
@@ -12,7 +14,7 @@ public class Group : Aggregate<GroupId>
     private readonly List<GroupInvite> _invites = [];
     private readonly List<ProblemId> _problemIds = [];
     private readonly List<FinancialPlanId> _financialPlanIds = [];
-    public string GroupName { get; private set; }
+    public string GroupName { get; set; }
 
 
     private Group()
@@ -48,4 +50,14 @@ public class Group : Aggregate<GroupId>
     public IReadOnlyCollection<GroupInvite> Invites => _invites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
+
+    public bool UserHasPermissions(UserId userId, UserGroupPermissions permissions)
+    {
+        var user = _users.FirstOrDefault(x => x.UserId == userId);
+        if (user is not null && user.Permissions.HasFlag(permissions))
+        {
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,6 +1,9 @@
+using System.Net;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Groups.Commands.UpdateGroup;
 using Scheduler.Application.Groups.Queries;
 using Scheduler.Contracts.Groups;
 
@@ -21,9 +24,20 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
     }
 
     [HttpPatch("{groupId}")]
-    public IActionResult UpdateGroupInformation([FromBody]UpdateGroupInformationRequest request)
+    public async Task<IActionResult> UpdateGroupInformationAsync(Guid groupId, [FromBody]UpdateGroupInformationRequest request)
     {
-        throw new NotImplementedException();
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null)
+        {
+            return Problem(statusCode: (int)HttpStatusCode.Forbidden);
+        }
+        var command = new UpdateGroupInformationCommand(groupId, userId.Value, request.GroupName);
+        var result = await _sender.Send(command);
+        if (result.IsForbidden)
+        {
+            return Problem(statusCode: (int)HttpStatusCode.Forbidden, detail: result.ClientMessage);
+        }
+        return Ok(_mapper.Map<GroupResponse>(result.Result));
     }
 
     [HttpDelete("{groupId}")]

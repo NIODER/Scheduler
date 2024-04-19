@@ -5,6 +5,7 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Scheduler.Api.Common.Utils;
 using Scheduler.Application.Users.Commands.UpdateUser;
 using Scheduler.Application.Users.Queries.GetUser;
 using Scheduler.Contracts.Users;
@@ -24,7 +25,7 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
         var user = await _sender.Send(command);
         if (user is null)
         {
-            return Problem(statusCode: (int)HttpStatusCode.NotFound, title: $"No user with id {userId} found.");
+            return Problem(statusCode: (int)HttpStatusCode.NotFound, detail: $"No user with id {userId} found.");
         }
         return Ok(_mapper.Map<GeneralUserResponse>(user));
     }
@@ -32,9 +33,8 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
     [Authorize, HttpPatch]
     public async Task<IActionResult> UpdateUserByIdAsync([FromBody]UpdateUserRequest request)
     {
-        var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-        var id = claimsIdentity?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        if (!Guid.TryParse(id, out Guid userId) || userId != request.UserId)
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null || userId != request.UserId)
         {
             return Problem(statusCode: (int)HttpStatusCode.Forbidden);
         }
