@@ -1,4 +1,4 @@
-namespace Scheduler.Domain.UserAggregate;
+namespace Scheduler.Domain.GroupAggregate;
 
 [Flags]
 public enum UserGroupPermissions
@@ -10,5 +10,6 @@ public enum UserGroupPermissions
     ChangeGroupSettings = 1 << 4,
     CreateFinancialPlan = 1 << 5,
     ChangeUnownedFinancialPlan = 1 << 6,
-    DeleteUnownedFinancialPlan = 1 << 7
+    DeleteUnownedFinancialPlan = 1 << 7,
+    IsGroupOwner = 1 << 8
 }

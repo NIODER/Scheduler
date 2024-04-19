@@ -1,8 +1,9 @@
-using System.Net;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Groups.Commands.DeleteGroup;
 using Scheduler.Application.Groups.Commands.UpdateGroup;
 using Scheduler.Application.Groups.Queries;
 using Scheduler.Contracts.Groups;
@@ -23,27 +24,38 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
         return Ok(_mapper.Map<GroupResponse>(result));
     }
 
-    [HttpPatch("{groupId}")]
+    [Authorize, HttpPatch("{groupId}")]
     public async Task<IActionResult> UpdateGroupInformationAsync(Guid groupId, [FromBody]UpdateGroupInformationRequest request)
     {
         var userId = HttpContext.GetExecutorUserId();
         if (userId is null)
         {
-            return Problem(statusCode: (int)HttpStatusCode.Forbidden);
+            return Forbid();
         }
         var command = new UpdateGroupInformationCommand(groupId, userId.Value, request.GroupName);
         var result = await _sender.Send(command);
         if (result.IsForbidden)
         {
-            return Problem(statusCode: (int)HttpStatusCode.Forbidden, detail: result.ClientMessage);
+            return Forbid();
         }
         return Ok(_mapper.Map<GroupResponse>(result.Result));
     }
 
-    [HttpDelete("{groupId}")]
-    public IActionResult DeleteGroup(Guid groupId)
+    [Authorize, HttpDelete("{groupId}")]
+    public async Task<IActionResult> DeleteGroup(Guid groupId)
     {
-        throw new NotImplementedException();
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null)
+        {
+            return Forbid();
+        }
+        var command = new DeleteGroupCommand(groupId, userId.Value);
+        var result = await _sender.Send(command);
+        if (result.IsForbidden)
+        {
+            return Forbid();
+        }
+        return Ok(_mapper.Map<GroupResponse>(result.Result));
     }
 }
  

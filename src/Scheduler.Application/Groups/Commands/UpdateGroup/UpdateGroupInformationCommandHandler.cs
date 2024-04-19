@@ -3,7 +3,6 @@ using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Common;
 using Scheduler.Domain.GroupAggregate;
-using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Application.Groups.Commands.UpdateGroup;
