@@ -106,6 +106,15 @@ http://scheduler.com/user/{userId}
 }
 ```
 
+#### response 
+```
+{
+    "userId": "0000-0000-000000",
+    "userName": "alexander",
+    "description": "description"
+    "email": "alexnader@mail"
+}
+```
 
 ## Group
 
