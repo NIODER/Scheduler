@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.Entities;
@@ -63,5 +64,28 @@ public class Group : Aggregate<GroupId>
     {
         var groupUser = new GroupUser(userId, Id, permissions);
         _users.Add(groupUser);
+    }
+
+    public void UpdateUser(GroupUser groupUser)
+    {
+        if (groupUser.GroupId != Id)
+        {
+            throw new ArgumentException("Group id must be equal to groupUser.GroupId", nameof(groupUser));
+        }
+        var user = _users.SingleOrDefault(x => x.UserId.Value == groupUser.UserId.Value)
+            ?? throw new NullReferenceException($"No user with id {groupUser.UserId.Value}");
+        _users.Remove(user);
+        _users.Add(groupUser);
+    }
+
+    public void DeleteUser(UserId userId)
+    {
+        var user = _users.SingleOrDefault(u => u.UserId == userId)
+            ?? throw new NullReferenceException($"No user with id {userId.Value} found in group.");
+        if (UserHasPermissions(userId, UserGroupPermissions.IsGroupOwner))
+        {
+            throw new Exception("Cannot delete group owner from group.");
+        }
+        _users.Remove(user);
     }
 }

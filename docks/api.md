@@ -130,6 +130,7 @@ http://scheduler.com/group/{groupId}
     "users": [
         {
             "userId": "0000-0000-000000",
+            "userName": "alexander",
             "permissions": 123
         }
     ]
@@ -153,6 +154,7 @@ http://scheduler.com/group/{groupId}
     "users": [
         {
             "userId": "0000-0000-000000",
+            "userName": "alexander",
             "permissions": 123
         }
     ]
@@ -169,6 +171,31 @@ http://scheduler.com/group/{groupId}
     "users": [
         {
             "userId": "0000-0000-000000",
+            "userName": "alexander",
+            "permissions": 123
+        }
+    ]
+}
+```
+
+### POST
+
+#### request
+```
+{
+    "groupName": "group1",
+}
+```
+
+#### response
+```
+{
+    "groupId": "0000-0000-000000",
+    "groupName": "group1",
+    "users": [
+        {
+            "userId": "0000-0000-000000",
+            "userName": "alexander",
             "permissions": 123
         }
     ]

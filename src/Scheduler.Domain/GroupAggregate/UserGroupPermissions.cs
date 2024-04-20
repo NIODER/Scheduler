@@ -12,5 +12,7 @@ public enum UserGroupPermissions
     ChangeUnownedFinancialPlan = 1 << 6,
     DeleteUnownedFinancialPlan = 1 << 7,
     IsGroupOwner = 1 << 8,
+    ChangeGroupUserSettings = 1 << 9,
+    DeleteGroupUser = 1 << 10,
     All = ~(0)
 }

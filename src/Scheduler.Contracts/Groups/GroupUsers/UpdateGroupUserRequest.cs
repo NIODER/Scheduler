@@ -1,7 +1,6 @@
 namespace Scheduler.Contracts.Groups.GroupUsers;
 
-public record GroupUserResponse(
-    Guid GroupId,
+public record UpdateGroupUserRequest(
     Guid UserId,
     int Permissions
 );

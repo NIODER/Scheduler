@@ -1,0 +1,7 @@
+POST http://localhost:5071/group
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YmI0MGQxZC01NmQ0LTQ5OTQtODViMS1lMGE0NDdjYzZiNzQiLCJuYW1lIjoiYWxleGFuZGVyIiwiZW1haWwiOiJhbGV4YW5kZXJAZ21haWwuY29tIiwic3ViIjoiOTNmNTIwOTQtMjIyNS00ODRlLWJiYTktMGJiNjBiOTJkYjM3IiwiZXhwIjoxNzEzNjQ0MDYxLCJpc3MiOiJTY2hlZHVsZXIiLCJhdWQiOiJTY2hlZHVsZXIifQ.P6KStSbQLoWhho6gDdWdab-vl4kWfgFYmZUa_oYot9I
+
+{
+    "groupName": "new group"
+}

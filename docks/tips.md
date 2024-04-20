@@ -4,7 +4,7 @@
 
 ```
 dotnet ef migrations add InitialCreate --project Scheduler.Infrastructure --startup-project Scheduler.Api
-dotnet ef database update --project Scheduler.Infrastructure
+dotnet ef database update --project Scheduler.Infrastructure --startup-project Scheduler.Api
 ```
 
 ## Add user secrets
