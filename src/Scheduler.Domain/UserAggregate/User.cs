@@ -17,6 +17,8 @@ public class User : Aggregate<UserId>
     public string Name { get; set; }
     public string Email { get; private set; }
     public string Description { get; set; } = string.Empty;
+    public UserPrivateSettings Settings { get; set; }
+    // TODO: Add blacklist
     public string PasswordHash { get; private set; }
 
     private User(
@@ -24,6 +26,7 @@ public class User : Aggregate<UserId>
         string username, 
         string email,
         string description,
+        UserPrivateSettings settings,
         string passwordHash,
         List<GroupId> groupIds,
         List<FinancialPlanId> financialPlanIds,
@@ -33,6 +36,7 @@ public class User : Aggregate<UserId>
         Name = username;
         Email = email;
         Description = description;
+        Settings = settings;
         PasswordHash = passwordHash;
         _groupIds = groupIds;
         _financialPlanIds = financialPlanIds;
@@ -52,12 +56,14 @@ public class User : Aggregate<UserId>
         string username,
         string email,
         string description,
-        string passwordHash
+        string passwordHash,
+        UserPrivateSettings? settings = null
     ) => new(
         new UserId(Guid.NewGuid()),
         username,
         email,
         description,
+        settings ?? UserPrivateSettings.All,
         passwordHash,
         groupIds: [],
         financialPlanIds: [],

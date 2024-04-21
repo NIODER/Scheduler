@@ -45,6 +45,9 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.PasswordHash)
             .HasMaxLength(64)
             .IsRequired();
+
+        builder.Property(u => u.Settings)
+            .IsRequired();
     }
 
     private static void ConfigureGroupIds(EntityTypeBuilder<User> builder)
