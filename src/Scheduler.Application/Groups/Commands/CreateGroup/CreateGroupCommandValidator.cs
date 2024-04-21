@@ -6,7 +6,7 @@ public class CreateGroupCommandValidator : AbstractValidator<CreateGroupCommand>
 {
     public CreateGroupCommandValidator()
     {
-        RuleFor(x => x.ExecutorId).NotNull().NotEmpty().NotEqual(default(Guid));
-        RuleFor(x => x.GroupName).NotNull().NotEmpty().MaximumLength(120);
+        RuleFor(x => x.ExecutorId).NotEqual(default(Guid));
+        RuleFor(x => x.GroupName).MaximumLength(120);
     }
 }
