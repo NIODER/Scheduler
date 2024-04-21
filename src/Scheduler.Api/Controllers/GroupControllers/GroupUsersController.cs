@@ -31,7 +31,7 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         {
             return Forbid();
         }
-        return Ok(_mapper.Map<GroupUserResponse>(result));
+        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
     }
 
     [Authorize, HttpPatch("{groupId}/user")]
@@ -53,7 +53,7 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         {
             return Forbid();
         }
-        return Ok(_mapper.Map<GroupUserResponse>(result));
+        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
     }
 
     [Authorize, HttpDelete("{groupId}/user/{userId}")]
@@ -74,6 +74,6 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         {
             return Forbid();
         }
-        return Ok(_mapper.Map<GroupUserResponse>(result));
+        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
     }
 }

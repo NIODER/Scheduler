@@ -75,4 +75,9 @@ public class User : Aggregate<UserId>
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
     public IReadOnlyCollection<FriendsInvite> FriendsInvites => _friendsInvites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
+
+    public void SetSettings(UserPrivateSettings settings)
+    {
+        Settings = settings;
+    }
 }
