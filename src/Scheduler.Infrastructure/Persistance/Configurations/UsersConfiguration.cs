@@ -25,7 +25,7 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Id)
             .HasConversion(
                 id => id.Value,
-                value => new UserId(value)
+                value => new(value)
             )
             .ValueGeneratedNever();
         

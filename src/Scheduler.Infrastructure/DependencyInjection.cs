@@ -10,6 +10,7 @@ using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Interfaces.Services;
 using Scheduler.Infrastructure.Authentication;
 using Scheduler.Infrastructure.Persistance;
+using Scheduler.Infrastructure.Persistance.Interceptors;
 using Scheduler.Infrastructure.Persistance.Repositories;
 using Scheduler.Infrastructure.Service;
 
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IProblemsRepository, ProblemsRepository>();
         services.AddScoped<IGroupsRepository, GroupsRepository>();
         services.AddScoped<IFinancialPlansRepository, FinancialPlansRepository>();
+        services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddDbContext<SchedulerDbContext>(options => options.UseNpgsql(configurationManager.GetConnectionString(nameof(SchedulerDbContext))));
         return services;
     }

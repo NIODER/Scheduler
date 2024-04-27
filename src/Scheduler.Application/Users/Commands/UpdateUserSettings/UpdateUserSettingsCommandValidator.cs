@@ -9,6 +9,6 @@ public class UpdateUserSettingsCommandValidator : AbstractValidator<UpdateUserSe
     {
         RuleFor(x => x.ExecutorId).NotEqual(default(Guid));
         RuleFor(x => x.UserId).NotEqual(default(Guid));
-        RuleFor(x => x.Permissions).Must(i => Enum.IsDefined(typeof(UserPrivateSettings), i));
+        RuleFor(x => x.Settings).Must(i => Enum.IsDefined(typeof(UserPrivateSettings), i));
     }
 }

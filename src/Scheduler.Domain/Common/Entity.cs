@@ -1,7 +1,10 @@
 namespace Scheduler.Domain.Common;
 
-public abstract class Entity<TId> where TId : notnull
+public abstract class Entity<TId> : IHasDomainEvents where TId : notnull
 {
+    private readonly List<IDomainEvent> _domainEvents = [];
+
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public TId Id { get; private set; } = default!;
 
     protected Entity(TId id)
@@ -19,4 +22,14 @@ public abstract class Entity<TId> where TId : notnull
 
     public static bool operator ==(Entity<TId> left, Entity<TId> right) => left.Equals(right);
     public static bool operator !=(Entity<TId> left, Entity<TId> right) => left.Equals(right);
+
+    protected void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 }
