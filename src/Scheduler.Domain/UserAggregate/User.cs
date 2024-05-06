@@ -1,10 +1,9 @@
 using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
-using Scheduler.Domain.FriendsInviteAggregate;
-using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.DomainEvents;
+using Scheduler.Domain.UserAggregate.Entities;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Domain.UserAggregate;
@@ -13,8 +12,8 @@ public class User : Aggregate<UserId>
 {
     private readonly List<GroupId> _groupIds = [];
     private readonly List<FinancialPlanId> _financialPlanIds = [];
-    private readonly List<FriendsInviteId> _receivedFriendsInviteIds = [];
-    private readonly List<FriendsInviteId> _sendedFriendsInviteIds = [];
+    private readonly List<FriendsInvite> _receivedFriendsInvites = [];
+    private readonly List<FriendsInvite> _sendedFriendsInvites = [];
     private readonly List<ProblemId> _problemIds = [];
     private readonly List<UserId> _friendsIds = [];
     private readonly List<UserId> _blackListUserIds = [];
@@ -34,8 +33,8 @@ public class User : Aggregate<UserId>
         string passwordHash,
         List<GroupId> groupIds,
         List<FinancialPlanId> financialPlanIds,
-        List<FriendsInviteId> receivedFriendsInviteIds,
-        List<FriendsInviteId> sendedFriendsInviteIds,
+        List<FriendsInvite> receivedFriendsInviteIds,
+        List<FriendsInvite> sendedFriendsInviteIds,
         List<ProblemId> problemIds) : base(userId)
     {
         Name = username;
@@ -45,8 +44,8 @@ public class User : Aggregate<UserId>
         PasswordHash = passwordHash;
         _groupIds = groupIds;
         _financialPlanIds = financialPlanIds;
-        _receivedFriendsInviteIds = receivedFriendsInviteIds;
-        _sendedFriendsInviteIds = sendedFriendsInviteIds;
+        _receivedFriendsInvites = receivedFriendsInviteIds;
+        _sendedFriendsInvites = sendedFriendsInviteIds;
         _problemIds = problemIds;
     }
         
@@ -80,9 +79,9 @@ public class User : Aggregate<UserId>
 
     public IReadOnlyCollection<GroupId> GroupIds => _groupIds.AsReadOnly();
     public IReadOnlyCollection<FinancialPlanId> FinancialPlanIds => _financialPlanIds.AsReadOnly();
-    public IReadOnlyCollection<FriendsInviteId> FriendsInviteIds => _sendedFriendsInviteIds.Concat(_receivedFriendsInviteIds).ToList().AsReadOnly();
-    public IReadOnlyCollection<FriendsInviteId> SendedFriendsInviteIds => _sendedFriendsInviteIds.AsReadOnly();
-    public IReadOnlyCollection<FriendsInviteId> ReceivedFriendsInviteIds => _receivedFriendsInviteIds.AsReadOnly();
+    public IReadOnlyCollection<FriendsInvite> FriendsInvites => _sendedFriendsInvites.Concat(_receivedFriendsInvites).ToList().AsReadOnly();
+    public IReadOnlyCollection<FriendsInvite> SendedFriendsInvites => _sendedFriendsInvites.AsReadOnly();
+    public IReadOnlyCollection<FriendsInvite> ReceivedFriendsInvites => _receivedFriendsInvites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
     public IReadOnlyCollection<UserId> FriendsIds => _friendsIds.AsReadOnly();
     public IReadOnlyCollection<UserId> BlackListUserIds => _blackListUserIds.AsReadOnly();
@@ -92,43 +91,49 @@ public class User : Aggregate<UserId>
         Settings = settings;
     }
 
-    public void AddReceivedFriendsInviteRequest(FriendsInviteId friendsInviteId)
+    public FriendsInvite SendFriendsInvite(User addressie, string message)
     {
+        if (!addressie.Settings.HasFlag(UserPrivateSettings.OpenForFriendshipInvites))
+        {
+            throw new Exception("You can't send friendship invites to this user.");
+        }
+        var friendsInvite = FriendsInvite.Create(Id, addressie.Id, message);
+        _sendedFriendsInvites.Add(friendsInvite);
+        return friendsInvite;
     }
 
+    public void AcceptFriendshipInvite(FriendsInviteId inviteId)
+    {
+        var invite = _receivedFriendsInvites.SingleOrDefault(fi => fi.Id == inviteId)
+            ?? throw new NullReferenceException($"No invite with id {inviteId.Value} found for user.");
+        _friendsIds.Add(invite.SenderId);
+        _receivedFriendsInvites.Remove(invite);
+        AddDomainEvent(new UserAcceptedFriendInviteEvent(SenderId: Id, AddressieId: invite.AddressieId));
+    }
 
-    //public void AcceptFriendshipInvite(FriendsInviteId inviteId)
-    //{
-    //    if (!_receivedFriendsInviteIds.Any(fi => fi == inviteId))
-    //    {
-    //        throw new NullReferenceException($"No invite with id {inviteId.Value} found for user.");
-    //    }
-    //    _friendsIds.Add(invite.SenderId);
-    //    _receivedFriendsInviteIds.Remove(invite.Id);
-    //    AddDomainEvent(new UserAcceptedFriendInviteEvent(invite.SenderId, invite.AddressieId, invite.Id));
-    //}
+    public void AddFriend(UserId userId)
+    {
+        _friendsIds.Add(userId);
+    }
 
-    //public void SendedFriendInviteAcceptedCallback(FriendsInvite invite)
-    //{
-    //    if (invite.AddressieId == Id)
-    //    {
-    //        throw new Exception($"Method {nameof(SendedFriendInviteAcceptedCallback)} only can be invoked for invite sender.");
-    //    }
-    //    if (invite.SenderId != Id)
-    //    {
-    //        throw new Exception($"Cannot execute {nameof(SendedFriendInviteAcceptedCallback)}, invalid sender id.");
-    //    }
-    //    _friendsIds.Add(invite.AddressieId);
-    //    _receivedFriendsInviteIds.Remove(invite.Id);
-    //}
-
-    //public void AddFriendsInvite(FriendsInvite friendsInvite)
-    //{
-    //    _receivedFriendsInviteIds.Add(friendsInvite.Id);
-    //}
-
-    //public void DeleteFriendsInvite(FriendsInviteId friendsInviteId)
-    //{
-    //    _receivedFriendsInviteIds.Remove(friendsInviteId);
-    //}
+    public FriendsInvite DeleteFriendsInvite(FriendsInviteId friendsInviteId)
+    {
+        if (!FriendsInvites.Any(fi => fi.Id == friendsInviteId))
+        {
+            throw new NullReferenceException($"No invite found with id {friendsInviteId.Value}.");
+        }
+        var invite = _receivedFriendsInvites.SingleOrDefault(fi => fi.Id == friendsInviteId);
+        if (invite is not null)
+        {
+            _receivedFriendsInvites.Remove(invite);
+            return invite;
+        }
+        invite = _sendedFriendsInvites.SingleOrDefault(fi => fi.Id == friendsInviteId);
+        if (invite is not null)
+        {
+            _sendedFriendsInvites.Remove(invite);
+            return invite;
+        }
+        throw new NullReferenceException($"No invite found with id {friendsInviteId.Value}.");
+    }
 }

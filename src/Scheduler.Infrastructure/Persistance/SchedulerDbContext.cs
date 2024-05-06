@@ -2,7 +2,6 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate;
-using Scheduler.Domain.FriendsInviteAggregate;
 using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.ProblemAggregate;
 using Scheduler.Domain.UserAggregate;
@@ -16,7 +15,6 @@ public sealed class SchedulerDbContext(DbContextOptions<SchedulerDbContext> opti
     public DbSet<Group> Groups { get; private set; }
     public DbSet<Problem> Problems { get; private set; }
     public DbSet<FinancialPlan> FinancialPlans { get; private set; }
-    public DbSet<FriendsInvite> FriendsInvites { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

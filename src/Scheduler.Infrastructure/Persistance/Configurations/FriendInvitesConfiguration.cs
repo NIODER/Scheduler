@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Scheduler.Domain.FriendsInviteAggregate;
+using Scheduler.Domain.UserAggregate.Entities;
 
 namespace Scheduler.Infrastructure.Persistance.Configurations;
 

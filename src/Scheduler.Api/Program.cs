@@ -24,6 +24,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// await dbCreating;
-
 app.Run();

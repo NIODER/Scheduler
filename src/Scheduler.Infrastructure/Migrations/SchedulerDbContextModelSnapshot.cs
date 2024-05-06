@@ -22,36 +22,6 @@ namespace Scheduler.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FriendsInvites", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AddressieId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("User1Id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressieId");
-
-                    b.HasIndex("SenderId");
-
-                    b.HasIndex("User1Id");
-
-                    b.ToTable("FriendsInvites");
-                });
-
             modelBuilder.Entity("Scheduler.Domain.FinancialPlanAggregate.FinancialPlan", b =>
                 {
                     b.Property<Guid>("Id")
@@ -123,6 +93,31 @@ namespace Scheduler.Infrastructure.Migrations
                     b.ToTable("Problems");
                 });
 
+            modelBuilder.Entity("Scheduler.Domain.UserAggregate.Entities.FriendsInvite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AddressieId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressieId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FriendsInvite");
+                });
+
             modelBuilder.Entity("Scheduler.Domain.UserAggregate.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -157,27 +152,6 @@ namespace Scheduler.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("FriendsInvites", b =>
-                {
-                    b.HasOne("Scheduler.Domain.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("AddressieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Scheduler.Domain.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Scheduler.Domain.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Scheduler.Domain.FinancialPlanAggregate.FinancialPlan", b =>
@@ -348,6 +322,21 @@ namespace Scheduler.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("Scheduler.Domain.UserAggregate.Entities.FriendsInvite", b =>
+                {
+                    b.HasOne("Scheduler.Domain.UserAggregate.User", null)
+                        .WithMany("ReceivedFriendsInvites")
+                        .HasForeignKey("AddressieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scheduler.Domain.UserAggregate.User", null)
+                        .WithMany("SendedFriendsInvites")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Scheduler.Domain.UserAggregate.User", b =>
                 {
                     b.OwnsMany("Scheduler.Domain.GroupAggregate.ValueObjects.GroupId", "GroupIds", b1 =>
@@ -454,6 +443,13 @@ namespace Scheduler.Infrastructure.Migrations
                     b.Navigation("GroupIds");
 
                     b.Navigation("ProblemIds");
+                });
+
+            modelBuilder.Entity("Scheduler.Domain.UserAggregate.User", b =>
+                {
+                    b.Navigation("ReceivedFriendsInvites");
+
+                    b.Navigation("SendedFriendsInvites");
                 });
 #pragma warning restore 612, 618
         }

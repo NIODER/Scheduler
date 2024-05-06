@@ -3,10 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
-using Scheduler.Application.Users.Commands.AcceptUserInvite;
-using Scheduler.Application.Users.Commands.CreateUserInvite;
-using Scheduler.Application.Users.Commands.DeleteUserInvite;
-using Scheduler.Application.Users.Queries.GetUserInvite;
+using Scheduler.Application.FriendsInvites.Commands.AcceptFriendsInvite;
+using Scheduler.Application.FriendsInvites.Commands.CreateFriendsInvite;
+using Scheduler.Application.FriendsInvites.Commands.DeleteFriendsInvite;
+using Scheduler.Application.FriendsInvites.Queries.GetFriendsInvite;
 using Scheduler.Contracts.Invites.UserInvites;
 
 namespace Scheduler.Api.Controllers;
@@ -25,7 +25,7 @@ public sealed class InvitesController(ISender sender, IMapper mapper) : Controll
         {
             return Forbid();
         }
-        var query = new GetUserInviteQuery(inviteId, id.Value);
+        var query = new GetFriendsInviteQuery(inviteId, id.Value);
         var result = await _sender.Send(query);
         return Ok(_mapper.Map<UserInvitesResponse>(result));
     }
@@ -38,20 +38,20 @@ public sealed class InvitesController(ISender sender, IMapper mapper) : Controll
         {
             return Forbid();
         }
-        var command = new AcceptUserInviteCommand(inviteId, id.Value);
+        var command = new AcceptFriendsInviteCommand(inviteId, id.Value);
         var result = await _sender.Send(command);
         return Ok(_mapper.Map<UserInvitesResponse>(result));
     }
 
     [HttpPut("user/{addressieId}")]
-    public async Task<IActionResult> CreateInvite(Guid addressieId, [FromBody]CreateUserInviteRequest request)
+    public async Task<IActionResult> CreateInvite(Guid addressieId, [FromBody] CreateUserInviteRequest request)
     {
         var senderId = HttpContext.GetExecutorUserId();
         if (senderId is null)
         {
             return Forbid();
         }
-        var command = new CreateUserInviteCommand(
+        var command = new CreateFriendsInviteCommand(
             SenderId: senderId.Value,
             AddressieId: addressieId,
             request.Message
@@ -68,7 +68,7 @@ public sealed class InvitesController(ISender sender, IMapper mapper) : Controll
         {
             return Forbid();
         }
-        var command = new DeleteUserInviteCommand(SenderId: id.Value, InviteId: inviteId);
+        var command = new DeleteFriendsInviteCommand(SenderId: id.Value, InviteId: inviteId);
         var result = await _sender.Send(command);
         return Ok(_mapper.Map<UserInvitesResponse>(result));
     }

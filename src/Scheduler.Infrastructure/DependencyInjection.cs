@@ -18,7 +18,7 @@ namespace Scheduler.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configurationManager)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configurationManager)
     {
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IHashProvider, HashProvider>();
@@ -27,19 +27,18 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services, ConfigurationManager configurationManager)
+    private static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configurationManager)
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<IProblemsRepository, ProblemsRepository>();
         services.AddScoped<IGroupsRepository, GroupsRepository>();
         services.AddScoped<IFinancialPlansRepository, FinancialPlansRepository>();
-        services.AddScoped<IFriendsInviteRepository, FriendsInviteRepository>();
         services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddDbContext<SchedulerDbContext>(options => options.UseNpgsql(configurationManager.GetConnectionString(nameof(SchedulerDbContext))));
         return services;
     }
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, ConfigurationManager configurationManager)
+    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configurationManager)
     {
         var jwtSettings = configurationManager.GetSection(JwtSettings.SECTION_NAME)
             .Get<JwtSettings>() ?? throw new NullReferenceException("No jwt settings specified in appsettings");

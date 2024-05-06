@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
-using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
@@ -85,16 +84,20 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
 
     private static void ConfigureFriendsInvites(EntityTypeBuilder<User> builder)
     {
-        builder.OwnsMany(u => u.FriendsInviteIds, b =>
-        {
-            b.WithOwner().HasForeignKey(nameof(UserId));
-            b.HasKey(fi => fi.Value);
-            b.Property(fi => fi.Value)
-                .HasColumnName(nameof(FriendsInviteId))
-                .ValueGeneratedNever();
-        });
+        builder.HasMany(u => u.SendedFriendsInvites)
+            .WithOne()
+            .HasForeignKey(fi => fi.SenderId);
 
-        builder.Metadata.FindNavigation(nameof(User.FriendsInviteIds))!
+        builder.HasMany(u => u.ReceivedFriendsInvites)
+            .WithOne()
+            .HasForeignKey(fi => fi.AddressieId);
+
+        builder.Ignore(u => u.FriendsInvites);
+
+        builder.Metadata.FindNavigation(nameof(User.ReceivedFriendsInvites))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata.FindNavigation(nameof(User.SendedFriendsInvites))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 

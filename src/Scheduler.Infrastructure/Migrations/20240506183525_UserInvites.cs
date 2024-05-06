@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Scheduler.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class User2 : Migration
+    public partial class UserInvites : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -181,33 +181,26 @@ namespace Scheduler.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendsInvites",
+                name: "FriendsInvite",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     SenderId = table.Column<Guid>(type: "uuid", nullable: false),
                     AddressieId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    User1Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendsInvites", x => x.Id);
+                    table.PrimaryKey("PK_FriendsInvite", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FriendsInvites_Users_AddressieId",
+                        name: "FK_FriendsInvite_Users_AddressieId",
                         column: x => x.AddressieId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FriendsInvites_Users_SenderId",
+                        name: "FK_FriendsInvite_Users_SenderId",
                         column: x => x.SenderId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FriendsInvites_Users_User1Id",
-                        column: x => x.User1Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -309,19 +302,14 @@ namespace Scheduler.Infrastructure.Migrations
                 column: "FinancialPlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsInvites_AddressieId",
-                table: "FriendsInvites",
+                name: "IX_FriendsInvite_AddressieId",
+                table: "FriendsInvite",
                 column: "AddressieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsInvites_SenderId",
-                table: "FriendsInvites",
+                name: "IX_FriendsInvite_SenderId",
+                table: "FriendsInvite",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FriendsInvites_User1Id",
-                table: "FriendsInvites",
-                column: "User1Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupId_UserId",
@@ -382,7 +370,7 @@ namespace Scheduler.Infrastructure.Migrations
                 name: "Charge");
 
             migrationBuilder.DropTable(
-                name: "FriendsInvites");
+                name: "FriendsInvite");
 
             migrationBuilder.DropTable(
                 name: "GroupId");

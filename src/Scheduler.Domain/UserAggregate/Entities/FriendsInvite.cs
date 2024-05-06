@@ -1,9 +1,7 @@
 using Scheduler.Domain.Common;
-using Scheduler.Domain.FriendsInviteAggregate.Events;
-using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
-namespace Scheduler.Domain.FriendsInviteAggregate;
+namespace Scheduler.Domain.UserAggregate.Entities;
 
 public class FriendsInvite : Entity<FriendsInviteId>
 {
@@ -34,16 +32,6 @@ public class FriendsInvite : Entity<FriendsInviteId>
         UserId addressieId,
         string message
     ) => new(new FriendsInviteId(Guid.NewGuid()), senderId, addressieId, message);
-
-    public static FriendsInvite CreateWithFriendsInviteCreatedEvent(
-        UserId senderId,
-        UserId addressieId,
-        string message)
-    {
-        var invite = new FriendsInvite(new(Guid.NewGuid()), senderId, addressieId, message);
-        invite.AddDomainEvent(new FriendsInviteCreatedEvent(invite));
-        return invite;
-    }
 
     public bool UserIsRelated(UserId userId) => userId == SenderId || userId == AddressieId;
 }
