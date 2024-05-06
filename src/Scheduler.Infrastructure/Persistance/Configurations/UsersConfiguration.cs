@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
+using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
@@ -17,6 +18,8 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         ConfigureFinancialPlanIds(builder);
         ConfigureFriendsInvites(builder);
         ConfigureTaskIds(builder);
+        ConfigureFriendsIds(builder);
+        ConfigureBlacklist(builder);
     }
 
     private static void ConfigureProperties(EntityTypeBuilder<User> builder)
@@ -82,43 +85,16 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
 
     private static void ConfigureFriendsInvites(EntityTypeBuilder<User> builder)
     {
-        builder.OwnsMany(u => u.FriendsInvites, friendsInvitesBuilder =>
+        builder.OwnsMany(u => u.FriendsInviteIds, b =>
         {
-            friendsInvitesBuilder.HasKey(fi => fi.Id);
-            friendsInvitesBuilder.Property(fi => fi.Id)
-                .HasConversion(
-                    id => id.Value,
-                    value => new(value)
-                )
+            b.WithOwner().HasForeignKey(nameof(UserId));
+            b.HasKey(fi => fi.Value);
+            b.Property(fi => fi.Value)
+                .HasColumnName(nameof(FriendsInviteId))
                 .ValueGeneratedNever();
-
-            friendsInvitesBuilder.Property(fi => fi.SenderId)
-                .HasConversion(
-                    id => id.Value,
-                    value => new(value)
-                )
-                .ValueGeneratedNever();
-            
-            friendsInvitesBuilder.Property(fi => fi.AddressieId)
-                .HasConversion(
-                    id => id.Value,
-                    value => new(value)
-                )
-                .ValueGeneratedNever();
-            
-            friendsInvitesBuilder.HasOne<User>()
-                .WithMany()
-                .HasForeignKey(fi => fi.SenderId);
-            
-            friendsInvitesBuilder.HasOne<User>()
-                .WithMany()
-                .HasForeignKey(fi => fi.AddressieId);
-
-            friendsInvitesBuilder.Property(fi => fi.Message)
-                .HasMaxLength(500);
         });
 
-        builder.Metadata.FindNavigation(nameof(User.FriendsInvites))!
+        builder.Metadata.FindNavigation(nameof(User.FriendsInviteIds))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 
@@ -134,6 +110,36 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
         });
 
         builder.Metadata.FindNavigation(nameof(User.ProblemIds))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+    }
+
+    private static void ConfigureFriendsIds(EntityTypeBuilder<User> builder)
+    {
+        builder.OwnsMany(u => u.FriendsIds, fidBuilder =>
+        {
+            fidBuilder.WithOwner().HasForeignKey(nameof(UserId));
+            fidBuilder.HasKey(fid => fid.Value);
+            fidBuilder.Property(fid => fid.Value)
+                .HasColumnName("FriendId")
+                .ValueGeneratedNever();
+        });
+
+        builder.Metadata.FindNavigation(nameof(User.FriendsIds))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+    }
+
+    private static void ConfigureBlacklist(EntityTypeBuilder<User> builder)
+    {
+        builder.OwnsMany(u => u.BlackListUserIds, blBuilder =>
+        {
+            blBuilder.WithOwner().HasForeignKey(nameof(UserId));
+            blBuilder.HasKey(bl => bl.Value);
+            blBuilder.Property(fid => fid.Value)
+                .HasColumnName("BlockedUserId")
+                .ValueGeneratedNever();
+        });
+
+        builder.Metadata.FindNavigation(nameof(User.BlackListUserIds))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

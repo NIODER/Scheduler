@@ -1,0 +1,10 @@
+using MediatR;
+using Scheduler.Application.FriendsInvites.Common;
+
+namespace Scheduler.Application.FriendsInvites.Commands.CreateFriendsInvite;
+
+public record CreateFriendsInviteCommand(
+    Guid SenderId,
+    Guid AddressieId,
+    string Message
+) : IRequest<FriendsInviteResult>;

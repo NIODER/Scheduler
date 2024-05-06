@@ -1,4 +1,5 @@
 using Scheduler.Domain.Common;
+using Scheduler.Domain.FriendsInviteAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Domain.UserAggregate.DomainEvents;

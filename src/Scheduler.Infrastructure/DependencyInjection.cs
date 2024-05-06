@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IProblemsRepository, ProblemsRepository>();
         services.AddScoped<IGroupsRepository, GroupsRepository>();
         services.AddScoped<IFinancialPlansRepository, FinancialPlansRepository>();
+        services.AddScoped<IFriendsInviteRepository, FriendsInviteRepository>();
         services.AddScoped<PublishDomainEventsInterceptor>();
         services.AddDbContext<SchedulerDbContext>(options => options.UseNpgsql(configurationManager.GetConnectionString(nameof(SchedulerDbContext))));
         return services;

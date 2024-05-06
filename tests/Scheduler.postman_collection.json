@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "d6631e86-708f-4cc8-aae4-d24a08e411cf",
+		"name": "Scheduler",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32781180"
+	},
+	"item": [
+		{
+			"name": "Registration Tests",
+			"item": [
+				{
+					"name": "RegNewUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"Register is success\", () => {\r",
+									"    pm.expect(jsonData.token).exist;\r",
+									"    pm.expect(jsonData.id).exist;\r",
+									"});\r",
+									"if (jsonData.token) {\r",
+									"    pm.globals.set(\"jwt-token\", jsonData.token);\r",
+									"    pm.globals.set(\"user-id\", jsonData.id);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"alexander\",\r\n    \"email\": \"alexander@gmail.com\",\r\n    \"description\": \"description\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/register",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"Register is success\", () => {\r",
+									"    pm.expect(jsonData.token).exist;\r",
+									"});\r",
+									"if (jsonData.token) {\r",
+									"    pm.globals.set(\"jwt-token\", jsonData.token)\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"alexander@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/login",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GetUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Getting user success\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/user/{{user-id}}",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"user",
+								"{{user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User name updated\", () => {\r",
+									"    pm.expect(pm.response.json().name).to.eql(\"alexander1\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{user-id}}\",\r\n    \"name\": \"alexander1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/user",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserSettings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get user settings success\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/user/{{user-id}}/settings",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"user",
+								"{{user-id}}",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UdateUserSettings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Update user settings success\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"    pm.expect(pm.response.json().settings).to.eql(1);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"settings\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SCHEDULER_URL}}/user/{{user-id}}/settings",
+							"host": [
+								"{{SCHEDULER_URL}}"
+							],
+							"path": [
+								"user",
+								"{{user-id}}",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invites",
+			"item": [
+				{
+					"name": "FriendsInvite",
+					"item": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "SCHEDULER_URL",
+			"value": "http://localhost:5071"
+		}
+	]
+}

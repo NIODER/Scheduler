@@ -60,7 +60,7 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
         return Ok(_mapper.Map<UserSettingsResponse>(result.Result));
     }
 
-    [Authorize, HttpPut("{userId}/settings")]
+    [Authorize, HttpPost("{userId}/settings")]
     public async Task<IActionResult> UpdateUserSettings(Guid userId, [FromBody]UpdateUserSettingsRequest request)
     {
         var executorId = HttpContext.GetExecutorUserId();
