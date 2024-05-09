@@ -120,4 +120,6 @@ public class User : Aggregate<UserId>
     {
         _initiatedUserFriends.Add(new(Id, userId));
     }
+
+    public bool IsInGroup(GroupId groupId) => _groupIds.Any(id => id == groupId);
 }

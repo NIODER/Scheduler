@@ -104,4 +104,17 @@ public class Group : Aggregate<GroupId>
         }
         AddUser(userId, invite.Permissions);
     }
+
+    public GroupInvite CreateInvite(UserId creatorId, UserGroupPermissions userGroupPermissions, string? message, DateTime? now = null, uint? usages = null)
+    {
+        GroupInvite groupInvite = (now is not null, usages is not null) switch
+        {
+            (true, false) => GroupInvite.Create(creatorId, Id, userGroupPermissions, now!.Value, message),
+            (false, true) => GroupInvite.Create(creatorId, Id, userGroupPermissions, usages!.Value, message),
+            (true, true) => GroupInvite.Create(creatorId, Id, userGroupPermissions, now!.Value, usages!.Value, message),
+            (false, false) => throw new NullReferenceException($"Nor of creation time {nameof(now)} and {nameof(usages)} are setted.")
+        };
+        _invites.Add(groupInvite);
+        return groupInvite;
+    }
 }

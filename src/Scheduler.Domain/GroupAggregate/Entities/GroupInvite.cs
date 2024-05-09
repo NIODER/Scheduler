@@ -72,6 +72,23 @@ public class GroupInvite : Entity<GroupInviteId>
         usages
     );
 
+    public static GroupInvite Create(
+        UserId creatorId,
+        GroupId groupId,
+        UserGroupPermissions permissions,
+        DateTime expire,
+        uint usages,
+        string? message = null
+    ) => new(
+        new(Guid.NewGuid()),
+        creatorId,
+        groupId,
+        permissions,
+        expire,
+        message ?? string.Empty,
+        usages
+    );
+
     public bool IsActive(DateTime now)
     {
         if (Usages.HasValue)

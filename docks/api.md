@@ -317,7 +317,7 @@ http://scheduler.com/invite/user/{addressieId}
 
 ## Invite group accept
 
-http://scheduler.com/group/{groupId}/invite/{inviteId}
+http://scheduler.com/group/invite/{groupId}?inviteId=0000-0000-000000
 
 ### POST:
 
@@ -334,7 +334,7 @@ http://scheduler.com/group/{groupId}/invite/{inviteId}
 
 ## Invite group create
 
-http://scheduler.com/invite/group/{groupId}
+http://scheduler.com/group/invite/{groupId}
 
 ### PUT:
 

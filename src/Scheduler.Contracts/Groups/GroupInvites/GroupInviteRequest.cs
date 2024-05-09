@@ -1,7 +1,7 @@
 ﻿namespace Scheduler.Contracts.Groups.GroupInvites;
 
 public record GroupInviteRequest(
-    int Uses,
+    uint Usages,
     DateTime Expire,
     long Permissions,
     string Message
