@@ -334,7 +334,7 @@ http://scheduler.com/group/invite/{groupId}?inviteId=0000-0000-000000
 
 ## Invite group create
 
-http://scheduler.com/group/invite/{groupId}
+http://scheduler.com/group{groupId}/invite
 
 ### PUT:
 
@@ -359,7 +359,7 @@ http://scheduler.com/group/invite/{groupId}
 
 ## Invite group delete
 
-http://scheduler.com/invite/group/{inviteId}
+http://scheduler.com/group/{groupId}/invite/{inviteId}
 
 ### DELETE:
 
@@ -375,7 +375,7 @@ http://scheduler.com/invite/group/{inviteId}
 
 ## Invite group update
 
-http://scheduler.com/invite/group/{inviteId}
+http://scheduler.com/group/{groupId}/invite/{inviteId}
 
 ### PATCH:
 

@@ -11,13 +11,13 @@ using Scheduler.Contracts.Groups.GroupUsers;
 
 namespace Scheduler.Api.Controllers.GroupControllers;
 
-[ApiController, Route("group")]
+[ApiController, Route("group"), Authorize]
 public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
 
-    [Authorize, HttpGet("{groupId}/user/{userId}")]
+    [HttpGet("{groupId}/user/{userId}")]
     public async Task<IActionResult> GetGroupUser(Guid groupId, Guid userId)
     {
         var id = HttpContext.GetExecutorUserId();
@@ -34,8 +34,8 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         return Ok(_mapper.Map<GroupUserResponse>(result.Result));
     }
 
-    [Authorize, HttpPatch("{groupId}/user")]
-    public async Task<IActionResult> UpdateGroupUser(Guid groupId, [FromBody]UpdateGroupUserRequest request)
+    [HttpPatch("{groupId}/user/{userId}")]
+    public async Task<IActionResult> UpdateGroupUser(Guid groupId, Guid userId, [FromBody]UpdateGroupUserRequest request)
     {
         var id = HttpContext.GetExecutorUserId();
         if (id is null)
@@ -44,7 +44,7 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         }
         var command = new UpdateGroupUserCommand(
             GroupId: groupId,
-            UserId: request.UserId,
+            UserId: userId,
             ExecutorId: id.Value,
             Permissions: request.Permissions
         );
@@ -56,7 +56,7 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
         return Ok(_mapper.Map<GroupUserResponse>(result.Result));
     }
 
-    [Authorize, HttpDelete("{groupId}/user/{userId}")]
+    [HttpDelete("{groupId}/user/{userId}")]
     public async Task<IActionResult> DeleteGroupUser(Guid groupId, Guid userId)
     {
         var id = HttpContext.GetExecutorUserId();

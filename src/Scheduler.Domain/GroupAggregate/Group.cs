@@ -117,4 +117,12 @@ public class Group : Aggregate<GroupId>
         _invites.Add(groupInvite);
         return groupInvite;
     }
+
+    public GroupInvite DeleteInvite(GroupInviteId inviteId)
+    {
+        GroupInvite invite = _invites.SingleOrDefault(i => i.Id == inviteId)
+            ?? throw new NullReferenceException($"No invite with id {inviteId.Value} found.");
+        _invites.Remove(invite);
+        return invite;
+    }
 }
