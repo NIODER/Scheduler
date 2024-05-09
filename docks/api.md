@@ -317,13 +317,14 @@ http://scheduler.com/invite/user/{addressieId}
 
 ## Invite group accept
 
-http://scheduler.com/invite/group/{inviteId}
+http://scheduler.com/group/{groupId}/invite/{inviteId}
 
-### GET:
+### POST:
 
 #### response
 ```
 {
+    "groupId": "0000-0000-000000",
     "inviteId": "0000-0000-000000",
     "senderId": "0000-0000-000000",
     "permissions": 123,
@@ -335,7 +336,48 @@ http://scheduler.com/invite/group/{inviteId}
 
 http://scheduler.com/invite/group/{groupId}
 
-### POST:
+### PUT:
+
+#### request
+```
+{
+    "uses": 1,
+    "expire": "20.12.22",
+    "permissions": 123,
+    "message": "message"
+}
+```
+#### response
+```
+{
+    "inviteId": "0000-0000-000000",
+    "senderId": "0000-0000-000000",
+    "permissions": 123,
+    "message": "message"
+}
+```
+
+## Invite group delete
+
+http://scheduler.com/invite/group/{inviteId}
+
+### DELETE:
+
+#### response
+```
+{
+    "inviteId": "0000-0000-000000",
+    "senderId": "0000-0000-000000",
+    "permissions": 123,
+    "message": "message"
+}
+```
+
+## Invite group update
+
+http://scheduler.com/invite/group/{inviteId}
+
+### PATCH:
 
 #### request
 ```

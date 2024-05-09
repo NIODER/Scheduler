@@ -10,18 +10,18 @@ public class GetUserSettingsQueryHandler(IUsersRepository usersRepository) : IRe
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<AccessResultWrapper<UserSettingsResult>> Handle(GetUserSettingsQuery request, CancellationToken cancellationToken)
+    public async Task<AccessResultWrapper<UserSettingsResult>> Handle(GetUserSettingsQuery request, CancellationToken cancellationToken)
     {
         if (request.ExecutorId != request.UserId)
         {
-            return Task.FromResult(AccessResultWrapper<UserSettingsResult>.CreateForbidden());
+            return AccessResultWrapper<UserSettingsResult>.CreateForbidden();
         }
-        User user = _usersRepository.GetUserById(new(request.UserId))
+        User user = await _usersRepository.GetUserByIdAsync(new(request.UserId))
             ?? throw new NullReferenceException($"User with id {request.UserId} not found.");
         var userSettingsResult = new UserSettingsResult(
             user.Id,
             user.Settings
         );
-        return Task.FromResult(AccessResultWrapper<UserSettingsResult>.Create(userSettingsResult));
+        return AccessResultWrapper<UserSettingsResult>.Create(userSettingsResult);
     }
 }

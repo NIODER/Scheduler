@@ -3,7 +3,6 @@ using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.FriendsInvites.Common;
 using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.Entities;
-using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Application.FriendsInvites.Commands.DeleteFriendsInvite;
 
@@ -12,19 +11,20 @@ public class DeleteFriendsInviteCommandHandler(IUsersRepository usersRepository)
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<FriendsInviteResult> Handle(DeleteFriendsInviteCommand request, CancellationToken cancellationToken)
+    public async Task<FriendsInviteResult> Handle(DeleteFriendsInviteCommand request, CancellationToken cancellationToken)
     {
-        User sender = _usersRepository.GetUserById(new(request.SenderId))
+        User sender = await _usersRepository.GetUserByIdAsync(new(request.SenderId))
             ?? throw new NullReferenceException($"No user with id {request.SenderId} found.");
-        FriendsInvite friendsInvite = sender.DeleteFriendsInvite(new FriendsInviteId(request.InviteId));
+        FriendsInvite friendsInvite = sender.FriendsInvites.SingleOrDefault(fi => fi.Id.Value == request.InviteId)
+            ?? throw new NullReferenceException($"No friends invite found with id {request.InviteId}");
         _usersRepository.Update(sender);
-        _usersRepository.SaveChanges();
+        await _usersRepository.SaveChangesAsync();
         var result = new FriendsInviteResult(
             friendsInvite.Id,
             friendsInvite.SenderId,
             friendsInvite.AddressieId,
             friendsInvite.Message
         );
-        return Task.FromResult(result);
+        return result;
     }
 }

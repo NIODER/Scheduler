@@ -86,11 +86,13 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasMany(u => u.SendedFriendsInvites)
             .WithOne()
-            .HasForeignKey(fi => fi.SenderId);
+            .HasForeignKey(fi => fi.SenderId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.ReceivedFriendsInvites)
             .WithOne()
-            .HasForeignKey(fi => fi.AddressieId);
+            .HasForeignKey(fi => fi.AddressieId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Ignore(u => u.FriendsInvites);
 
@@ -118,17 +120,45 @@ public sealed class UsersConfiguration : IEntityTypeConfiguration<User>
 
     private static void ConfigureFriendsIds(EntityTypeBuilder<User> builder)
     {
-        builder.OwnsMany(u => u.FriendsIds, fidBuilder =>
-        {
-            fidBuilder.WithOwner().HasForeignKey(nameof(UserId));
-            fidBuilder.HasKey(fid => fid.Value);
-            fidBuilder.Property(fid => fid.Value)
-                .HasColumnName("FriendId")
-                .ValueGeneratedNever();
-        });
+        //builder.Property<List<UserFriend>>("_initiatedUserFriends")
+        //    .HasColumnName("InitiatedUserFriends");
+        //builder.Property<List<UserFriend>>("_receivedUserFriends")
+        //    .HasColumnName("ReceivedUserFriends");
 
-        builder.Metadata.FindNavigation(nameof(User.FriendsIds))!
+        //builder.HasMany<UserFriend>("_initiatedUserFriends")
+        //    .WithOne()
+        //    .HasForeignKey(nameof(UserFriend.UserId1))
+        //    .IsRequired(false);
+
+        //builder.HasMany<UserFriend>("_receivedUserFriends")
+        //    .WithOne()
+        //    .HasForeignKey(nameof(UserFriend.UserId2))
+        //    .IsRequired(false);
+
+
+        builder.Ignore(u => u.FriendsIds);
+        builder.Metadata.FindNavigation(nameof(User.InitiatedUserFriends))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
+        builder.Metadata.FindNavigation(nameof(User.ReceivedFriendsInvites))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        //builder.OwnsMany(u => u.FriendsIds, fidBuilder =>
+        //{
+        //    fidBuilder.WithOwner().HasForeignKey(nameof(UserId));
+        //    fidBuilder.HasKey(fid => fid.Value);
+        //    fidBuilder.Property(fid => fid.Value)
+        //        .HasColumnName("FriendId")
+        //        .ValueGeneratedNever();
+        //    fidBuilder.HasOne<User>()
+        //        .WithMany()
+        //        .HasForeignKey("UserId");
+        //    fidBuilder.HasOne<User>()
+        //        .WithMany()
+        //        .HasForeignKey("FriendId");
+        //});
+
+        //builder.Metadata.FindNavigation(nameof(User.FriendsIds))!
+        //    .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 
     private static void ConfigureBlacklist(EntityTypeBuilder<User> builder)

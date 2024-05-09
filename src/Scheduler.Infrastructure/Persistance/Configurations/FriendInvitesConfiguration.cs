@@ -8,6 +8,7 @@ public class FriendInvitesConfiguration : IEntityTypeConfiguration<FriendsInvite
 {
     public void Configure(EntityTypeBuilder<FriendsInvite> builder)
     {
+        builder.ToTable(nameof(SchedulerDbContext.FriendsInvites));
         builder.HasKey(fi => fi.Id);
         builder.Property(fi => fi.Id)
             .HasConversion(

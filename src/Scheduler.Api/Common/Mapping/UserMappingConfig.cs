@@ -1,8 +1,8 @@
 using Mapster;
 using Scheduler.Application.FriendsInvites.Common;
 using Scheduler.Application.Users.Common;
-using Scheduler.Contracts.Invites.UserInvites;
 using Scheduler.Contracts.Users;
+using Scheduler.Contracts.Users.UserInvites;
 
 namespace Scheduler.Api.Common.Mapping;
 

@@ -12,20 +12,20 @@ public class AcceptFriendsInviteCommandHandler(IUsersRepository usersRepository)
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<FriendsInviteResult> Handle(AcceptFriendsInviteCommand request, CancellationToken cancellationToken)
+    public async Task<FriendsInviteResult> Handle(AcceptFriendsInviteCommand request, CancellationToken cancellationToken)
     {
-        User user = _usersRepository.GetUserById(new(request.ExecutorId))
+        User user = await _usersRepository.GetUserByIdAsync(new(request.ExecutorId))
             ?? throw new NullReferenceException($"No user with id {request.ExecutorId} found.");
         FriendsInvite friendsInvite = user.ReceivedFriendsInvites.SingleOrDefault(fi => fi.Id.Value == request.InviteId)
             ?? throw new NullReferenceException($"No friendship invite with id {request.InviteId} found.");
         user.AcceptFriendshipInvite(new FriendsInviteId(request.InviteId));
-        return Task.FromResult(
-                new FriendsInviteResult(
-                    friendsInvite.Id,
-                    friendsInvite.SenderId,
-                    friendsInvite.AddressieId,
-                    friendsInvite.Message
-                )
-        );
+        _usersRepository.DeleteFriendsInvite(friendsInvite);
+        _usersRepository.Update(user);
+        await _usersRepository.SaveChangesAsync();
+        return new FriendsInviteResult(
+            friendsInvite.Id,
+            friendsInvite.SenderId,
+            friendsInvite.AddressieId,
+            friendsInvite.Message);
     }
 }

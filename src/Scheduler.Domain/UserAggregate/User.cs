@@ -2,7 +2,6 @@ using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
-using Scheduler.Domain.UserAggregate.DomainEvents;
 using Scheduler.Domain.UserAggregate.Entities;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
@@ -15,7 +14,8 @@ public class User : Aggregate<UserId>
     private readonly List<FriendsInvite> _receivedFriendsInvites = [];
     private readonly List<FriendsInvite> _sendedFriendsInvites = [];
     private readonly List<ProblemId> _problemIds = [];
-    private readonly List<UserId> _friendsIds = [];
+    private readonly List<UserFriend> _initiatedUserFriends = [];
+    private readonly List<UserFriend> _receivedUserFriends = [];
     private readonly List<UserId> _blackListUserIds = [];
 
     public string Name { get; set; }
@@ -83,7 +83,13 @@ public class User : Aggregate<UserId>
     public IReadOnlyCollection<FriendsInvite> SendedFriendsInvites => _sendedFriendsInvites.AsReadOnly();
     public IReadOnlyCollection<FriendsInvite> ReceivedFriendsInvites => _receivedFriendsInvites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
-    public IReadOnlyCollection<UserId> FriendsIds => _friendsIds.AsReadOnly();
+    public IReadOnlyCollection<UserId> FriendsIds => _initiatedUserFriends
+        .Concat(_receivedUserFriends)
+        .Select(f => f.GetFriendId(Id))
+        .ToList()
+        .AsReadOnly();
+    public IReadOnlyCollection<UserFriend> InitiatedUserFriends => _initiatedUserFriends.AsReadOnly();
+    public IReadOnlyCollection<UserFriend> ReceivedUserFriends => _receivedUserFriends.AsReadOnly();
     public IReadOnlyCollection<UserId> BlackListUserIds => _blackListUserIds.AsReadOnly();
 
     public void SetSettings(UserPrivateSettings settings)
@@ -106,34 +112,12 @@ public class User : Aggregate<UserId>
     {
         var invite = _receivedFriendsInvites.SingleOrDefault(fi => fi.Id == inviteId)
             ?? throw new NullReferenceException($"No invite with id {inviteId.Value} found for user.");
-        _friendsIds.Add(invite.SenderId);
+        _receivedUserFriends.Add(new(Id, invite.SenderId));
         _receivedFriendsInvites.Remove(invite);
-        AddDomainEvent(new UserAcceptedFriendInviteEvent(SenderId: Id, AddressieId: invite.AddressieId));
     }
 
     public void AddFriend(UserId userId)
     {
-        _friendsIds.Add(userId);
-    }
-
-    public FriendsInvite DeleteFriendsInvite(FriendsInviteId friendsInviteId)
-    {
-        if (!FriendsInvites.Any(fi => fi.Id == friendsInviteId))
-        {
-            throw new NullReferenceException($"No invite found with id {friendsInviteId.Value}.");
-        }
-        var invite = _receivedFriendsInvites.SingleOrDefault(fi => fi.Id == friendsInviteId);
-        if (invite is not null)
-        {
-            _receivedFriendsInvites.Remove(invite);
-            return invite;
-        }
-        invite = _sendedFriendsInvites.SingleOrDefault(fi => fi.Id == friendsInviteId);
-        if (invite is not null)
-        {
-            _sendedFriendsInvites.Remove(invite);
-            return invite;
-        }
-        throw new NullReferenceException($"No invite found with id {friendsInviteId.Value}.");
+        _initiatedUserFriends.Add(new(Id, userId));
     }
 }

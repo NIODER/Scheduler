@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Scheduler.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UserInvites : Migration
+    public partial class UserFriends : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -181,7 +181,7 @@ namespace Scheduler.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendsInvite",
+                name: "FriendsInvites",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -191,15 +191,15 @@ namespace Scheduler.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendsInvite", x => x.Id);
+                    table.PrimaryKey("PK_FriendsInvites", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FriendsInvite_Users_AddressieId",
+                        name: "FK_FriendsInvites_Users_AddressieId",
                         column: x => x.AddressieId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FriendsInvite_Users_SenderId",
+                        name: "FK_FriendsInvites_Users_SenderId",
                         column: x => x.SenderId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -225,7 +225,31 @@ namespace Scheduler.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users_BlackListUserIds",
+                name: "UserFriend",
+                columns: table => new
+                {
+                    UserId1 = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId2 = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFriend", x => new { x.UserId1, x.UserId2 });
+                    table.ForeignKey(
+                        name: "FK_UserFriend_Users_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserFriend_Users_UserId2",
+                        column: x => x.UserId2,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserId",
                 columns: table => new
                 {
                     BlockedUserId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -233,9 +257,9 @@ namespace Scheduler.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users_BlackListUserIds", x => x.BlockedUserId);
+                    table.PrimaryKey("PK_UserId", x => x.BlockedUserId);
                     table.ForeignKey(
-                        name: "FK_Users_BlackListUserIds_Users_UserId",
+                        name: "FK_UserId_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -254,24 +278,6 @@ namespace Scheduler.Infrastructure.Migrations
                     table.PrimaryKey("PK_Users_FinancialPlanIds", x => x.FinancialPlanId);
                     table.ForeignKey(
                         name: "FK_Users_FinancialPlanIds_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users_FriendsIds",
-                columns: table => new
-                {
-                    FriendId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users_FriendsIds", x => x.FriendId);
-                    table.ForeignKey(
-                        name: "FK_Users_FriendsIds_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -302,13 +308,13 @@ namespace Scheduler.Infrastructure.Migrations
                 column: "FinancialPlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsInvite_AddressieId",
-                table: "FriendsInvite",
+                name: "IX_FriendsInvites_AddressieId",
+                table: "FriendsInvites",
                 column: "AddressieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsInvite_SenderId",
-                table: "FriendsInvite",
+                name: "IX_FriendsInvites_SenderId",
+                table: "FriendsInvites",
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
@@ -337,24 +343,24 @@ namespace Scheduler.Infrastructure.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserFriend_UserId2",
+                table: "UserFriend",
+                column: "UserId2");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserId_UserId",
+                table: "UserId",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_BlackListUserIds_UserId",
-                table: "Users_BlackListUserIds",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_FinancialPlanIds_UserId",
                 table: "Users_FinancialPlanIds",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_FriendsIds_UserId",
-                table: "Users_FriendsIds",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -370,7 +376,7 @@ namespace Scheduler.Infrastructure.Migrations
                 name: "Charge");
 
             migrationBuilder.DropTable(
-                name: "FriendsInvite");
+                name: "FriendsInvites");
 
             migrationBuilder.DropTable(
                 name: "GroupId");
@@ -391,13 +397,13 @@ namespace Scheduler.Infrastructure.Migrations
                 name: "Problems");
 
             migrationBuilder.DropTable(
-                name: "Users_BlackListUserIds");
+                name: "UserFriend");
+
+            migrationBuilder.DropTable(
+                name: "UserId");
 
             migrationBuilder.DropTable(
                 name: "Users_FinancialPlanIds");
-
-            migrationBuilder.DropTable(
-                name: "Users_FriendsIds");
 
             migrationBuilder.DropTable(
                 name: "Users_ProblemIds");

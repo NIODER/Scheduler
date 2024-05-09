@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
+using Scheduler.Domain.UserAggregate.Entities;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Infrastructure.Persistance.Repositories;
@@ -11,6 +12,11 @@ public sealed class UsersRepository(SchedulerDbContext context) : IUsersReposito
     public void Add(User user)
     {
         context.Users.Add(user);
+    }
+
+    public void DeleteFriendsInvite(FriendsInvite friendsInvite)
+    {
+        context.FriendsInvites.Remove(friendsInvite);
     }
 
     public void DeleteUserById(UserId userId)
@@ -24,28 +30,51 @@ public sealed class UsersRepository(SchedulerDbContext context) : IUsersReposito
 
     public User? GetUserByEmail(string email)
     {
-        return context.Users.SingleOrDefault(u => u.Email == email);
+        return context.Users
+            .AsSplitQuery()
+            .Include(u => u.ReceivedUserFriends)
+            .Include(u => u.InitiatedUserFriends)
+            //.Include("_receivedUserFriends")
+            //.Include("_initiatedUserFriends")
+            .Include(u => u.ReceivedFriendsInvites)
+            .Include(u => u.SendedFriendsInvites)
+            .SingleOrDefault(u => u.Email == email);
     }
 
     public Task<User?> GetUserByEmailAsync(string email)
     {
-        return context.Users.SingleOrDefaultAsync(u => u.Email == email);
+        return context.Users
+            .AsSplitQuery()
+            .Include(u => u.ReceivedFriendsInvites)
+            .Include(u => u.SendedFriendsInvites)
+            .SingleOrDefaultAsync(u => u.Email == email);
     }
 
     public User? GetUserById(UserId userId)
     {
-        return context.Users.SingleOrDefault(u => u.Id == userId);
+        return context.Users
+            .AsSplitQuery()
+            .Include(u => u.ReceivedFriendsInvites)
+            .Include(u => u.SendedFriendsInvites)
+            .SingleOrDefault(u => u.Id == userId);
     }
 
     public Task<User?> GetUserByIdAsync(UserId userId)
     {
-        return context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+        return context.Users
+            .AsSplitQuery()
+            .Include(u => u.ReceivedUserFriends)
+            .Include(u => u.InitiatedUserFriends)
+            //.Include(u => EF.Property<List<UserFriend>>(u, "_receivedUserFriends"))
+            //.Include(u => EF.Property<List<UserFriend>>(u, "_initiatedUserFriends"))
+            .Include(u => u.ReceivedFriendsInvites)
+            .Include(u => u.SendedFriendsInvites)
+            .SingleOrDefaultAsync(u => u.Id == userId);
     }
 
     public List<User> GetUsersByGroupId(GroupId groupId)
     {
         return context.Users
-            .Include(u => u.GroupIds)
             .Where(u => u.GroupIds.Contains(groupId))
             .ToList();
     }

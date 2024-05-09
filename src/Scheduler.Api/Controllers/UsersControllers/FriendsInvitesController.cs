@@ -7,12 +7,12 @@ using Scheduler.Application.FriendsInvites.Commands.AcceptFriendsInvite;
 using Scheduler.Application.FriendsInvites.Commands.CreateFriendsInvite;
 using Scheduler.Application.FriendsInvites.Commands.DeleteFriendsInvite;
 using Scheduler.Application.FriendsInvites.Queries.GetFriendsInvite;
-using Scheduler.Contracts.Invites.UserInvites;
+using Scheduler.Contracts.Users.UserInvites;
 
-namespace Scheduler.Api.Controllers;
+namespace Scheduler.Api.Controllers.UsersControllers;
 
 [ApiController, Authorize, Route("invite")]
-public sealed class InvitesController(ISender sender, IMapper mapper) : ControllerBase
+public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
@@ -60,7 +60,7 @@ public sealed class InvitesController(ISender sender, IMapper mapper) : Controll
         return Ok(_mapper.Map<UserInvitesResponse>(result));
     }
 
-    [HttpDelete("{inviteId}")]
+    [HttpDelete("user/{inviteId}")]
     public async Task<IActionResult> DeleteInvite(Guid inviteId)
     {
         var id = HttpContext.GetExecutorUserId();

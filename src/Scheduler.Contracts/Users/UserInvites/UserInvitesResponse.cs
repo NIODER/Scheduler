@@ -1,4 +1,4 @@
-namespace Scheduler.Contracts.Invites.UserInvites;
+namespace Scheduler.Contracts.Users.UserInvites;
 
 public record UserInvitesResponse(
     Guid InviteId,

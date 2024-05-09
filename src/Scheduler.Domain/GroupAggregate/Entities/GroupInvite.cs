@@ -2,6 +2,7 @@ using Scheduler.Domain.Common;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.ValueObjects;
+using System.Diagnostics;
 
 namespace Scheduler.Domain.GroupAggregate.Entities;
 
@@ -70,4 +71,30 @@ public class GroupInvite : Entity<GroupInviteId>
         message ?? string.Empty,
         usages
     );
+
+    public bool IsActive(DateTime now)
+    {
+        if (Usages.HasValue)
+        {
+            return Usages != 0;
+        }
+        else if (Expire.HasValue)
+        {
+            return Expire.Value > now;
+        }
+        throw new UnreachableException("No Usages and Expire is setted.");
+    }
+
+    public bool UseAndIsActive(DateTime now)
+    {
+        if (!IsActive(now))
+        {
+            throw new Exception($"Invite {Id} is inactive.");
+        }
+        if (Usages.HasValue)
+        {
+            Usages--;
+        }
+        return IsActive(now);
+    }
 }

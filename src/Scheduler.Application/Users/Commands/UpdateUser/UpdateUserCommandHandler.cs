@@ -9,9 +9,9 @@ public class UpdateUserCommandHandler(IUsersRepository userRepository) : IReques
 {
     private readonly IUsersRepository _userRepository = userRepository;
 
-    public Task<UserResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<UserResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        User user = _userRepository.GetUserById(new(request.UserId))
+        User user = await _userRepository.GetUserByIdAsync(new(request.UserId))
             ?? throw new NullReferenceException($"No user with id {request.UserId} found.");
         user.Name = request.Name ?? user.Name;
         user.Description = request.Description ?? user.Description;
@@ -21,6 +21,6 @@ public class UpdateUserCommandHandler(IUsersRepository userRepository) : IReques
             user.Email,
             user.Description
         );
-        return Task.FromResult(userResult);
+        return userResult;
     }
 }

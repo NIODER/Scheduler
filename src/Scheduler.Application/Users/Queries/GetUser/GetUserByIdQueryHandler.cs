@@ -8,9 +8,9 @@ public class GetUserByIdQueryHandler(IUsersRepository usersRepository) : IReques
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<UserResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<UserResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var user = _usersRepository.GetUserById(new(request.UserId))
+        var user = await _usersRepository.GetUserByIdAsync(new(request.UserId))
             ?? throw new NullReferenceException($"User with id {request.UserId}");
         var userResult = new UserResult(
             user.Id.Value,
@@ -18,6 +18,6 @@ public class GetUserByIdQueryHandler(IUsersRepository usersRepository) : IReques
             user.Email,
             user.Description
         );
-        return Task.FromResult(userResult);
+        return userResult;
     }
 }

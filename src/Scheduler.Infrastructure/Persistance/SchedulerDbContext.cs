@@ -5,6 +5,7 @@ using Scheduler.Domain.FinancialPlanAggregate;
 using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.ProblemAggregate;
 using Scheduler.Domain.UserAggregate;
+using Scheduler.Domain.UserAggregate.Entities;
 using Scheduler.Infrastructure.Persistance.Interceptors;
 
 namespace Scheduler.Infrastructure.Persistance;
@@ -15,6 +16,7 @@ public sealed class SchedulerDbContext(DbContextOptions<SchedulerDbContext> opti
     public DbSet<Group> Groups { get; private set; }
     public DbSet<Problem> Problems { get; private set; }
     public DbSet<FinancialPlan> FinancialPlans { get; private set; }
+    public DbSet<FriendsInvite> FriendsInvites { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

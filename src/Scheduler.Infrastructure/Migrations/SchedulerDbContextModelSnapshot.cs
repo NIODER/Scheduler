@@ -115,7 +115,7 @@ namespace Scheduler.Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("FriendsInvite");
+                    b.ToTable("FriendsInvites", (string)null);
                 });
 
             modelBuilder.Entity("Scheduler.Domain.UserAggregate.User", b =>
@@ -152,6 +152,21 @@ namespace Scheduler.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Scheduler.Domain.UserAggregate.ValueObjects.UserFriend", b =>
+                {
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId2")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId1", "UserId2");
+
+                    b.HasIndex("UserId2");
+
+                    b.ToTable("UserFriend");
                 });
 
             modelBuilder.Entity("Scheduler.Domain.FinancialPlanAggregate.FinancialPlan", b =>
@@ -358,25 +373,6 @@ namespace Scheduler.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("Scheduler.Domain.UserAggregate.ValueObjects.UserId", "BlackListUserIds", b1 =>
-                        {
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("BlockedUserId");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("Value");
-
-                            b1.HasIndex("UserId");
-
-                            b1.ToTable("Users_BlackListUserIds");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
                     b.OwnsMany("Scheduler.Domain.FinancialPlanAggregate.ValueObjects.FinancialPlanId", "FinancialPlanIds", b1 =>
                         {
                             b1.Property<Guid>("Value")
@@ -391,25 +387,6 @@ namespace Scheduler.Infrastructure.Migrations
                             b1.HasIndex("UserId");
 
                             b1.ToTable("Users_FinancialPlanIds");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.OwnsMany("Scheduler.Domain.UserAggregate.ValueObjects.UserId", "FriendsIds", b1 =>
-                        {
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("FriendId");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("Value");
-
-                            b1.HasIndex("UserId");
-
-                            b1.ToTable("Users_FriendsIds");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
@@ -434,20 +411,60 @@ namespace Scheduler.Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
+                    b.OwnsMany("Scheduler.Domain.UserAggregate.ValueObjects.UserId", "BlackListUserIds", b1 =>
+                        {
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("BlockedUserId");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("Value");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("UserId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.Navigation("BlackListUserIds");
 
                     b.Navigation("FinancialPlanIds");
-
-                    b.Navigation("FriendsIds");
 
                     b.Navigation("GroupIds");
 
                     b.Navigation("ProblemIds");
                 });
 
+            modelBuilder.Entity("Scheduler.Domain.UserAggregate.ValueObjects.UserFriend", b =>
+                {
+                    b.HasOne("Scheduler.Domain.UserAggregate.User", "User1")
+                        .WithMany("ReceivedUserFriends")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scheduler.Domain.UserAggregate.User", "User2")
+                        .WithMany("InitiatedUserFriends")
+                        .HasForeignKey("UserId2")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User1");
+
+                    b.Navigation("User2");
+                });
+
             modelBuilder.Entity("Scheduler.Domain.UserAggregate.User", b =>
                 {
+                    b.Navigation("InitiatedUserFriends");
+
                     b.Navigation("ReceivedFriendsInvites");
+
+                    b.Navigation("ReceivedUserFriends");
 
                     b.Navigation("SendedFriendsInvites");
                 });

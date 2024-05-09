@@ -10,12 +10,16 @@ public class CreateFriendsInviteCommandHandler(IUsersRepository usersRepository)
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<FriendsInviteResult> Handle(CreateFriendsInviteCommand request, CancellationToken cancellationToken)
+    public async Task<FriendsInviteResult> Handle(CreateFriendsInviteCommand request, CancellationToken cancellationToken)
     {
-        User sender = _usersRepository.GetUserById(new(request.SenderId))
+        User sender = await _usersRepository.GetUserByIdAsync(new(request.SenderId))
             ?? throw new NullReferenceException($"No user with id {request.SenderId} not found.");
-        User addressie = _usersRepository.GetUserById(new(request.AddressieId))
+        User addressie = await _usersRepository.GetUserByIdAsync(new(request.AddressieId))
             ?? throw new NullReferenceException($"No user with id {request.AddressieId} not found.");
+        if (sender.FriendsIds.Any(f => f == addressie.Id))
+        {
+            throw new Exception($"User is already a friend.");
+        }
         var invite = sender.SendFriendsInvite(addressie, request.Message);
         var result = new FriendsInviteResult(
             invite.Id,
@@ -23,6 +27,8 @@ public class CreateFriendsInviteCommandHandler(IUsersRepository usersRepository)
             invite.AddressieId,
             invite.Message
         );
-        return Task.FromResult(result);
+        _usersRepository.Update(sender);
+        await _usersRepository.SaveChangesAsync();
+        return result;
     }
 }

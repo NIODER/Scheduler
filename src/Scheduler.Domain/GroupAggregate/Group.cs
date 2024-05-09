@@ -88,4 +88,20 @@ public class Group : Aggregate<GroupId>
         }
         _users.Remove(user);
     }
+
+    public void AcceptUserInGroup(UserId userId, GroupInviteId inviteId, DateTime now)
+    {
+        GroupInvite invite = _invites.SingleOrDefault(i => i.Id == inviteId)
+            ?? throw new NullReferenceException($"No invite with id {inviteId.Value} found");
+        if (!invite.IsActive(now))
+        {
+            _invites.Remove(invite);
+            throw new Exception($"Group invite with id {inviteId.Value} is inactive and deleted.");
+        }
+        if (!invite.UseAndIsActive(now))
+        {
+            _invites.Remove(invite);
+        }
+        AddUser(userId, invite.Permissions);
+    }
 }

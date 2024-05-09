@@ -11,21 +11,21 @@ public class UpdateUserSettingsCommandHandler(IUsersRepository usersRepository) 
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
 
-    public Task<AccessResultWrapper<UserSettingsResult>> Handle(UpdateUserSettingsCommand request, CancellationToken cancellationToken)
+    public async Task<AccessResultWrapper<UserSettingsResult>> Handle(UpdateUserSettingsCommand request, CancellationToken cancellationToken)
     {
         if (request.UserId != request.ExecutorId)
         {
-            return Task.FromResult(AccessResultWrapper<UserSettingsResult>.CreateForbidden());
+            return AccessResultWrapper<UserSettingsResult>.CreateForbidden();
         }
-        User user = _usersRepository.GetUserById(new UserId(request.UserId))
+        User user = await _usersRepository.GetUserByIdAsync(new UserId(request.UserId))
             ?? throw new NullReferenceException($"No user with id {request.UserId} found.");
         user.SetSettings((UserPrivateSettings)request.Settings);
         _usersRepository.Update(user);
-        _usersRepository.SaveChanges();
+        await _usersRepository.SaveChangesAsync();
         var result = new UserSettingsResult(
             user.Id,
             user.Settings
         );
-        return Task.FromResult(AccessResultWrapper<UserSettingsResult>.Create(result));
+        return AccessResultWrapper<UserSettingsResult>.Create(result);
     }
 }
