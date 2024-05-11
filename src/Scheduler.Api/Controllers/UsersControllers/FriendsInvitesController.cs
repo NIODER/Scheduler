@@ -3,19 +3,22 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.FriendsInvites.Commands.AcceptFriendsInvite;
 using Scheduler.Application.FriendsInvites.Commands.CreateFriendsInvite;
 using Scheduler.Application.FriendsInvites.Commands.DeleteFriendsInvite;
+using Scheduler.Application.FriendsInvites.Common;
 using Scheduler.Application.FriendsInvites.Queries.GetFriendsInvite;
 using Scheduler.Contracts.Users.UserInvites;
 
 namespace Scheduler.Api.Controllers.UsersControllers;
 
 [ApiController, Authorize, Route("invite")]
-public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : ControllerBase
+public sealed class FriendsInvitesController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpGet("user/{inviteId}")]
     public async Task<IActionResult> GetUserInvite(Guid inviteId)
@@ -26,8 +29,8 @@ public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : C
             return Forbid();
         }
         var query = new GetFriendsInviteQuery(inviteId, id.Value);
-        var result = await _sender.Send(query);
-        return Ok(_mapper.Map<UserInvitesResponse>(result));
+        ICommandResult<FriendsInviteResult> result = await _sender.Send(query);
+        return result.ActionResult<FriendsInviteResult, UserInvitesResponse>(_mapper, _logger);
     }
 
     [HttpPost("user/{inviteId}")]
@@ -39,8 +42,8 @@ public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : C
             return Forbid();
         }
         var command = new AcceptFriendsInviteCommand(inviteId, id.Value);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<UserInvitesResponse>(result));
+        ICommandResult<FriendsInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<FriendsInviteResult, UserInvitesResponse>(_mapper, _logger);
     }
 
     [HttpPut("user/{addressieId}")]
@@ -56,8 +59,8 @@ public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : C
             AddressieId: addressieId,
             request.Message
         );
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<UserInvitesResponse>(result));
+        ICommandResult<FriendsInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<FriendsInviteResult, UserInvitesResponse>(_mapper, _logger);
     }
 
     [HttpDelete("user/{inviteId}")]
@@ -69,7 +72,7 @@ public sealed class FriendsInvitesController(ISender sender, IMapper mapper) : C
             return Forbid();
         }
         var command = new DeleteFriendsInviteCommand(SenderId: id.Value, InviteId: inviteId);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<UserInvitesResponse>(result));
+        ICommandResult<FriendsInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<FriendsInviteResult, UserInvitesResponse>(_mapper, _logger);
     }
 }

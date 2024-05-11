@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Scheduler.Application.Common.Wrappers;
-using Scheduler.Application.GroupInvites.Common;
+using Scheduler.Application.Groups.Common;
 
-namespace Scheduler.Application.GroupInvites.Commands.CreateGroupInvite;
+namespace Scheduler.Application.Groups.Commands.CreateGroupInvite;
 
 public record CreateGroupInviteCommand(
     Guid GroupId,
@@ -11,4 +11,4 @@ public record CreateGroupInviteCommand(
     uint? Usages,
     long Permissions,
     string Message
-) : IRequest<AccessResultWrapper<GroupInviteResult>>;
+) : IRequest<ICommandResult<GroupInviteResult>>;

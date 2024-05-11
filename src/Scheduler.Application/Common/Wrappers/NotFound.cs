@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Common.Wrappers;
 
-public class NotFound(string? message = null, Exception? exception = null) : IErrorResult
+public class NotFound<T>(string? message = null, Exception? exception = null) : IErrorResult<T>
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.NotFound;
 

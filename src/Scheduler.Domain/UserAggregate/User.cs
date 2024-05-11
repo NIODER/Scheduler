@@ -122,4 +122,14 @@ public class User : Aggregate<UserId>
     }
 
     public bool IsInGroup(GroupId groupId) => _groupIds.Any(id => id == groupId);
+
+    public void AddGroup(GroupId groupId)
+    {
+        _groupIds.Add(groupId);
+    }
+
+    public void RemoveGroup(GroupId groupId)
+    {
+        _groupIds.Remove(groupId);
+    }
 }

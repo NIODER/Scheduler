@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Scheduler.Domain.GroupAggregate;
 
-namespace Scheduler.Application.GroupInvites.Commands.CreateGroupInvite;
+namespace Scheduler.Application.Groups.Commands.CreateGroupInvite;
 
 public class CreateGroupInviteCommandValidator : AbstractValidator<CreateGroupInviteCommand>
 {

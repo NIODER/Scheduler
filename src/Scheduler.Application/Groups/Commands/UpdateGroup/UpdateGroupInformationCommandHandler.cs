@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Common;
@@ -7,22 +8,27 @@ using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Application.Groups.Commands.UpdateGroup;
 
-public class UpdateGroupInformationCommandHandler(IGroupsRepository groupsRepository) : IRequestHandler<UpdateGroupInformationCommand, AccessResultWrapper<GroupResult>>
+public class UpdateGroupInformationCommandHandler(IGroupsRepository groupsRepository, ILogger<UpdateGroupInformationCommandHandler> logger) 
+    : IRequestHandler<UpdateGroupInformationCommand, ICommandResult<GroupResult>>
 {
     private readonly IGroupsRepository _groupsRepository = groupsRepository;
+    private readonly ILogger<UpdateGroupInformationCommandHandler> _logger = logger;
 
-    public Task<AccessResultWrapper<GroupResult>> Handle(UpdateGroupInformationCommand request, CancellationToken cancellationToken)
+    public async Task<ICommandResult<GroupResult>> Handle(UpdateGroupInformationCommand request, CancellationToken cancellationToken)
     {
-        Group group = _groupsRepository.GetGroupById(new(request.GroupId))
-            ?? throw new NullReferenceException($"No group with id {request.GroupId} found.");
+        Group? group = await _groupsRepository.GetGroupByIdAsync(new(request.GroupId));
+        if (group is null)
+        {
+            return new NotFound<GroupResult>($"No group with id {request.GroupId} found.");
+        }
         if (!group.UserHasPermissions(new UserId(request.ExecutorId), UserGroupPermissions.ChangeGroupSettings))
         {
-            return Task.FromResult(AccessResultWrapper<GroupResult>.CreateForbidden());
+            return new AccessViolation<GroupResult>("No permissions.");
         }
         group.GroupName = request.GroupName;
         _groupsRepository.Update(group);
-        _groupsRepository.SaveChanges();
-        var groupresult = new GroupResult(group);
-        return Task.FromResult(AccessResultWrapper<GroupResult>.Create(result: groupresult));
+        await _groupsRepository.SaveChangesAsync();
+        _logger.LogInformation("Group {groupId} information updated.", request.GroupId);
+        return new SuccessResult<GroupResult>(new GroupResult(group));
     }
 }

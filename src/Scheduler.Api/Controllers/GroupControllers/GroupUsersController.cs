@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Commands.DeleteGroupUser;
 using Scheduler.Application.Groups.Commands.UpdateGroupUser;
+using Scheduler.Application.Groups.Common;
 using Scheduler.Application.Groups.Queries.GetGroupUser;
 using Scheduler.Contracts.Groups;
 using Scheduler.Contracts.Groups.GroupUsers;
@@ -12,10 +14,11 @@ using Scheduler.Contracts.Groups.GroupUsers;
 namespace Scheduler.Api.Controllers.GroupControllers;
 
 [ApiController, Route("group"), Authorize]
-public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBase
+public class GroupUsersController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpGet("{groupId}/user/{userId}")]
     public async Task<IActionResult> GetGroupUser(Guid groupId, Guid userId)
@@ -26,12 +29,8 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
             return Forbid();
         }
         var query = new GetGroupUserByGroupAndUserIdQuery(groupId, userId);
-        var result = await _sender.Send(query);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
+        ICommandResult<GroupUserResult> result = await _sender.Send(query);
+        return result.ActionResult<GroupUserResult, GroupUserResponse>(_mapper, _logger);
     }
 
     [HttpPatch("{groupId}/user/{userId}")]
@@ -48,12 +47,8 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
             ExecutorId: id.Value,
             Permissions: request.Permissions
         );
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
+        ICommandResult<GroupUserResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupUserResult, GroupUserResponse>(_mapper, _logger);
     }
 
     [HttpDelete("{groupId}/user/{userId}")]
@@ -69,11 +64,7 @@ public class GroupUsersController(ISender sender, IMapper mapper) : ControllerBa
             UserId: userId,
             ExecutorId: id.Value
         );
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupUserResponse>(result.Result));
+        ICommandResult<GroupUserResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupUserResult, GroupUserResponse>(_mapper, _logger);
     }
 }

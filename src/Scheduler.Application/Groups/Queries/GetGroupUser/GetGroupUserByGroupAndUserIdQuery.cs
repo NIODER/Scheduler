@@ -7,4 +7,4 @@ namespace Scheduler.Application.Groups.Queries.GetGroupUser;
 public record GetGroupUserByGroupAndUserIdQuery(
     Guid GroupId,
     Guid UserId
-) : IRequest<AccessResultWrapper<GroupUserResult>>;
+) : IRequest<ICommandResult<GroupUserResult>>;

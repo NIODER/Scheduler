@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Scheduler.Application.FriendsInvites.Commands.CreateFriendsInvite;
 
-public class CreateFriendsCommandValidator : AbstractValidator<CreateFriendsInviteCommand>
+public class CreateFriendsInviteCommandValidator : AbstractValidator<CreateFriendsInviteCommand>
 {
-    public CreateFriendsCommandValidator()
+    public CreateFriendsInviteCommandValidator()
     {
         RuleFor(x => x.SenderId).NotEqual(default(Guid));
         RuleFor(x => x.AddressieId).NotEqual(default(Guid));

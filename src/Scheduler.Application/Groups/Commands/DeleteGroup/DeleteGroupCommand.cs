@@ -7,4 +7,4 @@ namespace Scheduler.Application.Groups.Commands.DeleteGroup;
 public record DeleteGroupCommand(
     Guid GroupId,
     Guid ExecutorId
-) : IRequest<AccessResultWrapper<GroupResult>>;
+) : IRequest<ICommandResult<GroupResult>>;

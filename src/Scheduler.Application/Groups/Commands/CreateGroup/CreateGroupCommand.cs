@@ -1,4 +1,5 @@
 using MediatR;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Common;
 
 namespace Scheduler.Application.Groups.Commands.CreateGroup;
@@ -6,4 +7,4 @@ namespace Scheduler.Application.Groups.Commands.CreateGroup;
 public record CreateGroupCommand(
     Guid ExecutorId,
     string GroupName
-) : IRequest<GroupResult>;
+) : IRequest<ICommandResult<GroupResult>>;

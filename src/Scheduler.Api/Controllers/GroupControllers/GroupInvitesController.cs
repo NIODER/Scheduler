@@ -3,20 +3,21 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
-using Scheduler.Application.GroupInvites.Commands.AcceptGroupInvite;
-using Scheduler.Application.GroupInvites.Commands.CreateGroupInvite;
-using Scheduler.Application.GroupInvites.Commands.DeleteGroupInvite;
-using Scheduler.Application.Groups.Commands.CreateGroup;
+using Scheduler.Application.Common.Wrappers;
+using Scheduler.Application.Groups.Commands.AcceptGroupInvite;
+using Scheduler.Application.Groups.Commands.CreateGroupInvite;
+using Scheduler.Application.Groups.Commands.DeleteGroupInvite;
+using Scheduler.Application.Groups.Common;
 using Scheduler.Contracts.Groups.GroupInvites;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Api.Controllers.GroupControllers;
 
 [ApiController, Route("group"), Authorize]
-public class GroupInvitesController(ISender sender, IMapper mapper) : ControllerBase
+public class GroupInvitesController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpPost("{groupId}/invite")]
     public async Task<IActionResult> AcceptInvite(Guid groupId, Guid inviteId)
@@ -30,8 +31,8 @@ public class GroupInvitesController(ISender sender, IMapper mapper) : Controller
             groupId,
             userId.Value,
             inviteId);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<GroupInviteResponse>(result));
+        ICommandResult<GroupInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupInviteResult, GroupInviteResponse>(_mapper, _logger);
     }
 
     [HttpPut("{groupId}/invite")]
@@ -49,12 +50,8 @@ public class GroupInvitesController(ISender sender, IMapper mapper) : Controller
             request.Usages,
             request.Permissions,
             request.Message);
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupInviteResponse>(result.Result));
+        ICommandResult<GroupInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupInviteResult, GroupInviteResponse>(_mapper, _logger);
     }
 
     [HttpDelete("{groupId}/invite/{inviteId}")]
@@ -69,11 +66,7 @@ public class GroupInvitesController(ISender sender, IMapper mapper) : Controller
             userId.Value,
             groupId,
             inviteId);
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupInviteResponse>(result.Result));
+        ICommandResult<GroupInviteResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupInviteResult, GroupInviteResponse>(_mapper, _logger);
     }
 }

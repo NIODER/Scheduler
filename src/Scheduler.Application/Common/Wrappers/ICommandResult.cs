@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Common.Wrappers;
 
-public interface ICommandResult
+public interface ICommandResult<T>
 {
     public HttpStatusCode HttpStatusCode { get; }
 }

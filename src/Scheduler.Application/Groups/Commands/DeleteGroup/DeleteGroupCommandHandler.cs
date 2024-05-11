@@ -1,31 +1,57 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Common;
 using Scheduler.Domain.GroupAggregate;
+using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Application.Groups.Commands.DeleteGroup;
 
-public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand, AccessResultWrapper<GroupResult>>
+public class DeleteGroupCommandHandler(
+    IGroupsRepository groupsRepository,
+    ILogger<DeleteGroupCommandHandler> logger,
+    IUsersRepository usersRepository)
+    : IRequestHandler<DeleteGroupCommand, ICommandResult<GroupResult>>
 {
-    private readonly IGroupsRepository _groupsRepository;
+    private readonly IGroupsRepository _groupsRepository = groupsRepository;
+    private readonly IUsersRepository _usersRepository = usersRepository;
+    private readonly ILogger<DeleteGroupCommandHandler> _logger = logger;
 
-    public DeleteGroupCommandHandler(IGroupsRepository groupsRepository)
+    public async Task<ICommandResult<GroupResult>> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
     {
-        _groupsRepository = groupsRepository;
-    }
-
-    public Task<AccessResultWrapper<GroupResult>> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
-    {
-        Group group = _groupsRepository.GetGroupById(new(request.GroupId))
-            ?? throw new NullReferenceException($"No group with id {request.GroupId} found.");
+        Group? group = await _groupsRepository.GetGroupByIdAsync(new(request.GroupId));
+        if (group is null)
+        {
+            return new NotFound<GroupResult>($"No group with id {request.GroupId} found.");
+        }
         if (!group.UserHasPermissions(new UserId(request.ExecutorId), UserGroupPermissions.IsGroupOwner))
         {
-            return Task.FromResult(AccessResultWrapper<GroupResult>.CreateForbidden(clientMessage: "Delete group can only group owner."));
+            _logger.LogDebug("User {userId} is not a group owner.", request.ExecutorId);
+            return new AccessViolation<GroupResult>("Delete group can only group owner.");
         }
-        _groupsRepository.DeleteGroupById(group.Id);
-        _groupsRepository.SaveChanges();
-        return Task.FromResult(AccessResultWrapper<GroupResult>.Create(new(group)));
+        await DeleteGroupAsync(group.Id);
+        await DeleteGroupFromUsers(group.Id);
+        return new SuccessResult<GroupResult>(new GroupResult(group));
+    }
+
+    private async Task DeleteGroupAsync(GroupId groupId)
+    {
+        _groupsRepository.DeleteGroupById(groupId);
+        await _groupsRepository.SaveChangesAsync();
+        _logger.LogInformation("Group {groupId} deleted.", groupId.Value);
+    }
+
+    private async Task DeleteGroupFromUsers(GroupId groupId)
+    {
+        var users = await _usersRepository.GetUsersByGroupIdAsync(groupId);
+        foreach (var user in users)
+        {
+            user.RemoveGroup(groupId);
+            _usersRepository.Update(user);
+        }
+        await _usersRepository.SaveChangesAsync();
+        _logger.LogInformation("Group {groupId} deleted from {usersCount} users.", groupId.Value, users.Count);
     }
 }

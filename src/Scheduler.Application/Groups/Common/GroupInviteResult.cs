@@ -1,7 +1,7 @@
 ﻿using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
-namespace Scheduler.Application.GroupInvites.Common;
+namespace Scheduler.Application.Groups.Common;
 
 public record GroupInviteResult(
     GroupId GroupId,

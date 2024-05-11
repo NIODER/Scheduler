@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Common.Wrappers;
 
-public class AccessViolation(string? message = null, Exception? exception = null) : IErrorResult
+public class AccessViolation<T>(string? message = null, Exception? exception = null) : IErrorResult<T>
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.Forbidden;
 

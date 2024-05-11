@@ -9,4 +9,4 @@ public record UpdateGroupUserCommand(
     Guid UserId,
     Guid ExecutorId,
     int Permissions
-) : IRequest<AccessResultWrapper<GroupUserResult>>;
+) : IRequest<ICommandResult<GroupUserResult>>;

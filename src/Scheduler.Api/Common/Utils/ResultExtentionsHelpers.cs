@@ -5,7 +5,7 @@ using System.Net;
 
 internal static class ResultExtentionsHelpers
 {
-    public static IActionResult ProcceedInternalError(InternalError result, ILogger logger)
+    public static IActionResult ProcceedInternalError<T>(InternalError<T> result, ILogger logger)
     {
         logger.LogInformation(result.Exception, message: "Internal error result. Client message: {clientMessage}", result.ClientMessage);
         return new ObjectResult(new ProblemDetails()
@@ -16,19 +16,19 @@ internal static class ResultExtentionsHelpers
         });
     }
 
-    public static IActionResult ProceedForbidResult(AccessViolation result, ILogger logger)
+    public static IActionResult ProceedForbidResult<T>(AccessViolation<T> result, ILogger logger)
     {
         logger.LogDebug(result.Exception, "Access violation result. Client message: {clientMessage}", result.ClientMessage);
         return new ForbidResult();
     }
 
-    public static IActionResult ProceedNotFoundResult(NotFound result, ILogger logger)
+    public static IActionResult ProceedNotFoundResult<T>(NotFound<T> result, ILogger logger)
     {
         logger.LogDebug(result.Exception, "Not found result. Client message: {clientMessage}", result.ClientMessage);
         return new NotFoundResult();
     }
 
-    public static IActionResult ProceedUnhandledError(IErrorResult result, ILogger logger)
+    public static IActionResult ProceedUnhandledError<T>(IErrorResult<T> result, ILogger logger)
     {
         logger.LogError(result.Exception, "Unsupported error result. Message: {clientMessage}. Trace: {traceId}", result.ClientMessage, Activity.Current?.Id);
         return new ObjectResult(new ProblemDetails()

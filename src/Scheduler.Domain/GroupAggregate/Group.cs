@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Scheduler.Domain.Common;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.Entities;
+using Scheduler.Domain.GroupAggregate.Events;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
@@ -64,6 +64,7 @@ public class Group : Aggregate<GroupId>
     {
         var groupUser = new GroupUser(userId, Id, permissions);
         _users.Add(groupUser);
+        AddDomainEvent(new UserAddedToGroupEvent(userId, Id));
     }
 
     public void UpdateUser(GroupUser groupUser)
@@ -80,13 +81,17 @@ public class Group : Aggregate<GroupId>
 
     public void DeleteUser(UserId userId)
     {
-        var user = _users.SingleOrDefault(u => u.UserId == userId)
-            ?? throw new NullReferenceException($"No user with id {userId.Value} found in group.");
+        GroupUser? user = _users.SingleOrDefault(u => u.UserId == userId);
+        if (user is null)
+        {
+            return;
+        }
         if (UserHasPermissions(userId, UserGroupPermissions.IsGroupOwner))
         {
-            throw new Exception("Cannot delete group owner from group.");
+            throw new InvalidOperationException("Cannot delete group owner from group.");
         }
         _users.Remove(user);
+        AddDomainEvent(new UserDeletedFromGroupEvent(Id, user.UserId));
     }
 
     public void AcceptUserInGroup(UserId userId, GroupInviteId inviteId, DateTime now)

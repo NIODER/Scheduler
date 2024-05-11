@@ -6,7 +6,7 @@ namespace Scheduler.Api.Common.Utils;
 
 public static class ResultExtentions
 {
-    public static IActionResult ActionResult<TResult, TResponse>(this ICommandResult result, IMapper mapper, ILogger logger)
+    public static IActionResult ActionResult<TResult, TResponse>(this ICommandResult<TResult> result, IMapper mapper, ILogger logger)
     {
         if (result is ISuccessResult<TResult> successResult)
         {
@@ -14,10 +14,10 @@ public static class ResultExtentions
         }
         return result switch
         {
-            AccessViolation accessViolationResult => ResultExtentionsHelpers.ProceedForbidResult(accessViolationResult, logger),
-            NotFound notFoundResult => ResultExtentionsHelpers.ProceedNotFoundResult(notFoundResult, logger),
-            InternalError internalErrorResult => ResultExtentionsHelpers.ProcceedInternalError(internalErrorResult, logger),
-            IErrorResult errorResult => ResultExtentionsHelpers.ProceedUnhandledError(errorResult, logger),
+            AccessViolation<TResult> accessViolationResult => ResultExtentionsHelpers.ProceedForbidResult(accessViolationResult, logger),
+            NotFound<TResult> notFoundResult => ResultExtentionsHelpers.ProceedNotFoundResult(notFoundResult, logger),
+            InternalError<TResult> internalErrorResult => ResultExtentionsHelpers.ProcceedInternalError(internalErrorResult, logger),
+            IErrorResult<TResult> errorResult => ResultExtentionsHelpers.ProceedUnhandledError(errorResult, logger),
             _ => ResultExtentionsHelpers.ProceedUnknownError(logger)
         };
     }

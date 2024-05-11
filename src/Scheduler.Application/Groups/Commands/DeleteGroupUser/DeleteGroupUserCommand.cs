@@ -8,4 +8,4 @@ public record DeleteGroupUserCommand(
     Guid GroupId,
     Guid UserId,
     Guid ExecutorId
-) : IRequest<AccessResultWrapper<GroupUserResult>>;
+) : IRequest<ICommandResult<GroupUserResult>>;

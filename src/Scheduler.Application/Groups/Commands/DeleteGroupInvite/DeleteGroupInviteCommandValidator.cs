@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Scheduler.Application.GroupInvites.Commands.AcceptGroupInvite;
+namespace Scheduler.Application.Groups.Commands.DeleteGroupInvite;
 
-public class AcceptGroupInviteCommandValidator : AbstractValidator<AcceptGroupInviteCommand>
+public class DeleteGroupInviteCommandValidator : AbstractValidator<DeleteGroupInviteCommand>
 {
-    public AcceptGroupInviteCommandValidator()
+    public DeleteGroupInviteCommandValidator()
     {
         RuleFor(x => x.InviteId).NotEqual(default(Guid));
         RuleFor(x => x.GroupId).NotEqual(default(Guid));

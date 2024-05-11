@@ -3,26 +3,29 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Groups.Commands.CreateGroup;
 using Scheduler.Application.Groups.Commands.DeleteGroup;
 using Scheduler.Application.Groups.Commands.UpdateGroup;
+using Scheduler.Application.Groups.Common;
 using Scheduler.Application.Groups.Queries.GetGroup;
 using Scheduler.Contracts.Groups;
 
 namespace Scheduler.Api.Controllers.GroupControllers;
 
 [ApiController, Route("[controller]")]
-public class GroupController(ISender sender, IMapper mapper) : ControllerBase
+public class GroupController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpGet("{groupId}")]
     public async Task<IActionResult> GetGroupGyIdAsync(Guid groupId)
     {
         var command = new GetGroupByIdQuery(groupId);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<GroupResponse>(result));
+        ICommandResult<GroupResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupResult, GroupResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpPatch("{groupId}")]
@@ -34,12 +37,8 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var command = new UpdateGroupInformationCommand(groupId, userId.Value, request.GroupName);
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupResponse>(result.Result));
+        ICommandResult<GroupResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupResult, GroupResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpDelete("{groupId}")]
@@ -51,12 +50,8 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var command = new DeleteGroupCommand(groupId, userId.Value);
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupResponse>(result.Result));
+        ICommandResult<GroupResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupResult, GroupResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpPost]
@@ -68,8 +63,8 @@ public class GroupController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var command = new CreateGroupCommand(userId.Value, request.GroupName);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<GroupResponse>(result));
+        ICommandResult<GroupResult> result = await _sender.Send(command);
+        return result.ActionResult<GroupResult, GroupResponse>(_mapper, _logger);
     }
 }
  

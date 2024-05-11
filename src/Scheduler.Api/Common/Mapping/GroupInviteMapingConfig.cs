@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using Scheduler.Application.GroupInvites.Common;
+using Scheduler.Application.Groups.Common;
 using Scheduler.Contracts.Groups.GroupInvites;
 
 namespace Scheduler.Api.Common.Mapping;

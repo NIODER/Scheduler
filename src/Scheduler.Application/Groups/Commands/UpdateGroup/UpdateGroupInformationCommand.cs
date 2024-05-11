@@ -8,4 +8,4 @@ public record UpdateGroupInformationCommand(
     Guid GroupId,
     Guid ExecutorId,
     string GroupName
-) : IRequest<AccessResultWrapper<GroupResult>>;
+) : IRequest<ICommandResult<GroupResult>>;
