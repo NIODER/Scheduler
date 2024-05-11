@@ -5,7 +5,7 @@ using Scheduler.Domain.GroupAggregate.ValueObjects;
 
 namespace Scheduler.Api.Common.Mapping;
 
-public class GroupMappingConfig : IRegister
+internal class GroupMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

@@ -4,7 +4,7 @@ using Scheduler.Contracts.Authentication;
 
 namespace Scheduler.Api.Common.Mapping;
 
-public class AuthenticationMappingConfiguration : IRegister
+internal class AuthenticationMappingConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {

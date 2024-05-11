@@ -373,34 +373,9 @@ http://scheduler.com/group/{groupId}/invite/{inviteId}
 }
 ```
 
-## Invite group update
-
-http://scheduler.com/group/{groupId}/invite/{inviteId}
-
-### PATCH:
-
-#### request
-```
-{
-    "uses": 1,
-    "expire": "20.12.22",
-    "permissions": 123,
-    "message": "message"
-}
-```
-#### response
-```
-{
-    "inviteId": "0000-0000-000000",
-    "senderId": "0000-0000-000000",
-    "permissions": 123,
-    "message": "message"
-}
-```
-
 ## Tasks user
 
-http://scheduler.com/tasks/user/{userId}
+http://scheduler.com/tasks/user/
 
 ### GET:
 

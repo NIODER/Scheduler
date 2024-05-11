@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace Scheduler.Api.Common.Utils;
 
-public static class HttpContextHelpers
+internal static class HttpContextHelpers
 {
     public static Guid? GetExecutorUserId(this HttpContext context)
     {

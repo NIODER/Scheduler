@@ -6,7 +6,7 @@ using Scheduler.Contracts.Users.UserInvites;
 
 namespace Scheduler.Api.Common.Mapping;
 
-public class UserMappingConfig : IRegister
+internal class UserMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
