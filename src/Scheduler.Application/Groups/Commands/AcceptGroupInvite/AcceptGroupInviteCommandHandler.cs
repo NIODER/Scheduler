@@ -25,7 +25,7 @@ public class AcceptGroupInviteCommandHandler(IGroupsRepository groupsRepository,
         }
         if (group.Users.Any(u => u.UserId.Value == request.UserId))
         {
-            return new ExpectedErrorResult<GroupInviteResult>($"User with id {request.UserId} already in group.");
+            return new ExpectedError<GroupInviteResult>($"User with id {request.UserId} already in group.");
         }
         GroupInvite? invite = group.Invites.SingleOrDefault(i => i.Id.Value == request.InviteId);
         if (invite is null)

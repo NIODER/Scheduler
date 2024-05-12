@@ -25,7 +25,7 @@ public class CreateFriendsInviteCommandHandler(IUsersRepository usersRepository)
         }
         if (sender.FriendsIds.Any(f => f == addressie.Id))
         {
-            return new ExpectedErrorResult<FriendsInviteResult>($"User with id {request.AddressieId} is already a friend.");
+            return new ExpectedError<FriendsInviteResult>($"User with id {request.AddressieId} is already a friend.");
         }
         var invite = sender.SendFriendsInvite(addressie, request.Message);
         _usersRepository.Update(sender);

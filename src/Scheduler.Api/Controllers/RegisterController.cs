@@ -1,22 +1,26 @@
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Scheduler.Api.Common.Utils;
 using Scheduler.Application.Authentication.Commands.Registration;
+using Scheduler.Application.Authentication.Common;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Contracts.Authentication;
 
 namespace Scheduler.Api.Controllers;
 
 [ApiController, Route("[controller]")]
-public class RegisterController(ISender sender, IMapper mapper) : ControllerBase
+public class RegisterController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> Registrate([FromBody] RegistrateRequest request)
     {
         var command = _mapper.Map<RegisterCommand>(request);
-        var result = await _sender.Send(command);
-        return Ok(_mapper.Map<AuthenticationResponse>(result));
+        ICommandResult<AuthenticationResult> result = await _sender.Send(command);
+        return result.ActionResult<AuthenticationResult, AuthenticationResponse>(_mapper, _logger);
     }
 }

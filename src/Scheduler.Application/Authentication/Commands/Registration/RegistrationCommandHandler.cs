@@ -3,6 +3,7 @@ using Scheduler.Application.Authentication.Common;
 using Scheduler.Application.Common.Interfaces.Authentication;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Interfaces.Services;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Domain.UserAggregate;
 
 namespace Scheduler.Application.Authentication.Commands.Registration;
@@ -10,19 +11,20 @@ namespace Scheduler.Application.Authentication.Commands.Registration;
 public class RegistrationCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator, 
     IUsersRepository usersRepository,
-    IHashProvider hashProvider) : IRequestHandler<RegisterCommand, AuthenticationResult>
+    IHashProvider hashProvider) : IRequestHandler<RegisterCommand, ICommandResult<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IUsersRepository _usersRepository = usersRepository;
     private readonly IHashProvider _hashProvider = hashProvider;
 
-    public Task<AuthenticationResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<ICommandResult<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (_usersRepository.GetUserByEmail(request.Email) is not null)
+        User? user = await _usersRepository.GetUserByEmailAsync(request.Email);
+        if (user is not null)
         {
-            throw new Exception("Email is already taken.");
+            return new ExpectedError<AuthenticationResult>("Email is already taken.");
         }
-        User user = User.Create(
+        user = User.Create(
             request.Username,
             request.Email,
             request.Description,
@@ -31,6 +33,7 @@ public class RegistrationCommandHandler(
         _usersRepository.Add(user);
         _usersRepository.SaveChanges();
         var token = _jwtTokenGenerator.GenerateJwtToken(user);
-        return Task.FromResult(new AuthenticationResult(user, token));
+        var result = new AuthenticationResult(user, token);
+        return new SuccessResult<AuthenticationResult>(result);
     }
 }

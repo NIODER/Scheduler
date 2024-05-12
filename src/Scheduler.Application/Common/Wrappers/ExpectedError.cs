@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Common.Wrappers;
 
-public class ExpectedErrorResult<T>(string message) : IErrorResult<T>
+public class ExpectedError<T>(string message) : IErrorResult<T>
 {
     public string? ClientMessage => message;
 
