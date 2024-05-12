@@ -2,22 +2,19 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Common.Wrappers;
+using Scheduler.Application.Problems.Common;
 using Scheduler.Application.Problems.Queries.GetGroupProblems;
 using Scheduler.Contracts.Problems;
 
 namespace Scheduler.Api.Controllers.ProblemControllers;
 
 [ApiController, Route("tasks/group")]
-public class GroupProblemsController : ControllerBase
+public class GroupProblemsController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
-    private readonly ISender _sender;
-    private readonly IMapper _mapper;
-
-    public GroupProblemsController(ISender sender, IMapper mapper)
-    {
-        _sender = sender;
-        _mapper = mapper;
-    }
+    private readonly ISender _sender = sender;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpGet("{groupId}")]
     public async Task<IActionResult> GetGroupProblems(Guid groupId)
@@ -28,11 +25,7 @@ public class GroupProblemsController : ControllerBase
             return Forbid();
         }
         var query = new GetGroupProblemsCommand(groupId, userId.Value);
-        var result = await _sender.Send(query);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<GroupProblemsResponse>(result.Result));
+        ICommandResult<GroupProblemsResult> result = await _sender.Send(query);
+        return result.ActionResult<GroupProblemsResult, GroupProblemsResponse>(_mapper, _logger);
     }
 }

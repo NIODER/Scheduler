@@ -6,7 +6,7 @@ namespace Scheduler.Infrastructure.Tests.DatabaseTests;
 
 public class DatabaseCreatingTests
 {
-    private readonly SchedulerDbContext context;
+    private readonly SchedulerDbContext context = null!;
 
     //public DatabaseCreatingTests()
     //{
