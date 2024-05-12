@@ -4,30 +4,30 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
+using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Users.Commands.UpdateUser;
 using Scheduler.Application.Users.Commands.UpdateUserSettings;
+using Scheduler.Application.Users.Common;
 using Scheduler.Application.Users.Queries.GetUser;
 using Scheduler.Application.Users.Queries.GetUserSettings;
 using Scheduler.Contracts.Users;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Scheduler.Api.Controllers;
 
 [ApiController, Route("[controller]")]
-public class UserController(ISender sender, IMapper mapper) : ControllerBase
+public class UserController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
+    private readonly ILogger _logger = logger;
 
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById(Guid userId)
     {
         var command = new GetUserByIdQuery(userId);
-        var user = await _sender.Send(command);
-        if (user is null)
-        {
-            return NotFound();
-        }
-        return Ok(_mapper.Map<GeneralUserResponse>(user));
+        ICommandResult<UserResult>? result = await _sender.Send(command);
+        return result.ActionResult<UserResult, GeneralUserResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpPatch]
@@ -39,8 +39,8 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var command = _mapper.Map<UpdateUserCommand>(request);
-        var userResult = await _sender.Send(command);
-        return Ok(_mapper.Map<GeneralUserResponse>(userResult));
+        ICommandResult<UserResult> result = await _sender.Send(command);
+        return result.ActionResult<UserResult, GeneralUserResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpGet("{userId}/settings")]
@@ -52,12 +52,8 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var query = new GetUserSettingsQuery(userId, executorId.Value);
-        var result = await _sender.Send(query);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<UserSettingsResponse>(result.Result));
+        ICommandResult<UserSettingsResult> result = await _sender.Send(query);
+        return result.ActionResult<UserSettingsResult, UserSettingsResponse>(_mapper, _logger);
     }
 
     [Authorize, HttpPost("{userId}/settings")]
@@ -69,11 +65,7 @@ public class UserController(ISender sender, IMapper mapper) : ControllerBase
             return Forbid();
         }
         var command = new UpdateUserSettingsCommand(executorId.Value, userId, request.Settings);
-        var result = await _sender.Send(command);
-        if (result.IsForbidden)
-        {
-            return Forbid();
-        }
-        return Ok(_mapper.Map<UserSettingsResponse>(result.Result));
+        ICommandResult<UserSettingsResult> result = await _sender.Send(command);
+        return result.ActionResult<UserSettingsResult, UserSettingsResponse>(_mapper, _logger);
     }
 }

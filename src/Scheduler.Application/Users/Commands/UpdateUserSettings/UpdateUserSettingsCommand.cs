@@ -8,4 +8,4 @@ public record UpdateUserSettingsCommand(
     Guid ExecutorId,
     Guid UserId,
     int Settings
-) : IRequest<AccessResultWrapper<UserSettingsResult>>;
+) : IRequest<ICommandResult<UserSettingsResult>>;

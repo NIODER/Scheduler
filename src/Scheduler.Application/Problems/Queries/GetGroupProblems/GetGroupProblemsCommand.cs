@@ -7,4 +7,4 @@ namespace Scheduler.Application.Problems.Queries.GetGroupProblems;
 public record GetGroupProblemsCommand(
     Guid GroupId,
     Guid UserId
-) : IRequest<AccessResultWrapper<GroupProblemsResult>>;
+) : IRequest<ICommandResult<GroupProblemsResult>>;

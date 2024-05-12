@@ -7,4 +7,4 @@ namespace Scheduler.Application.Users.Queries.GetUserSettings;
 public record GetUserSettingsQuery(
     Guid UserId,
     Guid ExecutorId
-) : IRequest<AccessResultWrapper<UserSettingsResult>>;
+) : IRequest<ICommandResult<UserSettingsResult>>;

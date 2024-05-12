@@ -20,11 +20,11 @@ public class User : Aggregate<UserId>
 
     public string Name { get; set; }
     public string Email { get; private set; }
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; }
     public UserPrivateSettings Settings { get; set; }
     public string PasswordHash { get; private set; }
 
-    private User(
+    protected User(
         UserId userId,
         string username, 
         string email,
@@ -91,11 +91,6 @@ public class User : Aggregate<UserId>
     public IReadOnlyCollection<UserFriend> InitiatedUserFriends => _initiatedUserFriends.AsReadOnly();
     public IReadOnlyCollection<UserFriend> ReceivedUserFriends => _receivedUserFriends.AsReadOnly();
     public IReadOnlyCollection<UserId> BlackListUserIds => _blackListUserIds.AsReadOnly();
-
-    public void SetSettings(UserPrivateSettings settings)
-    {
-        Settings = settings;
-    }
 
     public FriendsInvite SendFriendsInvite(User addressie, string message)
     {
