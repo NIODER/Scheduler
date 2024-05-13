@@ -127,4 +127,9 @@ public class User : Aggregate<UserId>
     {
         _groupIds.Remove(groupId);
     }
+
+    public void AddProblem(ProblemId problemId)
+    {
+        _problemIds.Add(problemId);
+    }
 }

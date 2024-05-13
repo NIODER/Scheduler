@@ -435,7 +435,7 @@ http://scheduler.com/task/{taskId?}
     "taskId": "0000-0000-000000",
     "creatorId": "0000-0000-000000",
     "userId": "0000-0000-000000", nullable
-    "groupId": "0000-0000-000000",
+    "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
     "status": "new",
@@ -445,11 +445,12 @@ http://scheduler.com/task/{taskId?}
 
 PUT:
 
+http://scheduler.com/task/
+
 #### request
 ```
 {
-    "creatorId": "0000-0000-000000",
-    "userId": "0000-0000-000000", nullable
+    "assignedUserId": "0000-0000-000000", nullable
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",

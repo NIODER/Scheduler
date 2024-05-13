@@ -28,4 +28,14 @@ public class ProblemsController(IMapper mapper, ISender sender, ILogger logger) 
         var result = await _sender.Send(query);
         return result.ActionResult<ProblemResult, ProblemResponse>(_mapper, _logger);
     }
+
+    [HttpPut]
+    public async Task<IActionResult> CreateTask([FromBody] ProblemRequest request)
+    {
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null)
+        {
+            return Forbid();
+        }
+    }
 }

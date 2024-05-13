@@ -17,6 +17,8 @@ public static class ResultExtentions
             AccessViolation<TResult> accessViolationResult => ResultExtentionsHelpers.ProceedForbidResult(accessViolationResult, logger),
             NotFound<TResult> notFoundResult => ResultExtentionsHelpers.ProceedNotFoundResult(notFoundResult, logger),
             InternalError<TResult> internalErrorResult => ResultExtentionsHelpers.ProcceedInternalError(internalErrorResult, logger),
+            ExpectedError<TResult> expectedErrorResult => ResultExtentionsHelpers.ProceedExpectedErrorResult(expectedErrorResult, logger),
+            InvalidData<TResult> invalidDataResult => ResultExtentionsHelpers.ProceeedInvalidDataResult(invalidDataResult, logger),
             IErrorResult<TResult> errorResult => ResultExtentionsHelpers.ProceedUnhandledError(errorResult, logger),
             _ => ResultExtentionsHelpers.ProceedUnknownError(logger)
         };
