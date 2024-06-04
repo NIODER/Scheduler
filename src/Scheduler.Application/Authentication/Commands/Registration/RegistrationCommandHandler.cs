@@ -22,7 +22,7 @@ public class RegistrationCommandHandler(
         User? user = await _usersRepository.GetUserByEmailAsync(request.Email);
         if (user is not null)
         {
-            return new InvalidData<AuthenticationResult>("Email is already taken.", nameof(request.Email));
+            return new InvalidData<AuthenticationResult>("Email is already taken.");
         }
         user = User.Create(
             request.Username,

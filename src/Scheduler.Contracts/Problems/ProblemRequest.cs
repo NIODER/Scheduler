@@ -15,21 +15,17 @@ public record ProblemRequest
     public Guid? GroupId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
+    public int? Status { get; set; }
     public DateTime Deadline { get; set; }
 
     public ProblemRequest(
-        Guid taskId,
-        Guid creatorId,
         Guid? userId,
         Guid? groupId,
         string title,
         string description,
-        string status,
+        int? status,
         DateTime deadline)
     {
-        TaskId = taskId;
-        CreatorId = creatorId;
         AssignedUserId = userId;
         GroupId = groupId;
         Title = title;

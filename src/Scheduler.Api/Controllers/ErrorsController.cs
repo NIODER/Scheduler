@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Scheduler.Api.Controllers;
 
-public class ErrorsController : ControllerBase
+public class ErrorsController(ILogger logger) : ControllerBase
 {
+    private readonly ILogger _logger = logger;
+
     [ApiExplorerSettings(IgnoreApi = true), Route("/error")]
     public IActionResult Error()
     {
@@ -21,6 +23,7 @@ public class ErrorsController : ControllerBase
             }
             return ValidationProblem(modelStateDictionary);
         }
+        _logger.LogError(exception, "Exception catched in errors controller. Message: {message}.", exception?.Message);
         return Problem(statusCode: (int)HttpStatusCode.InternalServerError, title: exception?.Message);
     }
 }

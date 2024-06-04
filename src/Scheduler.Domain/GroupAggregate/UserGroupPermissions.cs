@@ -4,8 +4,8 @@ namespace Scheduler.Domain.GroupAggregate;
 public enum UserGroupPermissions
 {
     CreateTask = 1 << 0,
-    ChangeUnownedTask = 1 << 1,
-    DeleteUnownedTask = 1 << 2,
+    ChangeTask = 1 << 1,
+    DeleteTask = 1 << 2,
     CreateInvite = 1 << 3,
     DeleteInvites = 1 << 4,
     ChangeGroupSettings = 1 << 5,

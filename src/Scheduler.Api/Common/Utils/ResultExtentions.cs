@@ -10,15 +10,19 @@ public static class ResultExtentions
     {
         if (result is ISuccessResult<TResult> successResult)
         {
-            return new OkObjectResult(mapper.Map<TResponse>(successResult));
+            if (successResult.Value is null)
+            {
+                return new OkResult();
+            }
+            return new OkObjectResult(mapper.Map<TResponse>(successResult.Value));
         }
         return result switch
         {
             AccessViolation<TResult> accessViolationResult => ResultExtentionsHelpers.ProceedForbidResult(accessViolationResult, logger),
             NotFound<TResult> notFoundResult => ResultExtentionsHelpers.ProceedNotFoundResult(notFoundResult, logger),
-            InternalError<TResult> internalErrorResult => ResultExtentionsHelpers.ProcceedInternalError(internalErrorResult, logger),
-            ExpectedError<TResult> expectedErrorResult => ResultExtentionsHelpers.ProceedExpectedErrorResult(expectedErrorResult, logger),
             InvalidData<TResult> invalidDataResult => ResultExtentionsHelpers.ProceeedInvalidDataResult(invalidDataResult, logger),
+            ExpectedError<TResult> expectedErrorResult => ResultExtentionsHelpers.ProceedExpectedErrorResult(expectedErrorResult, logger),
+            InternalError<TResult> internalErrorResult => ResultExtentionsHelpers.ProcceedInternalError(internalErrorResult, logger),
             IErrorResult<TResult> errorResult => ResultExtentionsHelpers.ProceedUnhandledError(errorResult, logger),
             _ => ResultExtentionsHelpers.ProceedUnknownError(logger)
         };

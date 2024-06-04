@@ -438,7 +438,7 @@ http://scheduler.com/task/{taskId?}
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -454,7 +454,7 @@ http://scheduler.com/task/
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -467,7 +467,7 @@ http://scheduler.com/task/
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -477,13 +477,11 @@ http://scheduler.com/task/
 #### request
 ```
 {
-    "taskId": "0000-0000-000000",
-    "creatorId": "0000-0000-000000",
-    "userId": "0000-0000-000000", nullable
+    "assignedUserId": "0000-0000-000000", nullable
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -496,7 +494,7 @@ http://scheduler.com/task/
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -512,7 +510,7 @@ http://scheduler.com/task/
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```

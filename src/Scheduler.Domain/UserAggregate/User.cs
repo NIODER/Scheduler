@@ -132,4 +132,9 @@ public class User : Aggregate<UserId>
     {
         _problemIds.Add(problemId);
     }
+
+    public void RemoveProblem(ProblemId problemId)
+    {
+        _problemIds.Remove(problemId);
+    }
 }

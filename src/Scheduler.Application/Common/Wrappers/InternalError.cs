@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Common.Wrappers;
 
-public class InternalError<T>(Exception exception, string? message = null, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) 
+public class InternalError<T>(Exception? exception = null, string? message = null, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) 
     : IErrorResult<T>
 {
     public const string DEFAULT_MESSAGE = "Unknown internal error.";
