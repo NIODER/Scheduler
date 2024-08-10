@@ -1,4 +1,3 @@
-using System.Net;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,16 +10,15 @@ using Scheduler.Application.Users.Common;
 using Scheduler.Application.Users.Queries.GetUser;
 using Scheduler.Application.Users.Queries.GetUserSettings;
 using Scheduler.Contracts.Users;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Scheduler.Api.Controllers;
 
 [ApiController, Route("[controller]")]
-public class UserController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class UserController(ISender sender, IMapper mapper, ILogger<UserController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<UserController> _logger = logger;
 
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById(Guid userId)

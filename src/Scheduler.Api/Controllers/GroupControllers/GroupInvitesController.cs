@@ -13,11 +13,11 @@ using Scheduler.Contracts.Groups.GroupInvites;
 namespace Scheduler.Api.Controllers.GroupControllers;
 
 [ApiController, Route("group"), Authorize]
-public class GroupInvitesController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class GroupInvitesController(ISender sender, IMapper mapper, ILogger<GroupInvitesController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<GroupInvitesController> _logger = logger;
 
     [HttpPost("{groupId}/invite")]
     public async Task<IActionResult> AcceptInvite(Guid groupId, Guid inviteId)

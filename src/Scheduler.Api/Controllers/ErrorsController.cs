@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Scheduler.Api.Controllers;
 
-public class ErrorsController(ILogger logger) : ControllerBase
+public class ErrorsController(ILogger<ErrorsController> logger) : ControllerBase
 {
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<ErrorsController> _logger = logger;
 
     [ApiExplorerSettings(IgnoreApi = true), Route("/error")]
     public IActionResult Error()

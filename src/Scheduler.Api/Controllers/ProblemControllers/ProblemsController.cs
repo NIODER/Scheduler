@@ -12,11 +12,11 @@ using Scheduler.Contracts.Problems;
 namespace Scheduler.Api.Controllers.ProblemControllers;
 
 [ApiController, Route("task"), Authorize]
-public class ProblemsController(IMapper mapper, ISender sender, ILogger logger) : ControllerBase
+public class ProblemsController(IMapper mapper, ISender sender, ILogger<ErrorsController> logger) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly ISender _sender = sender;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<ErrorsController> _logger = logger;
 
     [HttpGet("{taskId}")]
     public async Task<IActionResult> GetTask(Guid taskId)

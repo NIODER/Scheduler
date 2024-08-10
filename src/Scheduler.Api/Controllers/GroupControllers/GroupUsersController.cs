@@ -14,11 +14,11 @@ using Scheduler.Contracts.Groups.GroupUsers;
 namespace Scheduler.Api.Controllers.GroupControllers;
 
 [ApiController, Route("group"), Authorize]
-public class GroupUsersController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class GroupUsersController(ISender sender, IMapper mapper, ILogger<GroupUsersController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<GroupUsersController> _logger = logger;
 
     [HttpGet("{groupId}/user/{userId}")]
     public async Task<IActionResult> GetGroupUser(Guid groupId, Guid userId)
