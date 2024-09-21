@@ -1,4 +1,5 @@
 using Scheduler.Domain.Common;
+using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.Events;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
@@ -104,5 +105,33 @@ public class Problem : Aggregate<ProblemId>
         }
         UserId = userId;
         AddDomainEvent(new UserAssignedToProblemEvent(Id, userId));
+    }
+
+    public void Delete(UserId executorId, Group? group = null)
+    {
+        if (IsAssignedToGroup)
+        {
+            if (group is null)
+            {
+                throw new ArgumentNullException(nameof(group), "Impossible to detemine user access permissions due to group is not specified.");
+            }
+            if (!group.ProblemIds.Contains(Id))
+            {
+                return;
+            }
+            if (group.Id != GroupId)
+            {
+                throw new ArgumentException($"{nameof(GroupId)} and {nameof(group.Id)} is not equal.", nameof(group));
+            }
+            if (!group.UserHasPermissions(executorId, UserGroupPermissions.DeleteTask))
+            {
+                throw new InvalidOperationException("User has no permissions to delete tasks in this group.");
+            }
+        }
+        else if (CreatorId != executorId)
+        {
+            throw new InvalidOperationException("User has no permissions to delete this task.");
+        }
+        AddDomainEvent(new ProblemDeletedEvent(Id));
     }
 }

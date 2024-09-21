@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scheduler.Api.Common.Utils;
 using Scheduler.Application.Problems.Commands.CreateProblem;
+using Scheduler.Application.Problems.Commands.DeleteProblem;
 using Scheduler.Application.Problems.Commands.UpdateProblem;
 using Scheduler.Application.Problems.Common;
 using Scheduler.Application.Problems.Queries.GetProblem;
@@ -67,6 +68,19 @@ public class ProblemsController(IMapper mapper, ISender sender, ILogger<ErrorsCo
             request.Description,
             request.Status,
             request.Deadline);
+        var result = await _sender.Send(command);
+        return result.ActionResult<ProblemResult, ProblemResponse>(_mapper, _logger);
+    }
+
+    [HttpDelete("{taskId}")]
+    public async Task<IActionResult> DeleteTask(Guid taskId)
+    {
+        var userId = HttpContext.GetExecutorUserId();
+        if (userId is null)
+        {
+            return Forbid();
+        }
+        var command = new DeleteProblemCommand(userId.Value, taskId);
         var result = await _sender.Send(command);
         return result.ActionResult<ProblemResult, ProblemResponse>(_mapper, _logger);
     }

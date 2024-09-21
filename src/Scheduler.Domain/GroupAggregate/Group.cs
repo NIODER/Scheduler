@@ -14,7 +14,6 @@ public class Group : Aggregate<GroupId>
     private readonly List<GroupInvite> _invites = [];
     private readonly List<ProblemId> _problemIds = [];
     private readonly List<FinancialPlanId> _financialPlanIds = [];
-    public string GroupName { get; set; }
 
     private Group()
     {
@@ -45,6 +44,7 @@ public class Group : Aggregate<GroupId>
         problemIds: [],
         financialPlanIds: []);
 
+    public string GroupName { get; set; }
     public IReadOnlyCollection<GroupUser> Users => _users.AsReadOnly();
     public IReadOnlyCollection<GroupInvite> Invites => _invites.AsReadOnly();
     public IReadOnlyCollection<ProblemId> ProblemIds => _problemIds.AsReadOnly();
@@ -129,5 +129,10 @@ public class Group : Aggregate<GroupId>
             ?? throw new NullReferenceException($"No invite with id {inviteId.Value} found.");
         _invites.Remove(invite);
         return invite;
+    }
+
+    public void RemoveProblem(ProblemId problemId)
+    {
+        _problemIds.Remove(problemId);
     }
 }
