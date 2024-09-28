@@ -518,11 +518,12 @@ PUT:
 
 ## Finances
 
-http://scheduler.com/finances/{financialId}
-http://scheduler.com/finances/group/{groupId}
+
+
+http://scheduler.com/finances
 
 ### GET
-
+Returns user's private financialplans
 #### response
 ```
 {
@@ -533,13 +534,14 @@ http://scheduler.com/finances/group/{groupId}
             "title": "title",
             "charges": [
                 {
+                    "id": "0000-0000-000000",
                     "chargeName": "charge name",
                     "description": "description",
                     "minimalCost": 123,
                     "maximalCost": 321,
                     "priority": 123,
                     "repeat": true,
-                    "expire": 31,
+                    "expire": datetimeoffset,
                     "created": "20.12.22"
                 }
             ]
@@ -548,14 +550,67 @@ http://scheduler.com/finances/group/{groupId}
 }
 ```
 
-### DELETE
+http://scheduler.com/finances/{financialId}
+### GET
+Returns financial plan by id
+#### response
 
-### POST
+```
+{
+    "financialId": "0000-0000-000000", 
+    "title": "title",
+    "charges": [
+        {
+            "id": "0000-0000-000000",
+            "chargeName": "charge name",
+            "description": "description",
+            "minimalCost": 123,
+            "maximalCost": 321,
+            "priority": 123,
+            "repeat": true,
+            "expire": 31,
+            "created": "20.12.22"
+        }
+    ]
+}
+```
+
+http://scheduler.com/finances/group/{groupId}
+### GET
+Returns financial plans, attached to group
+#### response
+
+```
+{
+    "count": 123,
+    "plans": [
+        {
+            "financialId": "0000-0000-000000",
+            "title": "title",
+            "charges": [
+                {
+                    "id": "0000-0000-000000",
+                    "chargeName": "charge name",
+                    "description": "description",
+                    "minimalCost": 123,
+                    "maximalCost": 321,
+                    "priority": 123,
+                    "repeat": true,
+                    "expire": datetimeoffset,
+                    "created": "20.12.22"
+                }
+            ]
+        }
+    ]
+}
+```
+
+### PUT 
+http://scheduler.com/finances
 
 #### request
 ```
 {
-    "financialId": "0000-0000-000000", 
     "title": "title",
     "charges": [
         {
@@ -571,6 +626,51 @@ http://scheduler.com/finances/group/{groupId}
     ]
 }
 ```
+#### response
+```
+{
+    "financialId": "0000-0000-000000", 
+    "title": "title",
+    "charges": [
+        {
+            "id": "0000-0000-000000",
+            "chargeName": "charge name",
+            "description": "description",
+            "minimalCost": 123,
+            "maximalCost": 321,
+            "priority": 123,
+            "repeat": true,
+            "expire": 31,
+            "created": "20.12.22"
+        }
+    ]
+}
+```
+
+### POST
+http://scheduler.com/finances/{financialId}?title="title"
+#### response
+```
+{
+    "financialId": "0000-0000-000000", 
+    "title": "title",
+    "charges": [
+        {
+            "id": "0000-0000-000000",
+            "chargeName": "charge name",
+            "description": "description",
+            "minimalCost": 123,
+            "maximalCost": 321,
+            "priority": 123,
+            "repeat": true,
+            "expire": 31,
+            "created": "20.12.22"
+        }
+    ]
+}
+```
+
+### DELETE
 #### response
 ```
 {
@@ -592,9 +692,7 @@ http://scheduler.com/finances/group/{groupId}
 ```
 
 http://scheduler.com/finances/{financialId}/calculate/fill?budget=123&priority=123
-
 ### GET
-
 #### response
 ```
 {
@@ -604,6 +702,7 @@ http://scheduler.com/finances/{financialId}/calculate/fill?budget=123&priority=1
     "limitDatePessimistic": "20.12.22",
     "charges": [
         {
+            "id": "0000-0000-000000",
             "chargeName": "charge name",
             "description": "description",
             "minimalCost": 123,
@@ -619,10 +718,7 @@ http://scheduler.com/finances/{financialId}/calculate/fill?budget=123&priority=1
 ```
 
 http://scheduler.com/finances/{financialId}/calculate/distribute?budget=123&date="yyyy-MM-ddTHH:mm:ssZZZ"
-
-
 ### GET
-
 #### response
 ```
 {
@@ -630,6 +726,7 @@ http://scheduler.com/finances/{financialId}/calculate/distribute?budget=123&date
     "title": "title",
     "charges": [
         {
+            "id": "0000-0000-000000",
             "chargeName": "charge name",
             "description": "description",
             "minimalCost": 123,
@@ -641,6 +738,99 @@ http://scheduler.com/finances/{financialId}/calculate/distribute?budget=123&date
             "status": "enough|provided|notpaid"
         }
     ]
+}
+```
+
+http://scheduler.com/finances/charges/{chargeId}
+### GET
+#### response
+```
+{
+    "id": "0000-0000-000000",
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+    "created": "20.12.22"
+}
+```
+
+http://scheduler.com/finances/{financialId}/charges
+### PUT
+#### request
+```
+{
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+}
+```
+#### response
+```
+{
+    "id": "0000-0000-000000",
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+    "created": "20.12.22"
+}
+```
+
+
+http://scheduler.com/finances/{financialId}/charges/{chargeId}
+### POST 
+#### request
+```
+{
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+}
+```
+#### response
+```
+{
+    "id": "0000-0000-000000",
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+    "created": "20.12.22"
+}
+```
+
+http://scheduler.com/finances/charges/{chargeId}
+### DELETE 
+#### response
+```
+{
+    "id": "0000-0000-000000",
+    "chargeName": "charge name",
+    "description": "description",
+    "minimalCost": 123,
+    "maximalCost": 321,
+    "priority": 123,
+    "repeat": true,
+    "expire": 31,
+    "created": "20.12.22"
 }
 ```
 
