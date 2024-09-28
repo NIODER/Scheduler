@@ -1,4 +1,5 @@
 using Scheduler.Domain.Common;
+using Scheduler.Domain.FinancialPlanAggregate.Entities;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;

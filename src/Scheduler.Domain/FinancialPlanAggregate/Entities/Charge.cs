@@ -1,8 +1,9 @@
 using Scheduler.Domain.Common;
+using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 
-namespace Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
+namespace Scheduler.Domain.FinancialPlanAggregate.Entities;
 
-public class Charge : Entity<ChargeId> 
+public class Charge : Entity<ChargeId>
 {
     public string ChargeName { get; private set; }
     public string Description { get; private set; }
