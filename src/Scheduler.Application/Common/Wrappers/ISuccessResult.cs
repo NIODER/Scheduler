@@ -2,5 +2,5 @@
 
 public interface ISuccessResult<T> : ICommandResult<T>
 {
-    public T Value { get; }
+    public T? Value { get; }
 }

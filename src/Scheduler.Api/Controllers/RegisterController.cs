@@ -10,11 +10,11 @@ using Scheduler.Contracts.Authentication;
 namespace Scheduler.Api.Controllers;
 
 [ApiController, Route("[controller]")]
-public class RegisterController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class RegisterController(ISender sender, IMapper mapper, ILogger<RegisterController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<RegisterController> _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> Registrate([FromBody] RegistrateRequest request)

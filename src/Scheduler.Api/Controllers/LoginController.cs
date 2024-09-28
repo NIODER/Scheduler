@@ -10,11 +10,11 @@ using Scheduler.Contracts.Authentication;
 namespace Scheduler.Api.Controllers;
 
 [ApiController, Route("[controller]")]
-public class LoginController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class LoginController(ISender sender, IMapper mapper, ILogger<LoginController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<LoginController> _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)

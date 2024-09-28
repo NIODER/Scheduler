@@ -25,7 +25,7 @@ public class LoginCommandHandler(IUsersRepository usersRepository, IHashProvider
         string passwordHash = _hashProvider.GetHash(request.Password);
         if (passwordHash != user.PasswordHash)
         {
-            return new ExpectedError<AuthenticationResult>("Invalid password.");
+            return new InvalidData<AuthenticationResult>("Invalid password.");
         }
         string token = _jwtTokenGenerator.GenerateJwtToken(user);
         var result = new AuthenticationResult(user, token);

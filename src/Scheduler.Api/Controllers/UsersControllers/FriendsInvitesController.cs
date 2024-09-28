@@ -14,11 +14,11 @@ using Scheduler.Contracts.Users.UserInvites;
 namespace Scheduler.Api.Controllers.UsersControllers;
 
 [ApiController, Authorize, Route("invite")]
-public sealed class FriendsInvitesController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public sealed class FriendsInvitesController(ISender sender, IMapper mapper, ILogger<FriendsInvitesController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<FriendsInvitesController> _logger = logger;
 
     [HttpGet("user/{inviteId}")]
     public async Task<IActionResult> GetUserInvite(Guid inviteId)

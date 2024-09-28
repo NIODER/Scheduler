@@ -10,11 +10,11 @@ using Scheduler.Contracts.Problems;
 namespace Scheduler.Api.Controllers.ProblemControllers;
 
 [ApiController, Route("tasks/group")]
-public class GroupProblemsController(ISender sender, IMapper mapper, ILogger logger) : ControllerBase
+public class GroupProblemsController(ISender sender, IMapper mapper, ILogger<GroupProblemsController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;
     private readonly IMapper _mapper = mapper;
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<GroupProblemsController> _logger = logger;
 
     [HttpGet("{groupId}")]
     public async Task<IActionResult> GetGroupProblems(Guid groupId)

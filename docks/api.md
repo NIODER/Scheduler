@@ -435,25 +435,26 @@ http://scheduler.com/task/{taskId?}
     "taskId": "0000-0000-000000",
     "creatorId": "0000-0000-000000",
     "userId": "0000-0000-000000", nullable
-    "groupId": "0000-0000-000000",
+    "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
 
 PUT:
 
+http://scheduler.com/task/
+
 #### request
 ```
 {
-    "creatorId": "0000-0000-000000",
-    "userId": "0000-0000-000000", nullable
+    "assignedUserId": "0000-0000-000000", nullable
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -466,7 +467,7 @@ PUT:
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -476,13 +477,11 @@ PUT:
 #### request
 ```
 {
-    "taskId": "0000-0000-000000",
-    "creatorId": "0000-0000-000000",
-    "userId": "0000-0000-000000", nullable
+    "assignedUserId": "0000-0000-000000", nullable
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -495,7 +494,7 @@ PUT:
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```
@@ -511,7 +510,7 @@ PUT:
     "groupId": "0000-0000-000000", nullable
     "title": "title",
     "description": "description",
-    "status": "new",
+    "status": 0,
     "deadline": "20.12.22"
 }
 ```

@@ -7,9 +7,9 @@ namespace Scheduler.Application.Problems.Common;
 
 public record ProblemResult(
     ProblemId TaskId,
-    GroupId? GroupId,
-    UserId? UserId,
     UserId CreatorId,
+    UserId? UserId,
+    GroupId? GroupId,
     string Title,
     string Description,
     ProblemStatus Status,
