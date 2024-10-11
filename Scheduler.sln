@@ -5,29 +5,32 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFB70C79-64C1-4B26-B169-5C1F890E6C2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Api", "src\Scheduler.Api\Scheduler.Api.csproj", "{1A058FA6-06C6-44B1-9FD1-76C0070CECC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Api", "src\Scheduler.Api\Scheduler.Api.csproj", "{1A058FA6-06C6-44B1-9FD1-76C0070CECC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Application", "src\Scheduler.Application\Scheduler.Application.csproj", "{50A06173-FB02-4E03-8AF3-9E8EC46DC814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Application", "src\Scheduler.Application\Scheduler.Application.csproj", "{50A06173-FB02-4E03-8AF3-9E8EC46DC814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Domain", "src\Scheduler.Domain\Scheduler.Domain.csproj", "{0254BB49-63ED-41BE-BFAF-CD7D52997093}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Domain", "src\Scheduler.Domain\Scheduler.Domain.csproj", "{0254BB49-63ED-41BE-BFAF-CD7D52997093}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Infrastructure", "src\Scheduler.Infrastructure\Scheduler.Infrastructure.csproj", "{2A1739CA-3AF0-4220-B225-B5A3BFFC32A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Infrastructure", "src\Scheduler.Infrastructure\Scheduler.Infrastructure.csproj", "{2A1739CA-3AF0-4220-B225-B5A3BFFC32A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Contracts", "src\Scheduler.Contracts\Scheduler.Contracts.csproj", "{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Contracts", "src\Scheduler.Contracts\Scheduler.Contracts.csproj", "{6FE12165-DCB4-49D6-B08B-6C146F70EDE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Infrastructure.Tests", "tests\Scheduler.Infrastructure.Tests\Scheduler.Infrastructure.Tests.csproj", "{B23AA471-B76A-48DF-8090-09DC85E761FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Infrastructure.Tests", "tests\Scheduler.Infrastructure.Tests\Scheduler.Infrastructure.Tests.csproj", "{B23AA471-B76A-48DF-8090-09DC85E761FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Api.Tests", "tests\Scheduler.Api.Tests\Scheduler.Api.Tests.csproj", "{E4B8223F-EECA-4556-A5EB-5FB177586BAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Api.Tests", "tests\Scheduler.Api.Tests\Scheduler.Api.Tests.csproj", "{E4B8223F-EECA-4556-A5EB-5FB177586BAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Domain.Tests", "tests\Scheduler.Domain.Tests\Scheduler.Domain.Tests.csproj", "{04423C80-33F7-4A20-9423-2FA43BEACCBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Application.Tests", "tests\Scheduler.Application.Tests\Scheduler.Application.Tests.csproj", "{4FAEB749-9810-483B-B1B3-DAF9231C9CCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsInfrastructure", "tests\TestsInfrastructure\TestsInfrastructure.csproj", "{79ADB85B-182E-465D-8121-8D94D7A45B83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1A058FA6-06C6-44B1-9FD1-76C0070CECC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,6 +61,21 @@ Global
 		{E4B8223F-EECA-4556-A5EB-5FB177586BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B8223F-EECA-4556-A5EB-5FB177586BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B8223F-EECA-4556-A5EB-5FB177586BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04423C80-33F7-4A20-9423-2FA43BEACCBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04423C80-33F7-4A20-9423-2FA43BEACCBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04423C80-33F7-4A20-9423-2FA43BEACCBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04423C80-33F7-4A20-9423-2FA43BEACCBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FAEB749-9810-483B-B1B3-DAF9231C9CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FAEB749-9810-483B-B1B3-DAF9231C9CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FAEB749-9810-483B-B1B3-DAF9231C9CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FAEB749-9810-483B-B1B3-DAF9231C9CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79ADB85B-182E-465D-8121-8D94D7A45B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79ADB85B-182E-465D-8121-8D94D7A45B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79ADB85B-182E-465D-8121-8D94D7A45B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79ADB85B-182E-465D-8121-8D94D7A45B83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1A058FA6-06C6-44B1-9FD1-76C0070CECC7} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
@@ -67,5 +85,11 @@ Global
 		{6FE12165-DCB4-49D6-B08B-6C146F70EDE8} = {CFB70C79-64C1-4B26-B169-5C1F890E6C2F}
 		{B23AA471-B76A-48DF-8090-09DC85E761FA} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
 		{E4B8223F-EECA-4556-A5EB-5FB177586BAE} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
+		{04423C80-33F7-4A20-9423-2FA43BEACCBB} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
+		{4FAEB749-9810-483B-B1B3-DAF9231C9CCE} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
+		{79ADB85B-182E-465D-8121-8D94D7A45B83} = {002EDC6E-2C13-4EEA-9FAB-9AAEC21BAFCC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7D61F76-EE06-45F4-9348-6C75985BE729}
 	EndGlobalSection
 EndGlobal
