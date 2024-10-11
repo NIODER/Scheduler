@@ -4,7 +4,7 @@ using TestsInfrastructure.Repositories;
 
 namespace TestsInfrastructure.DI;
 
-public static class TestInfrastructureDependencyInjection
+internal static class TestInfrastructureDependencyInjection
 {
     public static IServiceCollection AddTestInfrastructure(this IServiceCollection services)
     {
