@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileSystemGlobbing;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Domain.FinancialPlanAggregate;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
@@ -48,7 +47,7 @@ public sealed class FinancialPlansRepository(SchedulerDbContext context) : IFina
     {
         return context.FinancialPlans
             .Where(fp => fp.CreatorId == userId)
-            .Where(fp => fp.GroupId.Value == default)
+            .Where(fp => fp.GroupId == default)
             .ToList();
     }
 
@@ -56,7 +55,7 @@ public sealed class FinancialPlansRepository(SchedulerDbContext context) : IFina
     {
         return context.FinancialPlans
             .Where(fp => fp.CreatorId == userId)
-            .Where(fp => fp.GroupId.Value == default)
+            .Where(fp => fp.GroupId == default)
             .ToListAsync();
     }
 

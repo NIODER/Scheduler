@@ -1,6 +1,5 @@
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.FinancialPlanAggregate;
 using Scheduler.Domain.GroupAggregate;
 using Scheduler.Domain.ProblemAggregate;
@@ -22,7 +21,7 @@ public sealed class SchedulerDbContext(DbContextOptions<SchedulerDbContext> opti
     {
         modelBuilder
             .Ignore<List<IDomainEvent>>()
-            .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            .ApplyConfigurationsFromAssembly(typeof(SchedulerDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 

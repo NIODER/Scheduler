@@ -1,4 +1,4 @@
-﻿using Scheduler.Domain.Common;
+﻿using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
 
 namespace Scheduler.Domain.ProblemAggregate.Events;

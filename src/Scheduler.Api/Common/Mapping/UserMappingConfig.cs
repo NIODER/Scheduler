@@ -11,16 +11,16 @@ internal class UserMappingConfig : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<UserSettingsResult, UserSettingsResponse>()
-            .Map(src => src.UserId, dest => dest.UserId.Value)
-            .Map(src => src.Settings, dest => (int)dest.Settings);
+            .Map(dest => dest.UserId, src => src.UserId.Value)
+            .Map(dest => dest.Settings, src => (int)src.Settings);
         AddUserInviteMapping(config);
     }
 
     public void AddUserInviteMapping(TypeAdapterConfig config)
     {
         config.NewConfig<FriendsInviteResult, UserInvitesResponse>()
-            .Map(src => src.InviteId, dest => dest.InviteId.Value)
-            .Map(src => src.AddressieId, dest => dest.AddressieId.Value)
-            .Map(src => src.SenderId, dest => dest.SenderId.Value);
+            .Map(dest => dest.InviteId, src => src.InviteId.Value)
+            .Map(dest => dest.AddressieId, src => src.AddressieId.Value)
+            .Map(dest => dest.SenderId, src => src.SenderId.Value);
     }
 }

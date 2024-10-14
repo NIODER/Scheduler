@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 
 namespace Scheduler.Infrastructure.Persistance.Interceptors;
 

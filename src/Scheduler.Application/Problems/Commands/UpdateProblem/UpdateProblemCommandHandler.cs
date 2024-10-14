@@ -79,7 +79,8 @@ internal class UpdateProblemCommandHandler(
 
     private static bool ExecutorIsMemberAndHasPermissions(Group group, UserId userId, out IErrorResult<ProblemResult>? error)
     {
-        if (!IsUserInGroup(group, userId, out var groupUser))
+        var groupUser = group.Users.SingleOrDefault(u => u.UserId == userId);
+        if (groupUser == default)
         {
             error = new AccessViolation<ProblemResult>("User is not a member.");
             return false;
@@ -93,12 +94,6 @@ internal class UpdateProblemCommandHandler(
         return true;
     }
 
-    private static bool IsUserInGroup(Group group, UserId userId, out GroupUser? groupUser)
-    {
-        groupUser = group.Users.SingleOrDefault(u => u.UserId == userId);
-        return groupUser is not null;
-    }
-
     private static bool AssignedUserIsMember(Group group, Guid? userId, out IErrorResult<ProblemResult>? error)
     {
         if (!userId.HasValue)
@@ -107,7 +102,7 @@ internal class UpdateProblemCommandHandler(
             return true;
         }
         var groupUser = group.Users.SingleOrDefault(u => u.UserId.Value == userId.Value);
-        if (groupUser is null)
+        if (groupUser == default)
         {
             error = new AccessViolation<ProblemResult>("Assigned user is not a member.");
             return false;

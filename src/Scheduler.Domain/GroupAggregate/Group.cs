@@ -1,4 +1,4 @@
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.Entities;
 using Scheduler.Domain.GroupAggregate.Events;
@@ -38,7 +38,7 @@ public class Group : Aggregate<GroupId>
 
     public static Group Create(string groupName) => new(
         new GroupId(Guid.NewGuid()),
-        groupName, 
+        groupName,
         users: [],
         invites: [],
         problemIds: [],
@@ -134,5 +134,19 @@ public class Group : Aggregate<GroupId>
     public void RemoveProblem(ProblemId problemId)
     {
         _problemIds.Remove(problemId);
+    }
+
+    public void AddFinancialPlan(FinancialPlanId financialPlanId)
+    {
+        if (_financialPlanIds.Contains(financialPlanId))
+        {
+            throw new InvalidOperationException($"Group already contains financialPlan with id {financialPlanId.Value}.");
+        }
+        _financialPlanIds.Add(financialPlanId);
+    }
+
+    public void RemoveFinancialPlan(FinancialPlanId financialPlanId)
+    {
+        _financialPlanIds.Remove(financialPlanId);
     }
 }
