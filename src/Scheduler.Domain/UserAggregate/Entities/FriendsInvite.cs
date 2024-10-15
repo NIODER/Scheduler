@@ -1,4 +1,4 @@
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.UserAggregate.ValueObjects;
 
 namespace Scheduler.Domain.UserAggregate.Entities;

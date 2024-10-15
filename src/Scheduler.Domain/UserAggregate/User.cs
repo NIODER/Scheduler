@@ -1,4 +1,4 @@
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.ProblemAggregate.ValueObjects;
@@ -26,7 +26,7 @@ public class User : Aggregate<UserId>
 
     protected User(
         UserId userId,
-        string username, 
+        string username,
         string email,
         string description,
         UserPrivateSettings settings,
@@ -48,7 +48,7 @@ public class User : Aggregate<UserId>
         _sendedFriendsInvites = sendedFriendsInviteIds;
         _problemIds = problemIds;
     }
-        
+
     private User()
     {
         Name = null!;
@@ -120,6 +120,10 @@ public class User : Aggregate<UserId>
 
     public void AddGroup(GroupId groupId)
     {
+        if (_groupIds.Contains(groupId))
+        {
+            throw new InvalidOperationException("User already in this group.");
+        }
         _groupIds.Add(groupId);
     }
 
@@ -130,11 +134,24 @@ public class User : Aggregate<UserId>
 
     public void AddProblem(ProblemId problemId)
     {
+        if (_problemIds.Contains(problemId))
+        {
+            throw new InvalidOperationException($"User already has task with id {problemId}.");
+        }
         _problemIds.Add(problemId);
     }
 
     public void RemoveProblem(ProblemId problemId)
     {
         _problemIds.Remove(problemId);
+    }
+
+    public void AddFinancialPlan(FinancialPlanId financialPlanId)
+    {
+        if (_financialPlanIds.Contains(financialPlanId))
+        {
+            throw new InvalidOperationException($"User already have financial plan with id {financialPlanId}.");
+        }
+        _financialPlanIds.Add(financialPlanId);
     }
 }

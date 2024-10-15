@@ -52,13 +52,9 @@ internal class CreateProblemCommandHandler(
                 return new InvalidData<ProblemResult>($"Group is not found");
             }
             GroupUser? groupUser = group.Users.SingleOrDefault(u => u.UserId.Value == request.CreatorId);
-            if (groupUser is null)
+            if (groupUser == default || !groupUser.Permissions.HasFlag(UserGroupPermissions.CreateTask))
             {
-                return new AccessViolation<ProblemResult>($"Not a member.");
-            }
-            if (!groupUser.Permissions.HasFlag(UserGroupPermissions.CreateTask))
-            {
-                return new AccessViolation<ProblemResult>($"No permissions.");
+                return new AccessViolation<ProblemResult>($"User with id {request.CreatorId} has no permissions to create tasks in this group.");
             }
             if (request.UserId is not null)
             {

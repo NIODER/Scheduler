@@ -1,4 +1,4 @@
-namespace Scheduler.Domain.Common;
+namespace Scheduler.Domain.Common.DomainDesign;
 
 public abstract class Aggregate<TId> : Entity<TId> where TId : notnull
 {

@@ -6,6 +6,7 @@ public record ChargeRequest(
     decimal MaximalCost,
     decimal MinimalCost,
     int Priority,
-    bool Repeat,
-    DateTimeOffset Expire,
+    int RepeatType,
+    DateTimeOffset ExpirationDate,
+    DateTime ScheduledDate,
     DateTime Created);

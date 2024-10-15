@@ -1,4 +1,4 @@
-namespace Scheduler.Domain.Common;
+namespace Scheduler.Domain.Common.DomainDesign;
 
 public abstract class Entity<TId> : IHasDomainEvents where TId : notnull
 {

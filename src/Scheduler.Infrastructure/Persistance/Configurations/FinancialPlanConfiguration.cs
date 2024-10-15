@@ -22,11 +22,11 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
                 value => new(value)
             )
             .ValueGeneratedNever();
-        
+
         builder.Property(f => f.Title)
             .HasMaxLength(120)
             .IsRequired();
-        
+
         builder.Property(f => f.CreatorId)
             .HasConversion(
                 id => id.Value,
@@ -34,7 +34,7 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
             )
             .ValueGeneratedNever()
             .IsRequired();
-        
+
         builder.Property(f => f.GroupId)
             .HasConversion(
                 id => id == null ? default : id.Value,
@@ -59,29 +59,34 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
             cBuilder.Property(c => c.ChargeName)
                 .HasMaxLength(120)
                 .IsRequired();
-            
+
             cBuilder.Property(c => c.Description)
                 .HasMaxLength(1000);
-            
+
             cBuilder.Property(c => c.MinimalCost)
                 .IsRequired();
-            
+
             cBuilder.Property(c => c.MaximalCost);
 
             cBuilder.Property(c => c.Priority)
                 .IsRequired();
-            
-            cBuilder.Property(c => c.Repeat)
-                .IsRequired();
-            
-            cBuilder.Property(c => c.ExpireDays)
+
+            cBuilder.Property(c => c.RepeatType)
                 .IsRequired();
 
-            cBuilder.Property(c => c.Created)
-               .IsRequired();
+            cBuilder.Property(c => c.ScheduledDate)
+                .IsRequired();
+
+            cBuilder.Property(c => c.ExpirationDate)
+                .IsRequired();
+
+            cBuilder.Property(c => c.CreatedDate)
+                .IsRequired();
 
             cBuilder.WithOwner().HasForeignKey(nameof(FinancialPlanId));
         });
+
+
 
         builder.Metadata.FindNavigation(nameof(FinancialPlan.Charges))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

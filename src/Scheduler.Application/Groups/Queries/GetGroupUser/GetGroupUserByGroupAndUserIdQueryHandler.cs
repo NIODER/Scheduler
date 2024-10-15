@@ -7,7 +7,7 @@ using Scheduler.Domain.GroupAggregate;
 
 namespace Scheduler.Application.Groups.Queries.GetGroupUser;
 
-public class GetGroupUserByGroupAndUserIdQueryHandler(IGroupsRepository groupsRepository, ILogger<GetGroupUserByGroupAndUserIdQueryHandler> logger) 
+public class GetGroupUserByGroupAndUserIdQueryHandler(IGroupsRepository groupsRepository, ILogger<GetGroupUserByGroupAndUserIdQueryHandler> logger)
     : IRequestHandler<GetGroupUserByGroupAndUserIdQuery, ICommandResult<GroupUserResult>>
 {
     private readonly IGroupsRepository _groupsRepository = groupsRepository;
@@ -21,7 +21,7 @@ public class GetGroupUserByGroupAndUserIdQueryHandler(IGroupsRepository groupsRe
             return new NotFound<GroupUserResult>($"No group with id {request.GroupId} found.");
         }
         var groupUser = group.Users.SingleOrDefault(u => u.UserId.Value == request.UserId);
-        if (groupUser is null)
+        if (groupUser == default)
         {
             _logger.LogDebug("User {userId} is not member of group {groupId}.", request.UserId, request.GroupId);
             return new AccessViolation<GroupUserResult>("Not a member.");

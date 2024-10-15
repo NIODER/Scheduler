@@ -853,3 +853,5 @@ http://scheduler.com/updates
     }
 ]
 ```
+
+need to add copy as private for current user with checking for GroupId is null (financialPlan)

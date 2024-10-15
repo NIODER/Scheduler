@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Common.Interfaces.Persistance;
+using Scheduler.Infrastructure.Persistance;
 using TestsInfrastructure.Repositories;
 
 namespace TestsInfrastructure.DI;
@@ -19,6 +20,7 @@ internal static class TestInfrastructureDependencyInjection
         services.AddScoped<IProblemsRepository, ProblemsInMemoryRepository>();
         services.AddScoped<IGroupsRepository, GroupsInMemoryRepository>();
         services.AddScoped<IFinancialPlansRepository, FInancialPlansInMemoryRepository>();
+        services.AddDbContext<SchedulerDbContext>(options => options.UseSqlite());
         return services;
     }
 }

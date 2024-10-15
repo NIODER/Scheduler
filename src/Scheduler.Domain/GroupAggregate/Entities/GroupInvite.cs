@@ -1,4 +1,4 @@
-using Scheduler.Domain.Common;
+using Scheduler.Domain.Common.DomainDesign;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate;
 using Scheduler.Domain.UserAggregate.ValueObjects;

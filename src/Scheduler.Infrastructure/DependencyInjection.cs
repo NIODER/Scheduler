@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +12,7 @@ using Scheduler.Infrastructure.Persistance;
 using Scheduler.Infrastructure.Persistance.Interceptors;
 using Scheduler.Infrastructure.Persistance.Repositories;
 using Scheduler.Infrastructure.Service;
+using System.Text;
 
 namespace Scheduler.Infrastructure;
 

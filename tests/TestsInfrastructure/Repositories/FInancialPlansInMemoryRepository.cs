@@ -8,6 +8,8 @@ namespace TestsInfrastructure.Repositories;
 
 internal class FInancialPlansInMemoryRepository : IFinancialPlansRepository
 {
+    private readonly SchedulerContext _context;
+
     public void Add(FinancialPlan financialPlan)
     {
         throw new NotImplementedException();
