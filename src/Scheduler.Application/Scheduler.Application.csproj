@@ -1,6 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Finances\Events\**" />
+    <EmbeddedResource Remove="Finances\Events\**" />
+    <None Remove="Finances\Events\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Scheduler.Domain\Scheduler.Domain.csproj" />
   </ItemGroup>
 
@@ -11,10 +17,6 @@
     <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Finances\Events\" />
   </ItemGroup>
 
   <PropertyGroup>

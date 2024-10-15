@@ -401,3 +401,4 @@ FodyWeavers.xsd
 # Test infrastructure
 
 TestData/
+/tests/TestsInfrastructure/Resource.resx

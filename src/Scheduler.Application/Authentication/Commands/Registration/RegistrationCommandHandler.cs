@@ -9,7 +9,7 @@ using Scheduler.Domain.UserAggregate;
 namespace Scheduler.Application.Authentication.Commands.Registration;
 
 public class RegistrationCommandHandler(
-    IJwtTokenGenerator jwtTokenGenerator, 
+    IJwtTokenGenerator jwtTokenGenerator,
     IUsersRepository usersRepository,
     IHashProvider hashProvider) : IRequestHandler<RegisterCommand, ICommandResult<AuthenticationResult>>
 {

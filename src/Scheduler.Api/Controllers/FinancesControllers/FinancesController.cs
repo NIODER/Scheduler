@@ -18,9 +18,6 @@ namespace Scheduler.Api.Controllers.FinancesControllers;
 [ApiController, Route("[controller]"), Authorize]
 public class FinancesController(ISender sender, IMapper mapper, ILogger<FinancesController> logger) : Controller
 {
-    [ApiController, Route("[controller]")]
-    public class FinancesController : Controller
-    {
     [HttpGet]
     public async Task<IActionResult> GetUserFinancialPlansListAsync()
     {
@@ -141,5 +138,4 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     {
         throw new NotImplementedException();
     }
-}
 }
