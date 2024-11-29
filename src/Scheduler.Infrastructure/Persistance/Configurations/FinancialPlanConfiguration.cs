@@ -71,22 +71,10 @@ public sealed class FinancialPlanConfiguration : IEntityTypeConfiguration<Financ
             cBuilder.Property(c => c.Priority)
                 .IsRequired();
 
-            cBuilder.Property(c => c.RepeatType)
-                .IsRequired();
-
-            cBuilder.Property(c => c.ScheduledDate)
-                .IsRequired();
-
-            cBuilder.Property(c => c.ExpirationDate)
-                .IsRequired();
-
-            cBuilder.Property(c => c.CreatedDate)
-                .IsRequired();
+            cBuilder.OwnsOne(c => c.Schedule);
 
             cBuilder.WithOwner().HasForeignKey(nameof(FinancialPlanId));
         });
-
-
 
         builder.Metadata.FindNavigation(nameof(FinancialPlan.Charges))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

@@ -1,6 +1,6 @@
-﻿namespace Scheduler.Domain.Common.Schedule;
+﻿namespace Scheduler.Domain.Scheduling.ValueObjects;
 
-public enum RepeatType
+public enum ScheduleType
 {
     None = 0,
     Days,

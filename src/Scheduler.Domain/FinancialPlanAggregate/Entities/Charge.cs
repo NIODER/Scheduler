@@ -1,6 +1,7 @@
 using Scheduler.Domain.Common.DomainDesign;
-using Scheduler.Domain.Common.Schedule;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
+using Scheduler.Domain.Scheduling.Behavior;
+using Scheduler.Domain.Scheduling.ValueObjects;
 
 namespace Scheduler.Domain.FinancialPlanAggregate.Entities;
 
@@ -11,28 +12,26 @@ public class Charge : Entity<ChargeId>
     public decimal MinimalCost { get; private set; }
     public decimal? MaximalCost { get; private set; }
     public int Priority { get; private set; }
-    public RepeatType RepeatType { get; private set; }
-    public DateTime ScheduledDate { get; private set; }
-    public DateTime ExpirationDate { get; private set; }
-    public DateTime CreatedDate { get; private set; }
+    public Schedule Schedule { get; private set; }
+    public DateTime CreatedAt { get; private set; }
 
+    [Obsolete("Do not use. Only for entity framework")]
     private Charge()
     {
         ChargeName = null!;
         Description = null!;
+        Schedule = null!;
     }
 
-    private Charge(
+    protected Charge(
         ChargeId id,
         string chargeName,
         string description,
         decimal minimalCost,
         decimal maximalCost,
         int priority,
-        RepeatType repeatType,
-        DateTime scheduledDate,
-        DateTime expirationDate,
-        DateTime createdDate
+        Schedule schedule,
+        DateTime createdAt
     ) : base(id)
     {
         ChargeName = chargeName;
@@ -40,10 +39,8 @@ public class Charge : Entity<ChargeId>
         MinimalCost = minimalCost;
         MaximalCost = maximalCost;
         Priority = priority;
-        RepeatType = repeatType;
-        ScheduledDate = scheduledDate;
-        ExpirationDate = expirationDate;
-        CreatedDate = createdDate;
+        Schedule = schedule;
+        CreatedAt = createdAt;
     }
 
     public static Charge CreateWithRepeat(
@@ -52,8 +49,7 @@ public class Charge : Entity<ChargeId>
         decimal minimalCost,
         decimal? maximalCost,
         int priority,
-        IRepeatDelay repeatDelay,
-        DateTime expirationDate
+        Schedule schedule
     ) => new(
         id: new(Guid.NewGuid()),
         chargeName,
@@ -61,8 +57,15 @@ public class Charge : Entity<ChargeId>
         minimalCost: Math.Min(minimalCost, maximalCost ?? decimal.MaxValue),
         maximalCost: Math.Max(minimalCost, maximalCost ?? decimal.MinValue),
         priority,
-        repeatDelay.RepeatType,
-        repeatDelay.ExpirationDate,
-        expirationDate,
+        schedule,
         DateTime.UtcNow);
+
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="NotImplementedException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public void ActualizeSchedule(DateTime origin)
+    {
+        var scheduleActualizer = ScheduleActualizerFactory.GetActualizer(Schedule.ScheduleType);
+        Schedule = scheduleActualizer.Actualize(origin, Schedule);
+    }
 }

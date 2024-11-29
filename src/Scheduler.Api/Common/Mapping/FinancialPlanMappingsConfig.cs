@@ -35,10 +35,10 @@ public class FinancialPlanMappingsConfig : IRegister
             .Map(dest => dest.MinimalCost, src => src.Charge.MinimalCost)
             .Map(dest => dest.MaximalCost, src => src.Charge.MaximalCost)
             .Map(dest => dest.Priority, src => src.Charge.Priority)
-            .Map(dest => dest.RepeatType, src => src.Charge.RepeatType)
-            .Map(dest => dest.ScheduledDate, src => src.Charge.ScheduledDate)
-            .Map(dest => dest.ExpirationDate, src => src.Charge.ExpirationDate)
-            .Map(dest => dest.Created, src => src.Charge.CreatedDate)
+            .Map(dest => dest.RepeatType, src => src.Charge.Schedule.ScheduleType)
+            .Map(dest => dest.ScheduledDate, src => src.Charge.Schedule.ScheduledDate)
+            .Map(dest => dest.ExpirationDate, src => src.Charge.Schedule.Deadline)
+            .Map(dest => dest.Created, src => src.Charge.CreatedAt)
             .IgnoreNonMapped(true);
     }
 
