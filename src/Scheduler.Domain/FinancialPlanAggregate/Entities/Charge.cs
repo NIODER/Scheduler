@@ -60,12 +60,20 @@ public class Charge : Entity<ChargeId>
         schedule,
         DateTime.UtcNow);
 
+    /// <returns><see langword="true"/> if already was actual</returns>
     /// <exception cref="InvalidOperationException"></exception>
     /// <exception cref="NotImplementedException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public void ActualizeSchedule(DateTime origin)
+    public bool ActualizeSchedule(DateTime origin)
     {
+        if (Schedule.IsActual(origin))
+        {
+            return true;
+        }
+
         var scheduleActualizer = ScheduleActualizerFactory.GetActualizer(Schedule.ScheduleType);
         Schedule = scheduleActualizer.Actualize(origin, Schedule);
+
+        return false;
     }
 }
