@@ -16,34 +16,66 @@ internal class MonthsScheduleActualizer : IScheduleActualizer
             return schedule;
         }
 
-        DateTime newDeadline = schedule.Deadline;
-        DateTime newScheduledDate = schedule.ScheduledDate;
+        int deadlineDay = GetDeadlineDay(origin, schedule);
 
-        if (origin < newScheduledDate)
+        if (origin.Day < deadlineDay)
         {
-            while (origin < newScheduledDate)
-            {
-                newScheduledDate = newScheduledDate.AddMonths(1);
-            }
+            return GetScheduleWIthScheduledDateInPreviousMonth(origin, schedule);
         }
-        else if (origin > newDeadline)
+        else if (origin.Day > deadlineDay)
         {
-            while (origin > newDeadline)
-            {
-                newDeadline = newDeadline.AddMonths(-1);
-            }
+            return GetScheduleWithScheduledDateInCurrentMonth(origin, schedule, deadlineDay);
+        }
+        else
+        {
+            return new Schedule(origin, origin.AddMonths(1), schedule.OriginScheduledDate, schedule.ScheduleType);
+        }
+    }
+
+    private static Schedule GetScheduleWithScheduledDateInCurrentMonth(DateTime origin, Schedule schedule, int deadlineDay)
+    {
+        var newScheduledDate = new DateTime(
+            year: origin.Year,
+            month: origin.Month,
+            day: deadlineDay);
+
+        var nextDeadlineDateWithInvalidDay = origin.AddMonths(1);
+        var newDeadlineDate = new DateTime(
+            year: nextDeadlineDateWithInvalidDay.Year,
+            month: nextDeadlineDateWithInvalidDay.Month,
+            day: GetDeadlineDay(nextDeadlineDateWithInvalidDay, schedule));
+
+        return new Schedule(newScheduledDate, newDeadlineDate, schedule.OriginScheduledDate, schedule.ScheduleType);
+    }
+
+    private static Schedule GetScheduleWIthScheduledDateInPreviousMonth(DateTime origin, Schedule schedule)
+    {
+        var nextScheduledDateWithInvaildDay = origin.AddMonths(-1);
+        var newScheduledDate = new DateTime(
+            year: nextScheduledDateWithInvaildDay.Year,
+            month: nextScheduledDateWithInvaildDay.Month,
+            day: GetDeadlineDay(nextScheduledDateWithInvaildDay, schedule));
+
+        var newDeadlineDate = new DateTime(
+            year: origin.Year,
+            month: origin.Month,
+            day: GetDeadlineDay(origin, schedule));
+
+        return new Schedule(newScheduledDate, newDeadlineDate, schedule.OriginScheduledDate, schedule.ScheduleType);
+    }
+
+    /// <summary>
+    /// Returns max day in month for deadline
+    /// </summary>
+    private static int GetDeadlineDay(DateTime origin, Schedule schedule)
+    {
+        int deadlineDay = DateTime.DaysInMonth(origin.Year, origin.Month);
+
+        if (deadlineDay > schedule.OriginScheduledDate.Day)
+        {
+            deadlineDay = schedule.OriginScheduledDate.Day;
         }
 
-        if (newScheduledDate.Day < schedule.OriginScheduledDate.Day)
-        {
-            int daysInMonth = DateTime.DaysInMonth(newScheduledDate.Day, newScheduledDate.Month);
-            int maxDay = int.Min(daysInMonth, schedule.OriginScheduledDate.Day);
-            while (newScheduledDate.Day < maxDay)
-            {
-                newScheduledDate = newScheduledDate.AddDays(1);
-            }
-        }
-
-        return new Schedule(newScheduledDate, newDeadline, schedule.OriginScheduledDate, schedule.ScheduleType);
+        return deadlineDay;
     }
 }

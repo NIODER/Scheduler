@@ -1,77 +1,81 @@
-﻿//using Scheduler.Domain.FinancialPlanAggregate.Calculation.Dates;
-//using Scheduler.Domain.Scheduling.ValueObjects;
+﻿using Scheduler.Domain.Scheduling.ValueObjects;
 
-//namespace Scheduler.Domain.Tests.DatesActualizerTests;
+namespace Scheduler.Domain.Tests.DatesActualizerTests;
 
-//public class DaysActualizerTests
-//{
-//    [Fact]
-//    public void OriginAlreadyInPeriodReturnsTrueTest()
-//    {
-//        DateTime scheduledDate = DateTime.Parse("2001-01-01 10:10:10,000");
-//        DateTime expirationDate = DateTime.Parse("2001-01-03 10:10:10,000");
-//        DateTime originDate = DateTime.Parse("2001-01-02 10:10:10,000");
+public class DaysActualizerTests
+{
+    [Fact]
+    public void OriginAlreadyInPeriodTest()
+    {
+        DateTime scheduledDate = DateTime.Parse("2001-01-01");
+        DateTime expirationDate = DateTime.Parse("2001-01-03");
+        DateTime originDate = DateTime.Parse("2001-01-02");
 
-//        var actualizer = DatesActualizerFabfic.GetDatesActualizerByRepeatType(ScheduleType.Days);
+        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Days);
+        schedule.Actualize(originDate);
 
-//        Assert.True(actualizer.ActualizeDates(originDate, ref scheduledDate, ref expirationDate));
-//        Assert.Equal(DateTime.Parse("2001-01-01 10:10:10,000"), scheduledDate);
-//        Assert.Equal(DateTime.Parse("2001-01-03 10:10:10,000"), expirationDate);
-//    }
+        Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-01"), schedule.ScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-03"), schedule.Deadline);
+    }
 
-//    [Fact]
-//    public void OriginGreaterThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
-//    {
-//        DateTime scheduledDate = DateTime.Parse("2001-01-01 10:10:10,000");
-//        DateTime expirationDate = DateTime.Parse("2001-01-03 10:10:10,000");
-//        DateTime originDate = DateTime.Parse("2001-01-04 10:10:10,000");
+    [Fact]
+    public void OriginGreaterThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    {
+        DateTime scheduledDate = DateTime.Parse("2001-01-01");
+        DateTime expirationDate = DateTime.Parse("2001-01-03");
+        DateTime originDate = DateTime.Parse("2001-01-04");
 
-//        var actualizer = DatesActualizerFabfic.GetDatesActualizerByRepeatType(ScheduleType.Days);
+        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Days);
+        schedule.Actualize(originDate);
 
-//        Assert.False(actualizer.ActualizeDates(originDate, ref scheduledDate, ref expirationDate));
-//        Assert.Equal(DateTime.Parse("2001-01-03 10:10:10,000"), scheduledDate);
-//        Assert.Equal(DateTime.Parse("2001-01-05 10:10:10,000"), expirationDate);
-//    }
+        Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-03"), schedule.ScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-05"), schedule.Deadline);
+    }
 
-//    [Fact]
-//    public void OriginGreaterThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
-//    {
-//        DateTime scheduledDate = DateTime.Parse("2001-01-01 10:10:10,000");
-//        DateTime expirationDate = DateTime.Parse("2001-01-03 10:10:10,000");
-//        DateTime originDate = DateTime.Parse("2001-01-10 10:10:10,000");
+    [Fact]
+    public void OriginGreaterThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    {
+        DateTime scheduledDate = DateTime.Parse("2001-01-01");
+        DateTime expirationDate = DateTime.Parse("2001-01-03");
+        DateTime originDate = DateTime.Parse("2001-01-10");
 
-//        var actualizer = DatesActualizerFabfic.GetDatesActualizerByRepeatType(ScheduleType.Days);
+        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Days);
+        schedule.Actualize(originDate);
 
-//        Assert.False(actualizer.ActualizeDates(originDate, ref scheduledDate, ref expirationDate));
-//        Assert.Equal(DateTime.Parse("2001-01-09 10:10:10,000"), scheduledDate);
-//        Assert.Equal(DateTime.Parse("2001-01-11 10:10:10,000"), expirationDate);
-//    }
+        Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-09"), schedule.ScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-11"), schedule.Deadline);
+    }
 
-//    [Fact]
-//    public void OriginLessThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
-//    {
-//        DateTime scheduledDate = DateTime.Parse("2001-01-03 10:10:10,000");
-//        DateTime expirationDate = DateTime.Parse("2001-01-05 10:10:10,000");
-//        DateTime originDate = DateTime.Parse("2001-01-02 10:10:10,000");
+    [Fact]
+    public void OriginLessThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    {
+        DateTime scheduledDate = DateTime.Parse("2001-01-03");
+        DateTime expirationDate = DateTime.Parse("2001-01-05");
+        DateTime originDate = DateTime.Parse("2001-01-02");
 
-//        var actualizer = DatesActualizerFabfic.GetDatesActualizerByRepeatType(ScheduleType.Days);
+        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Days);
+        schedule.Actualize(originDate);
 
-//        Assert.False(actualizer.ActualizeDates(originDate, ref scheduledDate, ref expirationDate));
-//        Assert.Equal(DateTime.Parse("2001-01-01 10:10:10,000"), scheduledDate);
-//        Assert.Equal(DateTime.Parse("2001-01-03 10:10:10,000"), expirationDate);
-//    }
+        Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-01"), schedule.ScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-03"), schedule.Deadline);
+    }
 
-//    [Fact]
-//    public void OriginLessThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
-//    {
-//        DateTime scheduledDate = DateTime.Parse("2001-01-9 10:10:10,000");
-//        DateTime expirationDate = DateTime.Parse("2001-01-11 10:10:10,000");
-//        DateTime originDate = DateTime.Parse("2001-01-02 10:10:10,000");
+    [Fact]
+    public void OriginLessThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    {
+        DateTime scheduledDate = DateTime.Parse("2001-01-9");
+        DateTime expirationDate = DateTime.Parse("2001-01-11");
+        DateTime originDate = DateTime.Parse("2001-01-02");
 
-//        var actualizer = DatesActualizerFabfic.GetDatesActualizerByRepeatType(ScheduleType.Days);
+        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Days);
+        schedule.Actualize(originDate);
 
-//        Assert.False(actualizer.ActualizeDates(originDate, ref scheduledDate, ref expirationDate));
-//        Assert.Equal(DateTime.Parse("2001-01-01 10:10:10,000"), scheduledDate);
-//        Assert.Equal(DateTime.Parse("2001-01-03 10:10:10,000"), expirationDate);
-//    }
-//}
+        Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-01"), schedule.ScheduledDate);
+        Assert.Equal(DateTime.Parse("2001-01-03"), schedule.Deadline);
+    }
+}
