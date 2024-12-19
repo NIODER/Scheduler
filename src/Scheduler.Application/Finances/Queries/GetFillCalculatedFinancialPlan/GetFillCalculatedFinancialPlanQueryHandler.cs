@@ -8,6 +8,7 @@ namespace Scheduler.Application.Finances.Queries.GetFillCalculatedFinancialPlan
 {
     internal class GetFillCalculatedFinancialPlanQueryHandler : IRequestHandler<GetFillCalculatedFinancialPlanQuery, ICommandResult<FilledFinancialPlanResult>>
     {
+        // TODO: complete handler
         private readonly IUsersRepository _usersRepository;
         private readonly IFinancialPlansRepository _financialPlansRepository;
         private readonly IGroupsRepository _groupsRepository;

@@ -51,7 +51,9 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
         List<Charge> chargesByPriority = Charges.Where(c => c.Priority >= priority).ToList();
         HashSet<CalculatedCharge> chargesBudgetCover = [];
         bool calculated = false;
-        int minPeriod = 1; // 1 day for now. Idk how to calculate minimal diff. TODO: Optimize
+        // TODO: Optimize 
+        // 1 day for now. Idk how to calculate minimal diff.
+        int minPeriod = 1;
 
         do
         {
@@ -66,7 +68,7 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
                     ? charge.MinimalCost
                     : charge.MaximalCost ?? charge.MinimalCost;
 
-                if (budget - cost <= 0)
+                if (budget - cost < 0)
                 {
                     calculated = true;
                     continue;
@@ -91,17 +93,34 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
         }
         while (!calculated);
 
-        return [.. chargesBudgetCover];
+        var calculatedChargesList = chargesBudgetCover.ToList();
+        SortInOriginOrder(calculatedChargesList);
+
+        return calculatedChargesList;
     }
-
-
 
     public List<CalculatedCharge> CalculateDistributed()
     {
-        // Algorythm is:
-        // 1. Actualize all charges' schedule in this financial plan
-        // 2. For every charge get full count of repeats in this period
-        // 3. 
         throw new NotImplementedException();
+    }
+
+    private void SortInOriginOrder(List<CalculatedCharge> calculatedCharges)
+    {
+        calculatedCharges.Sort((c1, c2) =>
+        {
+            var index1 = _charges.IndexOf(c1.Charge);
+            var index2 = _charges.IndexOf(c2.Charge);
+
+            if (index1 == -1)
+            {
+                throw new InvalidDataException($"Charges of financial plan {Id.Value} is not contains chosen calculated charge {c1.Charge.Id}");
+            }
+            if (index2 == -1)
+            {
+                throw new InvalidDataException($"Charges of financial plan {Id.Value} is not contains chosen calculated charge {c2.Charge.Id}");
+            }
+
+            return index1.CompareTo(index2);
+        });
     }
 }

@@ -76,4 +76,16 @@ public class Charge : Entity<ChargeId>
 
         return false;
     }
+
+    public override bool Equals(object? obj)
+        => obj is Charge charge && charge.GetHashCode() == GetHashCode();
+
+    public override int GetHashCode()
+        => HashCode.Combine(Id.GetHashCode(), ChargeName, Description, MinimalCost, MaximalCost, Priority, Schedule.GetHashCode(), CreatedAt);
+
+    public static bool operator ==(Charge charge1, Charge charge2)
+        => charge1.Equals(charge2);
+
+    public static bool operator !=(Charge charge1, Charge charge2)
+        => !charge1.Equals(charge2);
 }

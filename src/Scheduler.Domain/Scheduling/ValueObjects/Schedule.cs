@@ -29,4 +29,10 @@ public class Schedule(
         OriginScheduledDate = actualSchedule.OriginScheduledDate;
         ScheduleType = actualSchedule.ScheduleType;
     }
+
+    public override bool Equals(object? obj)
+        => obj is Schedule schedule && schedule.GetHashCode() == GetHashCode();
+
+    public override int GetHashCode()
+        => HashCode.Combine(ScheduledDate, Deadline, OriginScheduledDate, ScheduleType);
 }
