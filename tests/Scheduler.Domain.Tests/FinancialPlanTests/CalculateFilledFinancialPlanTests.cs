@@ -1,5 +1,8 @@
 ﻿using Scheduler.Domain.FinancialPlanAggregate;
+<<<<<<< HEAD
 using Scheduler.Domain.FinancialPlanAggregate.Calculation;
+=======
+>>>>>>> master
 using Scheduler.Domain.FinancialPlanAggregate.Entities;
 using Scheduler.Domain.Scheduling.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
@@ -8,6 +11,7 @@ namespace Scheduler.Domain.Tests.FinancialPlanTests;
 
 public class CalculateFilledFinancialPlanTests
 {
+<<<<<<< HEAD
     // TODO: write tests for filled fp
     [Fact]
     public void CalculateFilledFinancialPlanTest()
@@ -68,5 +72,21 @@ public class CalculateFilledFinancialPlanTests
         var realCalculatedCharged = financialPlan.CalculateFilled(budget, 1, DateTime.Parse("2000-01-01"));
 
         Assert.Equal(expectedCalculatedCharges, realCalculatedCharged);
+=======
+    [Fact]
+    public void CalculateFilledFinancialPlanTest()
+    {
+        List<Charge> charges = [
+            Charge.CreateWithRepeat("Charge1_Month", string.Empty, 1000, null, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
+            Charge.CreateWithRepeat("Charge2_Week", string.Empty, 100, 1000, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
+            Charge.CreateWithRepeat("Charge3_Days", string.Empty, 100, 1000, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
+            ];
+        var financialPlan = FinancialPlan.CreatePrivate("FinancialPlan1", new UserId(Guid.NewGuid()), charges);
+        var budget = 1;
+
+        financialPlan.CalculateFilled(budget, 1, DateTime.Parse(""));
+
+        throw new NotImplementedException();
+>>>>>>> master
     }
 }
