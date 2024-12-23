@@ -112,7 +112,7 @@ public class CalculateFilledFinancialPlanTests
 
         const int CHARGES_IN_TWO_YEARS = 182;
 
-        decimal budget = 216;
+        decimal budget = 216000;
 
         DateTime origin = scheduled;
 

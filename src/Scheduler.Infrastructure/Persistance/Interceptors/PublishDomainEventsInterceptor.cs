@@ -11,17 +11,38 @@ public class PublishDomainEventsInterceptor(IPublisher publisher) : SaveChangesI
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        PublishDomainEventsAsync(eventData.Context).GetAwaiter().GetResult();
+        PublishDomainEvents(eventData.Context);
         return base.SavingChanges(eventData, result);
     }
 
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
-        DbContextEventData eventData, 
-        InterceptionResult<int> result, 
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
         await PublishDomainEventsAsync(eventData.Context);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
+    }
+
+    public void PublishDomainEvents(DbContext? dbContext)
+    {
+        if (dbContext is null)
+        {
+            return;
+        }
+
+        var eventsEntities = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
+            .Where(entry => entry.Entity.DomainEvents.Count > 0)
+            .Select(e => e.Entity)
+            .ToList();
+
+        var events = eventsEntities
+            .SelectMany(entry => entry.DomainEvents)
+            .ToList();
+
+        eventsEntities.ForEach(e => e.ClearDomainEvents());
+
+        Task.WaitAll(events.Select(e => _publisher.Publish(e)).ToArray());
     }
 
     private async Task PublishDomainEventsAsync(DbContext? dbContext)
@@ -30,14 +51,18 @@ public class PublishDomainEventsInterceptor(IPublisher publisher) : SaveChangesI
         {
             return;
         }
+
         var eventsEntities = dbContext.ChangeTracker.Entries<IHasDomainEvents>()
             .Where(entry => entry.Entity.DomainEvents.Count != 0)
             .Select(e => e.Entity)
             .ToList();
+
         var events = eventsEntities
             .SelectMany(entry => entry.DomainEvents)
             .ToList();
+
         eventsEntities.ForEach(e => e.ClearDomainEvents());
+
         foreach (var e in events)
         {
             await _publisher.Publish(e);
