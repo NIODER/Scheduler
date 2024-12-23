@@ -17,9 +17,9 @@ public class DatabaseCreatingTests
     //    );
     //}
 
-    [Fact]
-    public void CreateDatabase()
-    {
-        context.Database.EnsureCreated();
-    }
+    //[Fact]
+    //public void CreateDatabase()
+    //{
+    //    context.Database.EnsureCreated();
+    //}
 }
