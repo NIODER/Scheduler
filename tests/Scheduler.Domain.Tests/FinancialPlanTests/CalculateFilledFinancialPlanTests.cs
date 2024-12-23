@@ -1,8 +1,5 @@
 ﻿using Scheduler.Domain.FinancialPlanAggregate;
-<<<<<<< HEAD
 using Scheduler.Domain.FinancialPlanAggregate.Calculation;
-=======
->>>>>>> master
 using Scheduler.Domain.FinancialPlanAggregate.Entities;
 using Scheduler.Domain.Scheduling.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
@@ -11,16 +8,13 @@ namespace Scheduler.Domain.Tests.FinancialPlanTests;
 
 public class CalculateFilledFinancialPlanTests
 {
-<<<<<<< HEAD
-    // TODO: write tests for filled fp
     [Fact]
-    public void CalculateFilledFinancialPlanTest()
+    public void CalculateFilledFinancialPlanBudgetEnoughExactlyTest()
     {
         var charge1 = Charge.CreateWithRepeat(
                 chargeName: "Charge1_Week",
                 description: string.Empty,
                 minimalCost: 1000,
-                maximalCost: null,
                 priority: 1,
                 schedule: Schedule.Create(ScheduleType.Weeks, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-01-08")));
 
@@ -28,7 +22,6 @@ public class CalculateFilledFinancialPlanTests
                 chargeName: "Charge2_Days",
                 description: string.Empty,
                 minimalCost: 1000,
-                maximalCost: null,
                 priority: 1,
                 schedule: Schedule.Create(ScheduleType.Days, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-01-05")));
 
@@ -36,7 +29,6 @@ public class CalculateFilledFinancialPlanTests
                 chargeName: "Charge3_Month",
                 description: string.Empty,
                 minimalCost: 1000,
-                maximalCost: null,
                 priority: 1,
                 schedule: Schedule.Create(ScheduleType.Months, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-02-01")));
 
@@ -72,21 +64,77 @@ public class CalculateFilledFinancialPlanTests
         var realCalculatedCharged = financialPlan.CalculateFilled(budget, 1, DateTime.Parse("2000-01-01"));
 
         Assert.Equal(expectedCalculatedCharges, realCalculatedCharged);
-=======
+    }
+
     [Fact]
-    public void CalculateFilledFinancialPlanTest()
+    public void CalculateFilledWithZeroBudgetTest()
     {
-        List<Charge> charges = [
-            Charge.CreateWithRepeat("Charge1_Month", string.Empty, 1000, null, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
-            Charge.CreateWithRepeat("Charge2_Week", string.Empty, 100, 1000, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
-            Charge.CreateWithRepeat("Charge3_Days", string.Empty, 100, 1000, 1, Schedule.Create(ScheduleType.Months, DateTime.Parse(""), DateTime.Parse(""))),
-            ];
+        var charge1 = Charge.CreateWithRepeat(
+                chargeName: "Charge1_Week",
+                description: string.Empty,
+                minimalCost: 1000,
+                priority: 1,
+                schedule: Schedule.Create(ScheduleType.Weeks, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-01-08")));
+
+        var charge2 = Charge.CreateWithRepeat(
+                chargeName: "Charge2_Days",
+                description: string.Empty,
+                minimalCost: 1000,
+                priority: 1,
+                schedule: Schedule.Create(ScheduleType.Days, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-01-05")));
+
+        var charge3 = Charge.CreateWithRepeat(
+                chargeName: "Charge3_Month",
+                description: string.Empty,
+                minimalCost: 1000,
+                priority: 1,
+                schedule: Schedule.Create(ScheduleType.Months, DateTime.Parse("2000-01-01"), DateTime.Parse("2000-02-01")));
+
+        List<Charge> charges = [charge1, charge2, charge3];
         var financialPlan = FinancialPlan.CreatePrivate("FinancialPlan1", new UserId(Guid.NewGuid()), charges);
-        var budget = 1;
+        var budget = 0;
+        var expectedCalculatedCharges = new List<CalculatedCharge>();
 
-        financialPlan.CalculateFilled(budget, 1, DateTime.Parse(""));
+        var readCalculatedCharges = financialPlan.CalculateFilled(budget, 1, DateTime.Parse("2000-01-01"));
 
-        throw new NotImplementedException();
->>>>>>> master
+        Assert.Equal(expectedCalculatedCharges, readCalculatedCharges);
+    }
+
+    [Fact]
+    public void CalculateFilledForTwoYears()
+    {
+        DateTime scheduled = DateTime.Parse("1999-01-01");
+        DateTime deadline = DateTime.Parse("1999-01-05");
+
+        var charge1 = Charge.CreateWithRepeat("Charge1_Days", string.Empty, 1000, 1, Schedule.Create(ScheduleType.Days, scheduled, deadline));
+        var charge2 = Charge.CreateWithRepeat("Charge2_Month", string.Empty, 1000, 1, Schedule.Create(ScheduleType.Months, scheduled, scheduled.AddMonths(1)));
+        List<Charge> charges = [charge1, charge2];
+
+        const int CHARGES_IN_TWO_YEARS = 182;
+
+        decimal budget = 216;
+
+        DateTime origin = scheduled;
+
+        var financialPlan = FinancialPlan.CreatePrivate("fin", new UserId(Guid.NewGuid()), charges);
+
+        List<CalculatedCharge> expected = [new CalculatedCharge(charge1, []), new CalculatedCharge(charge2, [])];
+
+        for (int i = 0; i < CHARGES_IN_TWO_YEARS; i++)
+        {
+            expected[0].CalculatedExpirationDates.Add(origin);
+            origin.AddDays(4);
+        }
+
+        origin = scheduled;
+
+        for (int i = 0; i < 24; i++)
+        {
+            expected[1].CalculatedExpirationDates.Add(origin);
+        }
+
+        var real = financialPlan.CalculateFilled(budget, 1, scheduled);
+
+        Assert.Equal(expected, real);
     }
 }

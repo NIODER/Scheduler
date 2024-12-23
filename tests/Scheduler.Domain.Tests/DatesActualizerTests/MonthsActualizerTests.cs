@@ -8,10 +8,10 @@ public class MonthsActualizerTests
     public void OriginAlreadyInPeriodTest()
     {
         DateTime scheduledDate = DateTime.Parse("2001-01-01");
-        DateTime expirationDate = DateTime.Parse("2001-02-01");
+        DateTime deadlineDate = DateTime.Parse("2001-02-01");
         DateTime originDate = DateTime.Parse("2001-01-02");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -20,13 +20,13 @@ public class MonthsActualizerTests
     }
 
     [Fact]
-    public void OriginGreaterThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    public void OriginGreaterThanDeadlineDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
     {
         DateTime scheduledDate = DateTime.Parse("2001-01-01");
-        DateTime expirationDate = DateTime.Parse("2001-02-01");
+        DateTime deadlineDate = DateTime.Parse("2001-02-01");
         DateTime originDate = DateTime.Parse("2001-02-02");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -35,13 +35,13 @@ public class MonthsActualizerTests
     }
 
     [Fact]
-    public void OriginGreaterThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    public void OriginGreaterThanDeadlineDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
     {
         DateTime scheduledDate = DateTime.Parse("2001-01-01");
-        DateTime expirationDate = DateTime.Parse("2001-02-01");
+        DateTime deadlineDate = DateTime.Parse("2001-02-01");
         DateTime originDate = DateTime.Parse("2001-04-02");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -50,13 +50,13 @@ public class MonthsActualizerTests
     }
 
     [Fact]
-    public void OriginLessThanExpirationDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    public void OriginLessThanDeadlineDateInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
     {
         DateTime scheduledDate = DateTime.Parse("2001-02-01");
-        DateTime expirationDate = DateTime.Parse("2001-03-01");
+        DateTime deadlineDate = DateTime.Parse("2001-03-01");
         DateTime originDate = DateTime.Parse("2001-01-02");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -65,13 +65,13 @@ public class MonthsActualizerTests
     }
 
     [Fact]
-    public void OriginLessThanExpirationDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
+    public void OriginLessThanDeadlineDateNotInLimitsOfNextPeriodCorrectsDatesAndReturnsFalseTest()
     {
         DateTime scheduledDate = DateTime.Parse("2001-04-01");
-        DateTime expirationDate = DateTime.Parse("2001-05-01");
+        DateTime deadlineDate = DateTime.Parse("2001-05-01");
         DateTime originDate = DateTime.Parse("2001-01-02");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -83,10 +83,10 @@ public class MonthsActualizerTests
     public void OriginScheduledDateIsGreaterThanDaysCountInNextMonthTest()
     {
         DateTime scheduledDate = DateTime.Parse("1999-12-31");
-        DateTime expirationDate = DateTime.Parse("2000-01-31");
+        DateTime deadlineDate = DateTime.Parse("2000-01-31");
         DateTime originDate = DateTime.Parse("2000-02-01");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);
@@ -98,10 +98,10 @@ public class MonthsActualizerTests
     public void OriginScheduledDayIsLessThanDaysCountInNextMonthTest()
     {
         DateTime scheduledDate = DateTime.Parse("2000-01-29");
-        DateTime expirationDate = DateTime.Parse("2000-02-29");
+        DateTime deadlineDate = DateTime.Parse("2000-02-29");
         DateTime originDate = DateTime.Parse("2000-03-01");
 
-        var schedule = new Schedule(scheduledDate, expirationDate, scheduledDate, ScheduleType.Months);
+        var schedule = Schedule.Create(ScheduleType.Months, scheduledDate, deadlineDate);
         schedule.Actualize(originDate);
 
         Assert.Equal(scheduledDate, schedule.OriginScheduledDate);

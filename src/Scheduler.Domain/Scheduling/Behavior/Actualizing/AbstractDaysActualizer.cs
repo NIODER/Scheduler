@@ -1,14 +1,15 @@
-﻿using Scheduler.Domain.Scheduling.ValueObjects;
+﻿using Scheduler.Domain.Scheduling.Behavior.Actualizing.Results;
+using Scheduler.Domain.Scheduling.ValueObjects;
 
 namespace Scheduler.Domain.Scheduling.Behavior.Actualizing;
 
 internal abstract class AbstractDaysActualizer : IScheduleActualizer
 {
-    public virtual Schedule Actualize(DateTime origin, Schedule schedule)
+    public virtual IActualizedScheduleData Actualize(DateTime origin, Schedule schedule)
     {
         if (schedule.IsActual(origin))
         {
-            return schedule;
+            return ActualizedScheduleDataResult.CreateFromSchedule(schedule);
         }
 
         int daysCount = (schedule.Deadline - schedule.ScheduledDate).Days;
@@ -34,6 +35,8 @@ internal abstract class AbstractDaysActualizer : IScheduleActualizer
             newDeadline = newScheduledDate.AddDays(daysCount);
         }
 
-        return new Schedule(newScheduledDate, newDeadline, schedule.OriginScheduledDate, schedule.ScheduleType);
+        return new ActualizedScheduleDataResult(
+            NewScheduledDate: newScheduledDate,
+            NewDeadlineDate: newDeadline);
     }
 }

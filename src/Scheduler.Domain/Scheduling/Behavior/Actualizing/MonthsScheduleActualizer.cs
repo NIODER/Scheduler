@@ -1,10 +1,11 @@
-﻿using Scheduler.Domain.Scheduling.ValueObjects;
+﻿using Scheduler.Domain.Scheduling.Behavior.Actualizing.Results;
+using Scheduler.Domain.Scheduling.ValueObjects;
 
 namespace Scheduler.Domain.Scheduling.Behavior.Actualizing;
 
 internal class MonthsScheduleActualizer : IScheduleActualizer
 {
-    public Schedule Actualize(DateTime origin, Schedule schedule)
+    public IActualizedScheduleData Actualize(DateTime origin, Schedule schedule)
     {
         if (schedule.ScheduleType != ScheduleType.Months)
         {
@@ -13,14 +14,14 @@ internal class MonthsScheduleActualizer : IScheduleActualizer
 
         if (schedule.IsActual(origin))
         {
-            return schedule;
+            return ActualizedScheduleDataResult.CreateFromSchedule(schedule);
         }
 
         int deadlineDay = GetDeadlineDay(origin, schedule);
 
         if (origin.Day < deadlineDay)
         {
-            return GetScheduleWIthScheduledDateInPreviousMonth(origin, schedule);
+            return GetScheduleWithScheduledDateInPreviousMonth(origin, schedule);
         }
         else if (origin.Day > deadlineDay)
         {
@@ -28,11 +29,13 @@ internal class MonthsScheduleActualizer : IScheduleActualizer
         }
         else
         {
-            return new Schedule(origin, origin.AddMonths(1), schedule.OriginScheduledDate, schedule.ScheduleType);
+            return new ActualizedScheduleDataResult(
+                NewScheduledDate: origin,
+                NewDeadlineDate: origin.AddMonths(1));
         }
     }
 
-    private static Schedule GetScheduleWithScheduledDateInCurrentMonth(DateTime origin, Schedule schedule, int deadlineDay)
+    private static ActualizedScheduleDataResult GetScheduleWithScheduledDateInCurrentMonth(DateTime origin, Schedule schedule, int deadlineDay)
     {
         var newScheduledDate = new DateTime(
             year: origin.Year,
@@ -45,10 +48,12 @@ internal class MonthsScheduleActualizer : IScheduleActualizer
             month: nextDeadlineDateWithInvalidDay.Month,
             day: GetDeadlineDay(nextDeadlineDateWithInvalidDay, schedule));
 
-        return new Schedule(newScheduledDate, newDeadlineDate, schedule.OriginScheduledDate, schedule.ScheduleType);
+        return new ActualizedScheduleDataResult(
+            NewScheduledDate: newScheduledDate,
+            NewDeadlineDate: newDeadlineDate);
     }
 
-    private static Schedule GetScheduleWIthScheduledDateInPreviousMonth(DateTime origin, Schedule schedule)
+    private static ActualizedScheduleDataResult GetScheduleWithScheduledDateInPreviousMonth(DateTime origin, Schedule schedule)
     {
         var nextScheduledDateWithInvaildDay = origin.AddMonths(-1);
         var newScheduledDate = new DateTime(
@@ -61,7 +66,9 @@ internal class MonthsScheduleActualizer : IScheduleActualizer
             month: origin.Month,
             day: GetDeadlineDay(origin, schedule));
 
-        return new Schedule(newScheduledDate, newDeadlineDate, schedule.OriginScheduledDate, schedule.ScheduleType);
+        return new ActualizedScheduleDataResult(
+            NewScheduledDate: newScheduledDate,
+            NewDeadlineDate: newDeadlineDate);
     }
 
     /// <summary>

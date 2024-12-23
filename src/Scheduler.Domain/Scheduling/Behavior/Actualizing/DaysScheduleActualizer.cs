@@ -4,7 +4,7 @@ namespace Scheduler.Domain.Scheduling.Behavior.Actualizing;
 
 internal class DaysScheduleActualizer : AbstractDaysActualizer
 {
-    public override Schedule Actualize(DateTime origin, Schedule schedule)
+    public override IActualizedScheduleData Actualize(DateTime origin, Schedule schedule)
     {
         if (schedule.ScheduleType != ScheduleType.Days)
         {

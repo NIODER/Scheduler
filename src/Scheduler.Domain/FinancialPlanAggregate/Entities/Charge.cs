@@ -47,15 +47,31 @@ public class Charge : Entity<ChargeId>
         string chargeName,
         string description,
         decimal minimalCost,
-        decimal? maximalCost,
+        decimal maximalCost,
         int priority,
         Schedule schedule
     ) => new(
         id: new(Guid.NewGuid()),
         chargeName,
         description,
-        minimalCost: Math.Min(minimalCost, maximalCost ?? decimal.MaxValue),
-        maximalCost: Math.Max(minimalCost, maximalCost ?? decimal.MinValue),
+        minimalCost: Math.Min(minimalCost, maximalCost),
+        maximalCost: Math.Max(minimalCost, maximalCost),
+        priority,
+        schedule,
+        DateTime.UtcNow);
+
+    public static Charge CreateWithRepeat(
+        string chargeName,
+        string description,
+        decimal minimalCost,
+        int priority,
+    Schedule schedule
+    ) => new(
+        id: new(Guid.NewGuid()),
+        chargeName,
+        description,
+        minimalCost: minimalCost,
+        maximalCost: minimalCost,
         priority,
         schedule,
         DateTime.UtcNow);
@@ -72,7 +88,9 @@ public class Charge : Entity<ChargeId>
         }
 
         var scheduleActualizer = ScheduleActualizerFactory.GetActualizer(Schedule.ScheduleType);
-        Schedule = scheduleActualizer.Actualize(origin, Schedule);
+        var actualizedScheduleData = scheduleActualizer.Actualize(origin, Schedule);
+
+        Schedule.SetScheduleData(actualizedScheduleData);
 
         return false;
     }

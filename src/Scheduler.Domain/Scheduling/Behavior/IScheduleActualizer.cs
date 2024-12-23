@@ -1,4 +1,5 @@
-﻿using Scheduler.Domain.Scheduling.ValueObjects;
+﻿using Scheduler.Domain.Scheduling.Behavior.Actualizing;
+using Scheduler.Domain.Scheduling.ValueObjects;
 
 namespace Scheduler.Domain.Scheduling.Behavior;
 
@@ -11,5 +12,5 @@ public interface IScheduleActualizer
     /// <param name="schedule">Schedule need to actuzlize</param>
     /// <returns>Actual schedule</returns>
     /// <exception cref="ArgumentException"></exception>
-    public Schedule Actualize(DateTime origin, Schedule schedule);
+    public IActualizedScheduleData Actualize(DateTime origin, Schedule schedule);
 }
