@@ -4,6 +4,7 @@ using Scheduler.Domain.FinancialPlanAggregate.Entities;
 using Scheduler.Domain.FinancialPlanAggregate.ValueObjects;
 using Scheduler.Domain.GroupAggregate.ValueObjects;
 using Scheduler.Domain.UserAggregate.ValueObjects;
+using System.Diagnostics;
 
 namespace Scheduler.Domain.FinancialPlanAggregate;
 
@@ -46,14 +47,15 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
 
     public bool IsPrivate => GroupId is null;
 
-    public List<CalculatedCharge> CalculateFilled(decimal budget, int priority, DateTime origin, bool byMin = true)
+    public List<CalculatedCharge> CalculateFilled(decimal budget, int priority, DateTime origin)
     {
         List<Charge> chargesByPriority = Charges.Where(c => c.Priority >= priority).ToList();
         HashSet<CalculatedCharge> chargesBudgetCover = [];
-        bool calculated = false;
-        // TODO: Optimize 
-        // 1 day for now. Idk how to calculate minimal diff.
+        bool minCalculated = false;
+        bool maxCalculated = false;
         int minPeriod = 1;
+        decimal budgetByMin = budget;
+        decimal budgetByMax = budget;
 
         do
         {
@@ -64,24 +66,59 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
                     continue;
                 }
 
-                decimal cost = byMin
-                    ? charge.MinimalCost
-                    : charge.MaximalCost ?? charge.MinimalCost;
-
-                if (budget - cost < 0)
+                if (!minCalculated)
                 {
-                    calculated = true;
-                    continue;
-                }
-                else
-                {
-                    budget -= cost;
+                    decimal costByMin = charge.MinimalCost;
+
+                    if (budgetByMin - costByMin < 0)
+                    {
+                        minCalculated = true;
+
+                        if (maxCalculated)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        budgetByMin -= costByMin;
+                    }
                 }
 
-                CalculatedCharge calculatedCharge = new(charge, [charge.Schedule.ScheduledDate]);
+                if (!maxCalculated)
+                {
+                    decimal costByMax = charge.MaximalCost ?? charge.MinimalCost;
+
+                    if (budgetByMax - costByMax < 0)
+                    {
+                        maxCalculated = true;
+
+                        if (minCalculated)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        budgetByMax -= costByMax;
+                    }
+                }
+
+                CalculatedExpirationDateType type = (minCalculated, maxCalculated) switch
+                {
+                    (false, false) => CalculatedExpirationDateType.ByBoth,
+                    (false, true) => CalculatedExpirationDateType.ByMax,
+                    (true, false) => CalculatedExpirationDateType.ByMin,
+                    _ => throw new UnreachableException("Program logic error, min and max are calculated but trying to continue.")
+                };
+
+                CalculatedExpirationDate calculatedExpirationDate = new(charge.Schedule.ScheduledDate, type);
+
+                CalculatedCharge calculatedCharge = new(charge, [calculatedExpirationDate]);
+
                 if (chargesBudgetCover.TryGetValue(calculatedCharge, out var listedCalculatedCharge))
                 {
-                    listedCalculatedCharge.CalculatedExpirationDates.Add(charge.Schedule.ScheduledDate);
+                    listedCalculatedCharge.CalculatedExpirationDates.Add(calculatedExpirationDate);
                 }
                 else
                 {
@@ -91,7 +128,7 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
 
             origin = origin.AddDays(minPeriod);
         }
-        while (!calculated);
+        while (!maxCalculated || !minCalculated);
 
         var calculatedChargesList = chargesBudgetCover.ToList();
         SortInOriginOrder(calculatedChargesList);
@@ -99,7 +136,7 @@ public class FinancialPlan : Aggregate<FinancialPlanId>
         return calculatedChargesList;
     }
 
-    public List<CalculatedCharge> CalculateDistributed()
+    public List<CalculatedCharge> CalculateDistributed(decimal budget, DateTime periodEnd)
     {
         throw new NotImplementedException();
     }

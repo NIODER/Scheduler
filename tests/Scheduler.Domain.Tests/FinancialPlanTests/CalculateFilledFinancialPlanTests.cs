@@ -9,7 +9,7 @@ namespace Scheduler.Domain.Tests.FinancialPlanTests;
 public class CalculateFilledFinancialPlanTests
 {
     [Fact]
-    public void CalculateFilledFinancialPlanBudgetEnoughExactlyTest()
+    public void CalculateFilledFinancialPlanBudgetEnoughExactlyForBothTest()
     {
         var charge1 = Charge.CreateWithRepeat(
                 chargeName: "Charge1_Week",
@@ -40,24 +40,24 @@ public class CalculateFilledFinancialPlanTests
         var expectedCalculatedCharges = new List<CalculatedCharge>()
         {
             new(charge1, [ // every sat
-                DateTime.Parse("2000-01-08"),
-                DateTime.Parse("2000-01-15"),
-                DateTime.Parse("2000-01-22"),
-                DateTime.Parse("2000-01-29"),
-                DateTime.Parse("2000-02-05")
+                new(DateTime.Parse("2000-01-08"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-15"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-22"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-29"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-02-05"), CalculatedExpirationDateType.ByBoth)
             ]),
             new(charge2, [ // every 3 days (3 days between)
-                DateTime.Parse("2000-01-05"),
-                DateTime.Parse("2000-01-09"),
-                DateTime.Parse("2000-01-13"),
-                DateTime.Parse("2000-01-17"),
-                DateTime.Parse("2000-01-21"),
-                DateTime.Parse("2000-01-25"),
-                DateTime.Parse("2000-01-29"),
-                DateTime.Parse("2000-02-02")
+                new(DateTime.Parse("2000-01-05"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-09"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-13"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-17"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-21"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-25"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-01-29"), CalculatedExpirationDateType.ByBoth),
+                new(DateTime.Parse("2000-02-02"), CalculatedExpirationDateType.ByBoth)
             ]),
             new(charge3, [ // every month
-                DateTime.Parse("2000-02-01")
+                new(DateTime.Parse("2000-02-01"), CalculatedExpirationDateType.ByBoth)
             ])
         };
 
@@ -101,7 +101,7 @@ public class CalculateFilledFinancialPlanTests
     }
 
     [Fact]
-    public void CalculateFilledForTwoYears()
+    public void CalculateFilledForTwoYearsByBoth()
     {
         DateTime scheduled = DateTime.Parse("1999-01-01");
         DateTime deadline = DateTime.Parse("1999-01-05");
@@ -122,7 +122,7 @@ public class CalculateFilledFinancialPlanTests
 
         for (int i = 0; i < CHARGES_IN_TWO_YEARS; i++)
         {
-            expected[0].CalculatedExpirationDates.Add(origin);
+            expected[0].CalculatedExpirationDates.Add(new CalculatedExpirationDate(origin, CalculatedExpirationDateType.ByBoth));
             origin.AddDays(4);
         }
 
@@ -130,11 +130,14 @@ public class CalculateFilledFinancialPlanTests
 
         for (int i = 0; i < 24; i++)
         {
-            expected[1].CalculatedExpirationDates.Add(origin);
+            expected[1].CalculatedExpirationDates.Add(new CalculatedExpirationDate(origin, CalculatedExpirationDateType.ByBoth));
         }
 
         var real = financialPlan.CalculateFilled(budget, 1, scheduled);
 
         Assert.Equal(expected, real);
     }
+
+    // TODO: write tests for two years with min and max
+    // need to recalculate for minimal with same budget
 }

@@ -2,10 +2,10 @@
 
 namespace Scheduler.Domain.FinancialPlanAggregate.Calculation;
 
-public class CalculatedCharge(Charge charge, List<DateTime> calculatedExpirationDates)
+public class CalculatedCharge(Charge charge, List<CalculatedExpirationDate> calculatedExpirationDates)
 {
     public Charge Charge { get; init; } = charge;
-    public List<DateTime> CalculatedExpirationDates { get; init; } = calculatedExpirationDates;
+    public List<CalculatedExpirationDate> CalculatedExpirationDates { get; init; } = calculatedExpirationDates;
 
     private readonly int _hashCode = HashCode.Combine(charge.Id);
 
