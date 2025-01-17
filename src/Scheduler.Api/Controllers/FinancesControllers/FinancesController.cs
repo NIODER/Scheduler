@@ -22,12 +22,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> GetUserFinancialPlansListAsync()
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var query = new GetUserFinancialPlansQuery(userId.Value);
         var result = await sender.Send(query);
+
         return result.ActionResult<UserFinancialPlansListResult, FinancialPlansListResponse>(mapper, logger);
     }
 
@@ -35,12 +38,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> GetGroupFinancialPlansListAsync(Guid groupId)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var query = new GetGroupFinancialPlansListQuery(userId.Value, groupId);
         var result = await sender.Send(query);
+
         return result.ActionResult<GroupFinancialPlansListResult, FinancialPlansListResponse>(mapper, logger);
     }
 
@@ -48,12 +54,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> GetFinancialPlanGyIdAsync(Guid financialPlanId)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var query = new GetFinancialPlanByIdQuery(userId.Value, financialPlanId);
         var result = await sender.Send(query);
+
         return result.ActionResult<FinancialPlanResult, FinancialPlanResponse>(mapper, logger);
     }
 
@@ -61,12 +70,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> CreateFinancialPlanAsync([FromBody] FinancialPlanRequest request)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var command = new CreateFinancialPlanCommand(userId.Value, request.GroupId, request.Title);
         var result = await sender.Send(command);
+
         return result.ActionResult<FinancialPlanResult, FinancialPlanResponse>(mapper, logger);
     }
 
@@ -74,12 +86,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> UpdateFinancialPlanAsync(Guid financialId, [FromBody] UpdateFinancialPlanRequest request)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var command = new UpdateFinancialPlanCommand(userId.Value, financialId, request.Title);
         var result = await sender.Send(command);
+
         return result.ActionResult<FinancialPlanResult, FinancialPlanResponse>(mapper, logger);
     }
 
@@ -87,12 +102,15 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> DeleteFinancialPlanByIdAsync(Guid financialPlanId)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var command = new DeleteFinancialPlanCommand(userId.Value, financialPlanId);
         var result = await sender.Send(command);
+
         return result.ActionResult<FinancialPlanResult, FinancialPlanResponse>(mapper, logger);
     }
 
@@ -100,13 +118,16 @@ public class FinancesController(ISender sender, IMapper mapper, ILogger<Finances
     public async Task<IActionResult> GetFillCalculatedFinancialPlanById(Guid financialPlanId, decimal budget, int priority, DateTime? origin)
     {
         var userId = HttpContext.GetExecutorUserId();
+
         if (userId is null)
         {
             return Forbid();
         }
+
         var command = new GetFillCalculatedFinancialPlanQuery(userId.Value, financialPlanId, budget, priority, origin);
         var result = await sender.Send(command);
-        throw new NotImplementedException();
+
+        return result.ActionResult<FilledFinancialPlanResult, FilledFinancialPlanResult>(mapper, logger);
     }
 
     [HttpGet("{financialPlanId}/calculate/distribute")]
