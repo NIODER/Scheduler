@@ -7,6 +7,5 @@ public record CalculatedChargeResponse(
     decimal MinimalCost,
     decimal MaximalCost,
     int Priority,
-    List<DateTime> ExpirationDates,
-    DateTime Created,
-    string Status);
+    List<CalculatedChargeExpirationDateResponse> ExpirationDates,
+    DateTime Created);

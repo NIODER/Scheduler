@@ -2,6 +2,7 @@
 using Scheduler.Application.Finances.Common;
 using Scheduler.Contracts.Finances;
 using Scheduler.Domain.FinancialPlanAggregate;
+using Scheduler.Domain.FinancialPlanAggregate.Calculation;
 using Scheduler.Domain.FinancialPlanAggregate.Entities;
 
 namespace Scheduler.Api.Common.Mapping;
@@ -16,6 +17,9 @@ public class FinancialPlanMappingsConfig : IRegister
         RegisterChargeToChargeResultMapping(config);
         RegisterFinancialPlanToFinancialPlanResultMapping(config);
         RegisterFilledFinancialPlanResultToResponseMapping(config);
+        RegisterCalculatedChargeExpirationDateResultToCalculatedExpirationDateResponseMapping(config);
+        RegisterCalculatedExpirationDateToCalculatedChargeExpirationDateResultMapping(config);
+        RegisterCalculatedChargeToCalculatedChargeResultResultMapping(config);
         RegisterCalculatedChargeResultToResponseMapping(config);
     }
 
@@ -83,7 +87,27 @@ public class FinancialPlanMappingsConfig : IRegister
             .Map(dest => dest.MinimalCost, src => src.Charge.MinimalCost)
             .Map(dest => dest.MaximalCost, src => src.Charge.MaximalCost)
             .Map(dest => dest.Priority, src => src.Charge.Priority)
-            .Map(dest => dest.ExpirationDates, src => src.ExpirationDates)
-            .Map(dest => dest.Status, src => src.Status.ToString());
+            .Map(dest => dest.ExpirationDates, src => src.ExpirationDates);
+    }
+
+    private static void RegisterCalculatedChargeExpirationDateResultToCalculatedExpirationDateResponseMapping(TypeAdapterConfig config)
+    {
+        config.NewConfig<CalculatedChargeExpirationDateResult, CalculatedChargeExpirationDateResponse>()
+            .Map(dest => dest.ExpirationDate, src => src.ExpirationDate)
+            .Map(dest => dest.Type, src => src.Type);
+    }
+
+    private static void RegisterCalculatedChargeToCalculatedChargeResultResultMapping(TypeAdapterConfig config)
+    {
+        config.NewConfig<CalculatedCharge, CalculatedChargeResult>()
+            .Map(dest => dest.Charge, src => src.Charge)
+            .Map(dest => dest.ExpirationDates, src => src.CalculatedExpirationDates);
+    }
+
+    private static void RegisterCalculatedExpirationDateToCalculatedChargeExpirationDateResultMapping(TypeAdapterConfig config)
+    {
+        config.NewConfig<CalculatedExpirationDate, CalculatedChargeExpirationDateResult>()
+            .Map(dest => dest.ExpirationDate, src => src.ExpirationDate)
+            .Map(dest => dest.Type, src => src.Type);
     }
 }

@@ -1,3 +1,3 @@
 ﻿namespace Scheduler.Domain.FinancialPlanAggregate.Calculation;
 
-public record CalculatedExpirationDate(DateTime ExpirationDate, CalculatedExpirationDateType CalculatedExpirationDateType);
+public record CalculatedExpirationDate(DateTime ExpirationDate, CalculatedExpirationDateType Type);

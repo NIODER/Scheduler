@@ -2,7 +2,4 @@
 
 namespace Scheduler.Application.Finances.Common;
 
-public record CalculatedChargeResult(
-    Charge Charge,
-    List<DateTime> ExpirationDates,
-    CalculatedChargeStatus Status);
+public record CalculatedChargeResult(Charge Charge, List<CalculatedChargeExpirationDateResult> ExpirationDates);

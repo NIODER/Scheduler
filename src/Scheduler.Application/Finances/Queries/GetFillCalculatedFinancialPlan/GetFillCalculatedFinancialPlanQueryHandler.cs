@@ -1,18 +1,25 @@
-﻿using MediatR;
+﻿using MapsterMapper;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Scheduler.Application.Common.Interfaces.Persistance;
 using Scheduler.Application.Common.Wrappers;
 using Scheduler.Application.Finances.Common;
+using Scheduler.Domain.FinancialPlanAggregate.Calculation;
 
 namespace Scheduler.Application.Finances.Queries.GetFillCalculatedFinancialPlan
 {
-    internal class GetFillCalculatedFinancialPlanQueryHandler : IRequestHandler<GetFillCalculatedFinancialPlanQuery, ICommandResult<FilledFinancialPlanResult>>
+    internal class GetFillCalculatedFinancialPlanQueryHandler(
+        IUsersRepository usersRepository,
+        IFinancialPlansRepository financialPlansRepository,
+        IGroupsRepository groupsRepository,
+        IMapper mapper,
+        ILogger<GetFillCalculatedFinancialPlanQueryHandler> logger) : IRequestHandler<GetFillCalculatedFinancialPlanQuery, ICommandResult<FilledFinancialPlanResult>>
     {
-        // TODO: complete handler
-        private readonly IUsersRepository _usersRepository;
-        private readonly IFinancialPlansRepository _financialPlansRepository;
-        private readonly IGroupsRepository _groupsRepository;
-        private readonly ILogger<GetFillCalculatedFinancialPlanQueryHandler> _logger;
+        private readonly IUsersRepository _usersRepository = usersRepository;
+        private readonly IFinancialPlansRepository _financialPlansRepository = financialPlansRepository;
+        private readonly IGroupsRepository _groupsRepository = groupsRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ILogger<GetFillCalculatedFinancialPlanQueryHandler> _logger = logger;
 
         public async Task<ICommandResult<FilledFinancialPlanResult>> Handle(GetFillCalculatedFinancialPlanQuery request, CancellationToken cancellationToken)
         {
@@ -51,7 +58,28 @@ namespace Scheduler.Application.Finances.Queries.GetFillCalculatedFinancialPlan
                 return new SuccessResult<FilledFinancialPlanResult>(emptyFilledFinancialPlanResult);
             }
 
-            throw new NotImplementedException();
+            if (request.Origin is null)
+            {
+                _logger.LogInformation("Origin wasn't specified so assumed for now.");
+            }
+
+            var calculatedCharges = financialPlan.CalculateFilled(request.Budget, request.Priority, request.Origin ?? DateTime.UtcNow);
+
+            var limitDateOptimistic = calculatedCharges
+                .SelectMany(c => c.CalculatedExpirationDates)
+                .Where(d => d.Type == CalculatedExpirationDateType.ByMin)
+                .Max(d => d.ExpirationDate);
+
+            var liminDatePessimistic = calculatedCharges
+                .SelectMany(c => c.CalculatedExpirationDates)
+                .Where(d => d.Type == CalculatedExpirationDateType.ByMax)
+                .Max(d => d.ExpirationDate);
+
+            var calculatedChargeResults = _mapper.Map<List<CalculatedChargeResult>>(calculatedCharges);
+
+            var result = new FilledFinancialPlanResult(financialPlan, limitDateOptimistic, liminDatePessimistic, calculatedChargeResults);
+
+            return new SuccessResult<FilledFinancialPlanResult>(result);
         }
     }
 }
